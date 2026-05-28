@@ -4,7 +4,7 @@ import React, { useState, use } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useApp } from '../../../context/AppContext';
+import { useApp } from '@/context/AppContext';
 import { ArrowLeft, Check, Calendar, Users, Coffee, Mail, Phone, User, AlertTriangle } from 'lucide-react';
 
 interface PageProps {
