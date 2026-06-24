@@ -10,23 +10,23 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
         {/* Brand column */}
         <div className="flex flex-col gap-4">
-          <Link href="/" className="flex items-center gap-2 text-primary-light">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-light">
-              <Compass className="h-5 w-5" />
+          <Link href="/" className="flex items-center gap-3 text-primary-light">
+            <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary text-primary-light shadow-sm">
+              <Compass className="h-5 w-5 stroke-[1.5]" />
             </span>
-            <div className="flex flex-col">
-              <span className="text-base font-semibold leading-tight tracking-tight">Motimahal Lodge</span>
-              <span className="text-[10px] tracking-wider uppercase text-primary-accent font-medium leading-none">Chitwan, Nepal</span>
+            <div className="flex flex-col leading-tight">
+              <span className="text-lg font-serif font-semibold tracking-tight text-white">Motimahal</span>
+              <span className="text-[9px] tracking-wider uppercase text-primary-accent font-bold">Lodge · Chitwan</span>
             </div>
           </Link>
-          <p className="text-xs leading-relaxed text-muted">
-            Nestled on the edge of Chitwan National Park in Sauraha, blending wild rustic nature with cozy, clean premium comfort.
+          <p className="text-xs leading-relaxed text-muted/80 font-normal">
+            An eco-friendly sanctuary nestled on the edge of Chitwan National Park in Sauraha, blending wild rustic nature with warm Nepalese hospitality.
           </p>
         </div>
 
         {/* Guest Links */}
         <div className="flex flex-col gap-3">
-          <h4 className="text-sm font-semibold text-primary-light uppercase tracking-wider">Explore</h4>
+          <h4 className="text-xs font-bold text-primary-accent uppercase tracking-[0.15em]">Explore</h4>
           <ul className="flex flex-col gap-2 text-xs">
             <li>
               <Link href="/" className="hover:text-primary-accent transition-colors">Home</Link>
@@ -45,7 +45,7 @@ export default function Footer() {
 
         {/* Staff & Portals */}
         <div className="flex flex-col gap-3">
-          <h4 className="text-sm font-semibold text-primary-light uppercase tracking-wider">Services</h4>
+          <h4 className="text-xs font-bold text-primary-accent uppercase tracking-[0.15em]">Services</h4>
           <ul className="flex flex-col gap-2 text-xs">
             <li>
               <Link href="/portal" className="hover:text-primary-accent transition-colors">Guest Portal Login</Link>
@@ -61,7 +61,7 @@ export default function Footer() {
 
         {/* Contact Info */}
         <div className="flex flex-col gap-3">
-          <h4 className="text-sm font-semibold text-primary-light uppercase tracking-wider">Contact Details</h4>
+          <h4 className="text-xs font-bold text-primary-accent uppercase tracking-[0.15em]">Contact Details</h4>
           <ul className="flex flex-col gap-2.5 text-xs text-muted">
             <li className="flex items-center gap-2">
               <MapPin className="h-4 w-4 text-primary-accent shrink-0" />

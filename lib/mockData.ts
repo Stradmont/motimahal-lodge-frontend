@@ -5,8 +5,8 @@ export const PROPERTY_ID = 'motimahal-chitwan';
 export const INITIAL_ROOM_TYPES: RoomType[] = [
   {
     id: 'deluxe',
-    name: 'Deluxe Room',
-    description: 'Spacious air-conditioned room featuring a private balcony with breathtaking views of the Chitwan National Park landscape. Perfect for couples and families seeking comfort and nature.',
+    name: 'Deluxe Garden Cottage',
+    description: 'A spacious, air-conditioned cottage built with traditional clay-toned finishes. It features a private veranda looking directly out to the national park woods. Perfect for couples and families who want to experience Chitwan in comfort.',
     photos: [
       'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&q=80&w=800',
       'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&q=80&w=800'
@@ -28,8 +28,8 @@ export const INITIAL_ROOM_TYPES: RoomType[] = [
   },
   {
     id: 'standard',
-    name: 'Standard Room',
-    description: 'Cozy and comfortable standard room looking out to our lush garden lawns. Equipped with all essential amenities for a pleasant stay in Sauraha.',
+    name: 'Standard Family Room',
+    description: 'A cozy, garden-facing cottage room with double beds. It stays naturally cool and opens up directly to our green lawns, offering a peaceful space for your family.',
     photos: [
       'https://images.unsplash.com/photo-1598928506311-c55ded91a20c?auto=format&fit=crop&q=80&w=800',
       'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&q=80&w=800'
@@ -50,8 +50,8 @@ export const INITIAL_ROOM_TYPES: RoomType[] = [
   },
   {
     id: 'normal',
-    name: 'Normal Room',
-    description: 'Budget-friendly, clean and simple room with twin beds. Ideal for backpackers and solo travellers looking for a reliable resting spot between jungle excursions.',
+    name: 'Budget Twin Room',
+    description: 'A simple, clean room with twin beds and high-quality mosquito netting. Ideal for backpackers and nature explorers who want a comfortable bed between jungle walks.',
     photos: [
       'https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&q=80&w=800'
     ],

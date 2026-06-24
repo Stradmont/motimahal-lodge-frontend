@@ -107,16 +107,16 @@ export default function BookingConfirmPage({ params }: PageProps) {
             <CheckCircle2 className="h-8 w-8" />
           </span>
           <div>
-            <h1 className="text-xl sm:text-2xl font-semibold text-foreground">Room Booking Initiated!</h1>
+            <h1 className="text-xl sm:text-2xl font-semibold text-foreground">Booking Received!</h1>
             <p className="text-xs sm:text-sm text-muted mt-1 leading-relaxed">
-              Welcome, <strong>{booking.guestName}</strong>! Your stay request is pending verification. Please verify details or submit payment.
+              Namaste, <strong>{booking.guestName}</strong>! We have received your booking request. Please check your details below and complete payment to secure your room.
             </p>
           </div>
         </div>
 
         {/* Booking Token Card */}
         <div className="bg-muted-light border border-border rounded-2xl px-5 py-3.5 flex flex-col gap-1 items-center shrink-0 w-full sm:w-auto">
-          <span className="text-[10px] text-muted uppercase tracking-wider font-semibold">Booking Reference Token</span>
+          <span className="text-micro text-muted uppercase tracking-wider font-semibold">Booking Code</span>
           <div className="flex items-center gap-1.5 mt-0.5">
             <span className="font-mono text-base font-bold text-primary select-all">{booking.referenceNumber}</span>
             <button 
@@ -127,13 +127,13 @@ export default function BookingConfirmPage({ params }: PageProps) {
               title="Copy Reference Number"
             >
               {copied ? (
-                <span className="text-[10px] font-semibold px-0.5">Copied!</span>
+                <span className="text-micro font-semibold px-0.5">Copied!</span>
               ) : (
                 <Copy className="h-3.5 w-3.5" />
               )}
             </button>
           </div>
-          <span className="text-[9px] text-muted italic">Store this reference to log into your guest portal.</span>
+          <span className="text-nano text-muted font-medium">Save this code to log into your guest portal to order food and check your booking status.</span>
         </div>
       </div>
 
@@ -150,27 +150,27 @@ export default function BookingConfirmPage({ params }: PageProps) {
         {/* Left Side: Receipt Breakdown */}
         <div className="lg:col-span-6 flex flex-col gap-6">
           <div className="bg-card border border-border rounded-3xl p-6 shadow-sm flex flex-col gap-5">
-            <h3 className="text-sm font-semibold uppercase tracking-wider border-b border-border pb-3">Booking Reservation details</h3>
+            <h3 className="text-sm font-semibold uppercase tracking-wider border-b border-border pb-3">Your Stay Details</h3>
             
             <div className="grid grid-cols-2 gap-4 text-xs">
               <div>
-                <span className="text-[10px] text-muted uppercase tracking-wider font-semibold">Check-In Date</span>
+                <span className="text-micro text-muted uppercase tracking-wider font-semibold">Check-In Date</span>
                 <span className="font-bold text-sm text-foreground mt-0.5 block">{booking.checkIn}</span>
               </div>
               <div>
-                <span className="text-[10px] text-muted uppercase tracking-wider font-semibold">Check-Out Date</span>
+                <span className="text-micro text-muted uppercase tracking-wider font-semibold">Check-Out Date</span>
                 <span className="font-bold text-sm text-foreground mt-0.5 block">{booking.checkOut}</span>
               </div>
               <div>
-                <span className="text-[10px] text-muted uppercase tracking-wider font-semibold">Cottage Type</span>
+                <span className="text-micro text-muted uppercase tracking-wider font-semibold">Cottage Type</span>
                 <span className="font-bold text-sm text-foreground mt-0.5 block">{roomType?.name}</span>
               </div>
               <div>
-                <span className="text-[10px] text-muted uppercase tracking-wider font-semibold">Guests Count</span>
+                <span className="text-micro text-muted uppercase tracking-wider font-semibold">Guests Count</span>
                 <span className="font-bold text-sm text-foreground mt-0.5 block">{booking.numGuests} Guest(s)</span>
               </div>
               <div className="col-span-2">
-                <span className="text-[10px] text-muted uppercase tracking-wider font-semibold">Contact Phone</span>
+                <span className="text-micro text-muted uppercase tracking-wider font-semibold">Contact Phone</span>
                 <span className="font-bold text-sm text-foreground mt-0.5 block">{booking.guestPhone}</span>
               </div>
             </div>
@@ -201,15 +201,15 @@ export default function BookingConfirmPage({ params }: PageProps) {
             {/* Status indicators */}
             <div className="flex gap-2 items-center border-t border-border pt-4 mt-2">
               <div className="flex flex-col gap-0.5">
-                <span className="text-[9px] text-muted uppercase tracking-wider font-semibold">Payment Status</span>
-                <span className={`inline-flex px-2.5 py-0.5 rounded-full text-[9px] font-bold border uppercase tracking-wider ${
+                <span className="text-nano text-muted uppercase tracking-wider font-semibold">Payment Status</span>
+                <span className={`inline-flex px-2.5 py-0.5 rounded-full text-nano font-bold border uppercase tracking-wider ${
                   booking.paymentStatus === 'Paid' ? 'bg-emerald-500/10 text-emerald-800 border-emerald-500/20' : 'bg-amber-500/10 text-amber-800 border-amber-500/20'
                 }`}>{booking.paymentStatus}</span>
               </div>
               <div className="w-px h-8 bg-border"></div>
               <div className="flex flex-col gap-0.5">
-                <span className="text-[9px] text-muted uppercase tracking-wider font-semibold">Booking Verification</span>
-                <span className={`inline-flex px-2.5 py-0.5 rounded-full text-[9px] font-bold border uppercase tracking-wider ${
+                <span className="text-nano text-muted uppercase tracking-wider font-semibold">Booking Verification</span>
+                <span className={`inline-flex px-2.5 py-0.5 rounded-full text-nano font-bold border uppercase tracking-wider ${
                   booking.status === 'Confirmed' ? 'bg-emerald-500/10 text-emerald-800 border-emerald-500/20' : 'bg-blue-500/10 text-blue-800 border-blue-500/20'
                 }`}>{booking.status}</span>
               </div>
@@ -222,8 +222,8 @@ export default function BookingConfirmPage({ params }: PageProps) {
         <div className="lg:col-span-6 flex flex-col gap-6">
           <div className="bg-card border border-border rounded-3xl p-6 shadow-xl flex flex-col gap-6">
             <div className="flex flex-col gap-1 border-b border-border pb-3">
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-foreground">Offline Payment Channels</h3>
-              <p className="text-[10px] text-muted leading-relaxed">Submit transaction details to instantly confirm this pending reservation status.</p>
+              <h3 className="text-sm font-semibold uppercase tracking-wider text-foreground">Payment Options</h3>
+              <p className="text-micro text-muted leading-relaxed">Please send payment using eSewa or Bank Transfer to confirm your cottage booking.</p>
             </div>
 
             {booking.paymentStatus === 'Paid' ? (
@@ -232,9 +232,9 @@ export default function BookingConfirmPage({ params }: PageProps) {
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">
                   <CheckCircle2 className="h-6 w-6" />
                 </div>
-                <h4 className="font-semibold text-foreground text-sm">Payment Verified Successfully</h4>
-                <p className="text-[11px] text-muted max-w-xs leading-relaxed">
-                  Thank you! We have verified your transaction #{booking.paymentDetails.transactionId?.slice(0,8).toUpperCase()}.
+                <h4 className="font-semibold text-foreground text-sm">Payment Confirmed!</h4>
+                <p className="text-mini text-muted max-w-xs leading-relaxed">
+                  Thank you! We have received your payment. Your booking is now confirmed, and we look forward to welcoming you to Sauraha.
                 </p>
                 <Link 
                   href="/dashboard?role=guest"
@@ -269,18 +269,18 @@ export default function BookingConfirmPage({ params }: PageProps) {
                 {/* Gateway Detail Boards */}
                 {paymentMethod === 'eSewa' ? (
                   <div className="bg-primary-light/50 border border-primary-accent/40 p-4 rounded-2xl flex flex-col gap-2.5 text-xs text-muted leading-relaxed">
-                    <span className="font-semibold text-primary block uppercase tracking-wider text-[9px]">eSewa Merchant Details:</span>
+                    <span className="font-semibold text-primary block uppercase tracking-wider text-nano">eSewa Merchant Details:</span>
                     <div>
                       <span className="font-bold text-foreground">eSewa ID / Mobile:</span> 9845012345
                     </div>
                     <div>
                       <span className="font-bold text-foreground">Account Holder:</span> Motimahal Lodge Pvt. Ltd.
                     </div>
-                    <span className="text-[10px] italic">Please transfer NPR {total.toLocaleString()} to this number. Save your 10-digit MPIN Transaction ID for verification.</span>
+                    <span className="text-micro font-medium text-primary-accent/90">Please send NPR {total.toLocaleString()} to this number. After transfer, type the 10-digit Transaction ID below to verify.</span>
                   </div>
                 ) : (
                   <div className="bg-primary-light/50 border border-primary-accent/40 p-4 rounded-2xl flex flex-col gap-2 text-xs text-muted leading-relaxed">
-                    <span className="font-semibold text-primary block uppercase tracking-wider text-[9px]">Direct Deposit Info:</span>
+                    <span className="font-semibold text-primary block uppercase tracking-wider text-nano">Direct Deposit Info:</span>
                     <div>
                       <span className="font-bold text-foreground">Bank Name:</span> Nabil Bank Ltd. (Sauraha Branch)
                     </div>
@@ -290,14 +290,14 @@ export default function BookingConfirmPage({ params }: PageProps) {
                     <div>
                       <span className="font-bold text-foreground">Account Number:</span> 01234567890123
                     </div>
-                    <span className="text-[10px] italic">Please transfer NPR {total.toLocaleString()} to this account. Upload your digital deposit screenshot slip.</span>
+                    <span className="text-micro font-medium text-primary-accent/90">Please deposit NPR {total.toLocaleString()} to this account. Enter the transaction reference below to verify.</span>
                   </div>
                 )}
 
                 {/* Submission Form */}
                 <form onSubmit={handlePaymentSubmit} className="flex flex-col gap-4">
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-[10px] text-muted font-bold uppercase tracking-wider">
+                    <label className="text-micro text-muted font-bold uppercase tracking-wider">
                       {paymentMethod === 'eSewa' ? '10-Digit eSewa txn ID' : 'Bank Reference Number'}
                     </label>
                     <input 
@@ -311,7 +311,7 @@ export default function BookingConfirmPage({ params }: PageProps) {
                   </div>
 
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-[10px] text-muted font-bold uppercase tracking-wider">Upload screenshot receipt (optional)</label>
+                    <label className="text-micro text-muted font-bold uppercase tracking-wider">Upload Receipt Screenshot (optional)</label>
                     <div className="relative border border-dashed border-border/80 hover:border-primary/50 bg-muted-light/60 p-4 rounded-xl text-center cursor-pointer transition-colors">
                       <input 
                         type="file" 
@@ -320,7 +320,7 @@ export default function BookingConfirmPage({ params }: PageProps) {
                         className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
                       />
                       <Upload className="h-5 w-5 text-muted/60 mx-auto mb-1" />
-                      <span className="text-[10px] text-muted font-medium block">
+                      <span className="text-micro text-muted font-medium block">
                         {screenshot ? 'Screenshot Attached ✓' : 'Drag & drop or browse image file'}
                       </span>
                     </div>
@@ -331,7 +331,7 @@ export default function BookingConfirmPage({ params }: PageProps) {
                     disabled={submitting || !txnId}
                     className="w-full bg-primary hover:bg-primary/95 text-primary-light py-2.5 rounded-xl font-semibold text-xs transition-all shadow-md mt-1 disabled:opacity-50"
                   >
-                    {submitting ? 'Verifying payment...' : `Submit NPR ${total.toLocaleString()} Verification`}
+                    {submitting ? 'Verifying payment...' : `Verify Payment of NPR ${total.toLocaleString()}`}
                   </button>
                 </form>
 

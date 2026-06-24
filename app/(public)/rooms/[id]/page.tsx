@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useApp } from '@/context/AppContext';
-import { ArrowLeft, Check, Calendar, Users, Coffee, Mail, Phone, User, AlertTriangle } from 'lucide-react';
+import { ArrowLeft, Check, Calendar, Users, Mail, Phone, User, AlertTriangle } from 'lucide-react';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -51,8 +51,8 @@ export default function RoomDetailPage({ params }: PageProps) {
   if (isLoaded && !roomType) {
     return (
       <div className="mx-auto max-w-7xl px-4 py-16 text-center">
-        <h2 className="text-2xl font-semibold mb-4">Room Type Not Found</h2>
-        <Link href="/" className="text-primary hover:underline flex items-center justify-center gap-1">
+        <h2 className="text-title-section mb-4">Room Type Not Found</h2>
+        <Link href="/" className="btn-luxury-link">
           <ArrowLeft className="h-4 w-4" /> Back to Home
         </Link>
       </div>
@@ -62,7 +62,7 @@ export default function RoomDetailPage({ params }: PageProps) {
   if (!roomType) {
     return (
       <div className="flex-1 flex items-center justify-center py-24">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-accent"></div>
       </div>
     );
   }
@@ -107,21 +107,22 @@ export default function RoomDetailPage({ params }: PageProps) {
   };
 
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 bg-background">
       {/* Back Button */}
       <Link 
-        href="/" 
-        className="inline-flex items-center gap-1 text-sm font-medium text-muted hover:text-foreground mb-6 transition-colors"
+        href="/rooms" 
+        className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-muted hover:text-foreground mb-8 transition-colors"
       >
-        <ArrowLeft className="h-4 w-4" /> Back to accommodations
+        <ArrowLeft className="h-4 w-4" /> Back to our rooms
       </Link>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
         
         {/* Left Column: Image Carousel & Room Info */}
-        <div className="lg:col-span-7 flex flex-col gap-6">
+        <div className="lg:col-span-7 flex flex-col gap-8">
+          
           {/* Main Gallery */}
-          <div className="relative h-96 w-full bg-muted-light rounded-3xl overflow-hidden border border-border">
+          <div className="relative h-[450px] w-full bg-muted-light rounded-[2rem] overflow-hidden border border-border shadow-md">
             <Image 
               src={roomType.photos[activePhoto] || roomType.photos[0]} 
               alt={roomType.name}
@@ -139,8 +140,8 @@ export default function RoomDetailPage({ params }: PageProps) {
                 <button 
                   key={i} 
                   onClick={() => setActivePhoto(i)}
-                  className={`relative h-20 w-28 rounded-xl overflow-hidden border-2 transition-all ${
-                    activePhoto === i ? 'border-primary' : 'border-border opacity-70 hover:opacity-100'
+                  className={`relative h-20 w-28 rounded-2xl overflow-hidden border-2 transition-all ${
+                    activePhoto === i ? 'border-primary-accent shadow-sm' : 'border-border opacity-70 hover:opacity-100'
                   }`}
                 >
                   <Image src={photo} alt="" fill className="object-cover" sizes="100px" />
@@ -150,22 +151,23 @@ export default function RoomDetailPage({ params }: PageProps) {
           )}
 
           {/* Description */}
-          <div className="border-b border-border pb-6">
-            <h1 className="text-3xl font-medium tracking-tight text-foreground mb-2">{roomType.name}</h1>
-            <p className="text-primary font-semibold text-lg">NPR {roomType.price.toLocaleString()} / night</p>
-            <p className="text-sm text-muted mt-4 leading-relaxed">{roomType.description}</p>
+          <div className="border-b border-border pb-8">
+            <h1 className="text-title-section mb-3">{roomType.name}</h1>
+            <p className="text-primary font-bold text-xl">NPR {roomType.price.toLocaleString()} <span className="text-sm font-normal text-muted">/ night</span></p>
+            <div className="editorial-line"></div>
+            <p className="text-sm sm:text-base text-muted mt-6 leading-relaxed">{roomType.description}</p>
           </div>
 
           {/* Amenities checklist */}
           <div>
-            <h2 className="text-xl font-medium text-foreground mb-4">What this room offers</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <h2 className="text-title-card mb-6">What is included in this room</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {roomType.amenities.map((amenity, i) => (
-                <div key={i} className="flex items-center gap-2 text-sm text-muted">
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary-light text-primary border border-primary-accent/40">
-                    <Check className="h-3 w-3" />
+                <div key={i} className="flex items-center gap-3 text-sm text-muted">
+                  <span className="flex h-6 w-6 items-center justify-center rounded-xl bg-primary-light text-primary border border-primary-accent/25">
+                    <Check className="h-3.5 w-3.5" />
                   </span>
-                  <span>{amenity}</span>
+                  <span className="font-medium text-foreground">{amenity}</span>
                 </div>
               ))}
             </div>
@@ -173,24 +175,22 @@ export default function RoomDetailPage({ params }: PageProps) {
         </div>
 
         {/* Right Column: Booking Widget Card */}
-        <div className="lg:col-span-5">
-          <div className="sticky top-24 bg-card border border-border rounded-3xl p-6 sm:p-8 shadow-xl flex flex-col gap-6">
+        <div className="lg:col-span-5 sticky top-24">
+          <div className="bg-card border border-border rounded-3xl p-6 sm:p-8 shadow-xl flex flex-col gap-6">
             
             {/* Header Availability Alert */}
-            <div className={`p-4 rounded-2xl flex gap-3 text-xs leading-relaxed border ${
-              isAvailable 
-                ? 'bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 border-emerald-500/20' 
-                : 'bg-red-500/10 text-red-800 dark:text-red-300 border-red-500/20'
+            <div className={`alert-luxury ${
+              isAvailable ? 'alert-luxury-success' : 'alert-luxury-danger'
             }`}>
-              <div className="mt-0.5">
-                <AlertTriangle className={`h-4 w-4 ${isAvailable ? 'text-emerald-600' : 'text-red-500'}`} />
+              <div className="mt-0.5 shrink-0">
+                <AlertTriangle className="h-4.5 w-4.5" />
               </div>
               <div>
-                <p className="font-semibold">{isAvailable ? 'Room is Available!' : 'Sold Out for these dates'}</p>
-                <p className="opacity-90 mt-0.5">
+                <p className="font-bold uppercase tracking-wider text-micro">{isAvailable ? 'Room is Available!' : 'Sold Out for these dates'}</p>
+                <p className="opacity-90 mt-1 leading-normal">
                   {isAvailable 
-                    ? `We currently have ${unitsLeft} unit${unitsLeft > 1 ? 's' : ''} of ${roomType.name} left.`
-                    : 'Please select another date range or try standard/normal rooms.'}
+                    ? `We have ${unitsLeft} room${unitsLeft > 1 ? 's' : ''} available for these dates.`
+                    : 'Please try selecting another date range or check our other rooms.'}
                 </p>
               </div>
             </div>
@@ -198,9 +198,9 @@ export default function RoomDetailPage({ params }: PageProps) {
             {/* Form */}
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
               <div className="grid grid-cols-2 gap-3">
-                <div className="flex flex-col gap-1">
-                  <label className="text-xs font-semibold text-muted uppercase tracking-wider flex items-center gap-1">
-                    <Calendar className="h-3.5 w-3.5 text-primary" /> Check-in
+                <div className="input-luxury-container">
+                  <label className="input-luxury-label">
+                    <Calendar className="h-3 w-3 text-primary-accent" /> Check-in
                   </label>
                   <input 
                     type="date" 
@@ -214,34 +214,34 @@ export default function RoomDetailPage({ params }: PageProps) {
                         setCheckOut(nextDay.toISOString().split('T')[0]);
                       }
                     }}
-                    className="bg-muted-light border border-border focus:border-primary focus:outline-none rounded-xl p-2.5 text-sm font-medium text-foreground w-full"
+                    className="input-luxury-field"
                     required
                   />
                 </div>
 
-                <div className="flex flex-col gap-1">
-                  <label className="text-xs font-semibold text-muted uppercase tracking-wider flex items-center gap-1">
-                    <Calendar className="h-3.5 w-3.5 text-primary" /> Check-out
+                <div className="input-luxury-container">
+                  <label className="input-luxury-label">
+                    <Calendar className="h-3 w-3 text-primary-accent" /> Check-out
                   </label>
                   <input 
                     type="date" 
                     value={checkOut}
                     min={checkIn}
                     onChange={(e) => setCheckOut(e.target.value)}
-                    className="bg-muted-light border border-border focus:border-primary focus:outline-none rounded-xl p-2.5 text-sm font-medium text-foreground w-full"
+                    className="input-luxury-field"
                     required
                   />
                 </div>
               </div>
 
-              <div className="flex flex-col gap-1">
-                <label className="text-xs font-semibold text-muted uppercase tracking-wider flex items-center gap-1">
-                  <Users className="h-3.5 w-3.5 text-primary" /> Guests
+              <div className="input-luxury-container">
+                <label className="input-luxury-label">
+                  <Users className="h-3 w-3 text-primary-accent" /> Guests
                 </label>
                 <select 
                   value={guests}
                   onChange={(e) => setGuests(Number(e.target.value))}
-                  className="bg-muted-light border border-border focus:border-primary focus:outline-none rounded-xl p-2.5 text-sm font-medium text-foreground w-full cursor-pointer"
+                  className="input-luxury-field cursor-pointer"
                 >
                   <option value={1}>1 Guest</option>
                   <option value={2}>2 Guests</option>
@@ -254,72 +254,81 @@ export default function RoomDetailPage({ params }: PageProps) {
 
               {/* Guest Details */}
               <div className="flex flex-col gap-3">
-                <h3 className="text-sm font-semibold text-foreground uppercase tracking-wider">Guest Information</h3>
+                <h3 className="text-xs font-bold text-foreground uppercase tracking-widest mb-1">Guest Information</h3>
                 
-                <div className="relative">
-                  <User className="absolute left-3 top-3 h-4 w-4 text-muted/60" />
+                <div className="input-luxury-container">
+                  <label className="input-luxury-label">
+                    <User className="h-3.5 w-3.5 text-primary-accent" /> Full Name
+                  </label>
                   <input 
                     type="text" 
-                    placeholder="Full Name"
+                    placeholder="Anil Gurung"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="bg-muted-light border border-border focus:border-primary focus:outline-none rounded-xl pl-10 pr-4 py-2.5 text-sm text-foreground w-full"
+                    className="input-luxury-field"
                     required
                   />
                 </div>
 
-                <div className="relative">
-                  <Phone className="absolute left-3 top-3 h-4 w-4 text-muted/60" />
+                <div className="input-luxury-container">
+                  <label className="input-luxury-label">
+                    <Phone className="h-3.5 w-3.5 text-primary-accent" /> Phone Number
+                  </label>
                   <input 
                     type="tel" 
-                    placeholder="Phone Number (e.g. 98XXXXXXXX)"
+                    placeholder="98XXXXXXXX"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    className="bg-muted-light border border-border focus:border-primary focus:outline-none rounded-xl pl-10 pr-4 py-2.5 text-sm text-foreground w-full"
+                    className="input-luxury-field"
                     required
                   />
                 </div>
 
-                <div className="relative">
-                  <Mail className="absolute left-3 top-3 h-4 w-4 text-muted/60" />
+                <div className="input-luxury-container">
+                  <label className="input-luxury-label">
+                    <Mail className="h-3.5 w-3.5 text-primary-accent" /> Email Address
+                  </label>
                   <input 
                     type="email" 
-                    placeholder="Email Address"
+                    placeholder="anil@gmail.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="bg-muted-light border border-border focus:border-primary focus:outline-none rounded-xl pl-10 pr-4 py-2.5 text-sm text-foreground w-full"
+                    className="input-luxury-field"
                     required
                   />
                 </div>
 
-                <textarea 
-                  placeholder="Special requests (e.g. twin beds, early check-in, dietary preferences)"
-                  value={notes}
-                  onChange={(e) => setNotes(e.target.value)}
-                  rows={2}
-                  className="bg-muted-light border border-border focus:border-primary focus:outline-none rounded-xl px-4 py-2.5 text-sm text-foreground w-full resize-none"
-                />
+                <div className="input-luxury-container">
+                  <label className="input-luxury-label">Special Requests / Message</label>
+                  <textarea 
+                    placeholder="Let us know if you need pick-up from Sauraha bus park, early check-in, or have dietary preferences."
+                    value={notes}
+                    onChange={(e) => setNotes(e.target.value)}
+                    rows={2}
+                    className="input-luxury-field resize-none h-12"
+                  />
+                </div>
               </div>
 
               {/* Pricing breakdown */}
               {isAvailable && (
-                <div className="bg-muted-light p-4 rounded-2xl flex flex-col gap-2 text-xs text-muted border border-border/60 mt-2">
+                <div className="bg-muted-light p-4 rounded-2xl flex flex-col gap-2.5 text-xs text-muted border border-border/60 mt-2">
                   <div className="flex justify-between">
                     <span>NPR {roomType.price.toLocaleString()} x {nights} night{nights > 1 ? 's' : ''}</span>
-                    <span className="font-medium text-foreground">NPR {subtotal.toLocaleString()}</span>
+                    <span className="font-bold text-foreground">NPR {subtotal.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Hotel Service Charge (10%)</span>
-                    <span className="font-medium text-foreground">NPR {serviceCharge.toLocaleString()}</span>
+                    <span className="font-bold text-foreground">NPR {serviceCharge.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>VAT (13%)</span>
-                    <span className="font-medium text-foreground">NPR {vat.toLocaleString()}</span>
+                    <span className="font-bold text-foreground">NPR {vat.toLocaleString()}</span>
                   </div>
                   <div className="h-px bg-border/80 my-1"></div>
-                  <div className="flex justify-between text-sm text-foreground font-semibold">
-                    <span>Total Amount</span>
-                    <span className="text-primary font-bold">NPR {total.toLocaleString()}</span>
+                  <div className="flex justify-between text-sm text-foreground font-bold">
+                    <span>Total Booking Cost</span>
+                    <span className="text-primary font-bold text-base">NPR {total.toLocaleString()}</span>
                   </div>
                 </div>
               )}
@@ -328,9 +337,9 @@ export default function RoomDetailPage({ params }: PageProps) {
               <button 
                 type="submit"
                 disabled={!isAvailable}
-                className="w-full bg-primary disabled:bg-muted disabled:cursor-not-allowed hover:bg-primary/95 text-primary-light py-3 rounded-xl font-medium text-sm transition-all shadow-md mt-2 flex items-center justify-center gap-1.5"
+                className="btn-luxury-primary w-full mt-2"
               >
-                <span>Reserve Room</span>
+                <span>Request Room Booking</span>
               </button>
             </form>
           </div>

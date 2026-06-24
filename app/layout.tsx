@@ -1,25 +1,32 @@
 import type { Metadata } from 'next';
-import { Geist } from 'next/font/google';
+import { Plus_Jakarta_Sans, Inter } from 'next/font/google';
 import './globals.css';
 import { AppProvider } from '@/context/AppContext';
 import { AuthProvider } from '@/context/AuthContext';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+const plusJakartaSans = Plus_Jakarta_Sans({
+  variable: '--font-heading',
   subsets: ['latin'],
+  display: 'swap',
+});
+
+const inter = Inter({
+  variable: '--font-sans',
+  subsets: ['latin'],
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
-  title: 'Motimahal Lodge | Hotel Booking & Room Service',
+  title: 'Motimahal Boutique Lodge | Sauraha, Chitwan',
   description:
-    'Book comfortable Deluxe, Standard, and Normal rooms at Motimahal Lodge in Sauraha, Chitwan. Order fresh Nepali Thali & Momo directly to your room.',
+    'Welcome to Motimahal Lodge in Sauraha. Experience warm Tharu hospitality, cozy cottage rooms, and authentic home-cooked Nepali kitchen meals right next to Chitwan National Park.',
 };
 
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${geistSans.variable} h-full antialiased`}>
+    <html lang="en" className={`${plusJakartaSans.variable} ${inter.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-primary-accent/30 selection:text-foreground">
         <AuthProvider>
           <AppProvider>{children}</AppProvider>

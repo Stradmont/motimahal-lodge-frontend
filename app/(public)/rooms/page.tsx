@@ -10,31 +10,33 @@ export default function RoomsPage() {
   const { roomTypes, isLoaded } = useApp();
 
   return (
-    <div className="flex flex-col flex-1">
+    <div className="flex flex-col flex-1 bg-background">
 
-      {/* Header */}
-      <section className="relative bg-hero text-primary-light py-16 px-4 sm:px-6 lg:px-8 flex flex-col justify-center items-center text-center overflow-hidden">
-        <div className="absolute inset-0 opacity-10 bg-[url('https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&q=80&w=1600')] bg-cover bg-center mix-blend-overlay" />
+      {/* Header Banner */}
+      <section className="banner-luxury">
+        <div className="absolute inset-0 opacity-5 bg-[url('https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&q=80&w=1600')] bg-cover bg-center mix-blend-overlay" />
+        
         <div className="relative max-w-3xl z-10">
-          <p className="text-[10px] uppercase tracking-[0.2em] text-white/50 mb-4 font-medium">
-            Sauraha · Chitwan National Park
-          </p>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight mb-3 text-white">
-            Rooms & Suites
+          <span className="badge-luxury mb-4">
+            <Sparkles className="h-3 w-3" /> Comfortable Sauraha Cottages
+          </span>
+          <h1 className="text-title-section mb-4">
+            Our Rooms
           </h1>
-          <p className="text-sm text-white/60 max-w-md mx-auto leading-relaxed">
-            From budget-friendly twin rooms to deluxe jungle-view suites — find the right fit for your stay.
+          <div className="editorial-line mx-auto"></div>
+          <p className="text-xs sm:text-sm text-muted max-w-md mx-auto leading-relaxed mt-4">
+            We offer clean, cozy, and budget-friendly cottage rooms in Sauraha. Each room is designed to stay naturally cool and looks out to our organic gardens.
           </p>
         </div>
       </section>
 
       {/* Room Listings */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 flex-1 w-full">
-        <div className="flex flex-col gap-10">
+      <section className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-20 flex-1 w-full">
+        <div className="flex flex-col gap-12">
           {isLoaded && roomTypes.map((room) => (
             <div
               key={room.id}
-              className="group bg-card border border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 grid grid-cols-1 lg:grid-cols-12"
+              className="group card-luxury grid grid-cols-1 lg:grid-cols-12"
             >
               {/* Photo */}
               <div className="relative h-64 sm:h-72 lg:h-auto lg:col-span-5 bg-muted-light overflow-hidden">
@@ -46,44 +48,44 @@ export default function RoomsPage() {
                   sizes="(max-width: 1024px) 100vw, 40vw"
                 />
                 {room.photos.length > 1 && (
-                  <span className="absolute bottom-3 left-3 bg-black/50 backdrop-blur-sm px-2.5 py-0.5 rounded-full text-[10px] font-medium text-white">
+                  <span className="absolute bottom-4 left-4 bg-card/95 backdrop-blur-sm px-3.5 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider text-foreground border border-border/40 shadow-sm">
                     {room.photos.length} Photos
                   </span>
                 )}
               </div>
 
               {/* Content */}
-              <div className="p-6 sm:p-8 lg:col-span-7 flex flex-col justify-between gap-5">
+              <div className="p-6 sm:p-10 lg:col-span-7 flex flex-col justify-between gap-6">
                 <div>
                   {/* Name & price */}
-                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 border-b border-border pb-4 mb-4">
+                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 border-b border-border pb-5 mb-5">
                     <div>
-                      <h2 className="text-xl font-semibold text-foreground group-hover:text-primary transition-colors">
+                      <h2 className="text-title-card group-hover:text-primary-accent transition-colors">
                         {room.name}
                       </h2>
-                      <div className="flex items-center gap-2 mt-1 text-xs text-muted">
-                        <Users className="h-3.5 w-3.5" />
+                      <div className="flex items-center gap-2 mt-2 text-xs text-muted font-medium">
+                        <Users className="h-3.5 w-3.5 text-primary-accent" />
                         <span>Max {room.id === 'deluxe' ? '4' : room.id === 'standard' ? '3' : '2'} Guests</span>
                         <span>&bull;</span>
-                        <span>{room.id === 'normal' ? 'Twin Beds' : room.id === 'standard' ? 'Queen Bed' : 'King Bed'}</span>
+                        <span className="capitalize">{room.id === 'normal' ? 'Twin Beds' : room.id === 'standard' ? 'Queen Bed' : 'King Bed'}</span>
                       </div>
                     </div>
                     <div className="text-left sm:text-right shrink-0">
-                      <span className="text-xl font-semibold text-primary">NPR {room.price.toLocaleString()}</span>
-                      <span className="text-[10px] block text-muted uppercase tracking-wider mt-0.5">per night</span>
+                      <span className="text-2xl font-bold text-primary">NPR {room.price.toLocaleString()}</span>
+                      <span className="text-[9px] block text-muted font-bold uppercase tracking-wider mt-0.5">per night</span>
                     </div>
                   </div>
 
-                  <p className="text-sm text-muted leading-relaxed mb-5">
+                  <p className="text-xs sm:text-sm text-muted leading-relaxed mb-6">
                     {room.description}
                   </p>
 
                   {/* Amenities */}
-                  <div className="flex flex-wrap gap-1.5">
+                  <div className="flex flex-wrap gap-2">
                     {room.amenities.map((amenity, i) => (
                       <span
                         key={i}
-                        className="text-[11px] px-2.5 py-0.5 rounded bg-muted-light text-muted border border-border/60"
+                        className="badge-tag-luxury"
                       >
                         {amenity}
                       </span>
@@ -92,12 +94,12 @@ export default function RoomsPage() {
                 </div>
 
                 {/* Footer action */}
-                <div className="border-t border-border pt-5">
+                <div className="border-t border-border pt-6 flex items-center justify-end">
                   <Link
                     href={`/rooms/${room.id}`}
-                    className="inline-flex items-center gap-1.5 bg-primary hover:bg-primary/90 text-primary-light py-2.5 px-6 rounded-xl font-medium text-sm transition-all"
+                    className="btn-luxury-primary"
                   >
-                    View & Book <ChevronRight className="h-4 w-4" />
+                    View Details & Book <ChevronRight className="h-4 w-4" />
                   </Link>
                 </div>
               </div>
@@ -107,28 +109,28 @@ export default function RoomsPage() {
       </section>
 
       {/* Footer strip */}
-      <section className="bg-muted-light border-t border-border py-12 px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-5xl grid grid-cols-1 sm:grid-cols-3 gap-8">
+      <section className="bg-primary-light/20 border-t border-border py-16 px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-5xl grid grid-cols-1 sm:grid-cols-3 gap-10">
           {[
             {
               icon: Clock,
-              title: '24 Hour Support',
-              desc: 'Our desk staff are ready at any hour to help with safari planning or room bookings.',
+              title: '24-Hour Sanctuary Helpdesk',
+              desc: 'Our lodge reception is open 24/7 to organize safari permits, boat bookings, or room adjustments.',
             },
             {
               icon: ShieldCheck,
-              title: 'Verified Payment',
-              desc: 'eSewa, bank transfer, or Pay at Hotel — all securely handled.',
+              title: 'Flexible & Secure Booking',
+              desc: 'Confirm online using standard reference tokens, with payment via eSewa or directly at check-out.',
             },
             {
               icon: Sparkles,
-              title: 'Authentic Chitwan',
-              desc: 'Steps from Sauraha tourist hubs, elephant crossings, and jungle tracks.',
+              title: 'Chitwan Heritage Stepway',
+              desc: 'Located at the peaceful edge of Sauraha town, with walking pathways leading directly into wildlife zones.',
             },
           ].map(({ icon: Icon, title, desc }) => (
-            <div key={title} className="flex gap-3 items-start">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                <Icon className="h-5 w-5" />
+            <div key={title} className="flex gap-4 items-start">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-card border border-border text-primary-accent shadow-sm">
+                <Icon className="h-5 w-5 stroke-[1.5]" />
               </span>
               <div>
                 <h4 className="text-sm font-semibold text-foreground mb-1">{title}</h4>
