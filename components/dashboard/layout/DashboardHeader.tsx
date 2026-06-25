@@ -269,10 +269,10 @@ export default function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
         </button>
       </div>
 
-      <div className="flex items-center gap-3 min-w-[40px] md:min-w-[120px] justify-end">
+      <div className="flex items-center gap-4 sm:gap-5 justify-end">
         {/* Guest Cottage verification status */}
         {role === 'guest' && (
-          <div className={`hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full text-micro font-bold border ${guestOk ? 'bg-primary-light text-primary border-primary/20' : 'bg-primary-accent/10 text-primary-accent border-primary-accent/20'
+          <div className={`hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-full text-micro font-bold border ${guestOk ? 'bg-primary-light text-primary border-primary/20' : 'bg-primary-accent/10 text-primary-accent border-primary-accent/20'
             }`}>
             <span className="h-2 w-2 rounded-full bg-current animate-pulse" />
             <span>{guestOk ? `Cottage ${currentRoomNumber} Active` : 'Awaiting Guest Stay Code'}</span>
@@ -312,7 +312,7 @@ export default function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
               <Bell className="h-4 w-4" />
             </button>
             {unreadCount > 0 && (
-              <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary-accent text-white text-nano font-bold border-2 border-card shadow-sm">
+              <span className="absolute -top-1.5 -right-1.5 flex h-4.5 w-4.5 items-center justify-center rounded-full bg-red-600 text-white text-[9px] font-bold border-2 border-card shadow-xs">
                 {unreadCount}
               </span>
             )}
