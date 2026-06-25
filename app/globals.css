@@ -411,4 +411,13 @@ body, p, span, label, input, select, textarea, button {
   border-bottom: 1px solid var(--border-color);
 }
 
+/* Ant Design Form Label Global Consistency */
+.ant-form-item .ant-form-item-label > label {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  color: var(--muted) !important;
+}
+
 

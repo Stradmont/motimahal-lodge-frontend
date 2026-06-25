@@ -17,9 +17,12 @@ interface DashboardContextValue {
 
   guestTab:      GuestTab;
   setGuestTab:   (t: GuestTab) => void;
+
+  isSearchOpen:  boolean;
+  setIsSearchOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-// ─── Context / hook ───────────────────────────────────────────────────────────
+// ─── Context / hook ───────────────────────────────────────────
 const DashboardContext = createContext<DashboardContextValue | null>(null);
 
 export function useDashboard() {
@@ -35,6 +38,7 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
   const [adminTab,   setAdminTab]   = useState<AdminTab>('bookings');
   const [kitchenTab, setKitchenTab] = useState<KitchenTab>('queue');
   const [guestTab,   setGuestTab]   = useState<GuestTab>('stay');
+  const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
 
   // Honour ?tab= deep-link on first load
   useEffect(() => {
@@ -47,7 +51,16 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <DashboardContext.Provider
-      value={{ adminTab, setAdminTab, kitchenTab, setKitchenTab, guestTab, setGuestTab }}
+      value={{
+        adminTab,
+        setAdminTab,
+        kitchenTab,
+        setKitchenTab,
+        guestTab,
+        setGuestTab,
+        isSearchOpen,
+        setIsSearchOpen
+      }}
     >
       {children}
     </DashboardContext.Provider>

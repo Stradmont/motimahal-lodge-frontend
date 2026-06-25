@@ -5,12 +5,11 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useApp } from '@/context/AppContext';
 import { useDashboard } from '@/context/DashboardContext';
-import AdminWorkspace from '@/components/dashboard/AdminWorkspace';
-import KitchenWorkspace from '@/components/dashboard/KitchenWorkspace';
-import GuestWorkspace from '@/components/dashboard/GuestWorkspace';
+import AdminView from '@/components/dashboard/views/AdminView';
+import KitchenView from '@/components/dashboard/views/KitchenView';
 
 export default function DashboardPage() {
-  const router       = useRouter();
+  const router = useRouter();
   const { user, isLoading: authLoading } = useAuth();
   const { adminTab, setAdminTab, kitchenTab, setKitchenTab, guestTab, setGuestTab } = useDashboard();
 
@@ -40,7 +39,7 @@ export default function DashboardPage() {
   // ── Admin ──────────────────────────────────────────────────────────────────
   if (user.role === 'admin') {
     return (
-      <AdminWorkspace
+      <AdminView
         bookings={bookings}
         roomTypes={roomTypes}
         orders={orders}
@@ -60,7 +59,7 @@ export default function DashboardPage() {
   // ── Kitchen ────────────────────────────────────────────────────────────────
   if (user.role === 'kitchen') {
     return (
-      <KitchenWorkspace
+      <KitchenView
         orders={orders}
         updateOrderStatus={updateOrderStatus}
         activeTab={kitchenTab}
@@ -69,23 +68,4 @@ export default function DashboardPage() {
     );
   }
 
-  // ── Guest ──────────────────────────────────────────────────────────────────
-  return (
-    <GuestWorkspace
-      currentBooking={currentBooking}
-      currentRoomNumber={currentRoomNumber}
-      loginGuest={loginGuest}
-      logoutGuest={logoutGuest}
-      orders={orders}
-      roomTypes={roomTypes}
-      foodItems={foodItems}
-      cart={cart}
-      addToCart={addToCart}
-      updateCartQuantity={updateCartQuantity}
-      removeFromCart={removeFromCart}
-      placeOrder={placeOrder}
-      activeTab={guestTab}
-      setActiveTab={setGuestTab}
-    />
-  );
 }

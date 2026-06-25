@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import DashboardSidebar from './DashboardSidebar';
 import DashboardHeader from './DashboardHeader';
+import CommandCenter from '@/components/dashboard/common/CommandCenter';
 import { useAuth } from '@/context/AuthContext';
 
 export default function DashboardShell({ children }: { children: React.ReactNode }) {
@@ -14,6 +15,9 @@ export default function DashboardShell({ children }: { children: React.ReactNode
 
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-background text-foreground">
+      {/* CommandCenter modal triggerable by search button or Ctrl+K */}
+      <CommandCenter />
+
       {/* ── Sidebar (handles desktop collapse and mobile drawer overlays) ── */}
       <DashboardSidebar
         collapsed={collapsed}

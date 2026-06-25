@@ -1,4 +1,4 @@
-import DashboardClientLayout from '@/components/dashboard/DashboardClientLayout';
+import DashboardClientLayout from '@/components/dashboard/layout/DashboardClientLayout';
 import { Suspense } from 'react';
 
 

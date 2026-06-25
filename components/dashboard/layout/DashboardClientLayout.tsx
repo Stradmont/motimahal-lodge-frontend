@@ -1,7 +1,7 @@
 'use client';
 
 import { DashboardProvider } from '@/context/DashboardContext';
-import DashboardShell from '@/components/dashboard/DashboardShell';
+import DashboardShell from './DashboardShell';
 
 /**
  * Client-side wrapper that wires the DashboardProvider (context)

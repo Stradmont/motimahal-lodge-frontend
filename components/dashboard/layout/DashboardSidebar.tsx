@@ -2,10 +2,11 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import {
   Compass, LogOut, Calendar, BedDouble, Coffee, BarChart3,
-  UtensilsCrossed, Check, User, Sparkles, ShoppingBag,
+  UtensilsCrossed, Check, User, ShoppingBag,
   ChevronLeft, ChevronRight, ArrowLeft, X
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
@@ -19,32 +20,30 @@ interface DashboardSidebarProps {
   setMobileOpen: (open: boolean) => void;
 }
 
-interface NavItem {
+interface NavConfigItem {
   key: string;
   label: string;
   icon: React.ElementType;
-  badge?: number;
+  role: 'admin' | 'kitchen' | 'guest';
+  badge?: (queue: number) => number | undefined;
+  requiresAuth?: boolean;
 }
 
-function getNavItems(role: string, guestAuthed: boolean, queue: number): NavItem[] {
-  if (role === 'admin') return [
-    { key: 'bookings', label: 'Reservations',    icon: Calendar },
-    { key: 'rooms',    label: 'Maintenance Log',  icon: BedDouble },
-    { key: 'orders',   label: 'Dining Orders',    icon: Coffee },
-    { key: 'reports',  label: 'Lodge Earnings',   icon: BarChart3 },
-  ];
-  if (role === 'kitchen') return [
-    { key: 'queue',     label: 'Active Cooking',  icon: UtensilsCrossed, badge: queue || undefined },
-    { key: 'completed', label: 'Served Meals',    icon: Check },
-  ];
-  if (role === 'guest' && guestAuthed) return [
-    { key: 'stay',      label: 'My Cottage Stay',  icon: User },
-    { key: 'orderFood', label: 'Order Food',       icon: Coffee },
-    { key: 'requests',  label: 'Housekeeping',     icon: Sparkles },
-    { key: 'orders',    label: 'Past Orders',      icon: ShoppingBag },
-  ];
-  return [];
-}
+const ALL_NAV_ITEMS: NavConfigItem[] = [
+  // Admin
+  { key: 'bookings', label: 'Reservations',    icon: Calendar, role: 'admin' },
+  { key: 'rooms',    label: 'Maintenance Log',  icon: BedDouble, role: 'admin' },
+  { key: 'orders',   label: 'Dining Orders',    icon: Coffee, role: 'admin' },
+  { key: 'reports',  label: 'Lodge Earnings',   icon: BarChart3, role: 'admin' },
+  // Kitchen
+  { key: 'queue',     label: 'Active Cooking',  icon: UtensilsCrossed, role: 'kitchen', badge: (queue) => queue || undefined },
+  { key: 'completed', label: 'Served Meals',    icon: Check, role: 'kitchen' },
+  // Guest
+  { key: 'stay',      label: 'My Cottage Stay',  icon: User, role: 'guest', requiresAuth: true },
+  { key: 'orderFood', label: 'Order Food',       icon: Coffee, role: 'guest', requiresAuth: true },
+  { key: 'requests',  label: 'Housekeeping',     icon: BedDouble, role: 'guest', requiresAuth: true },
+  { key: 'orders',    label: 'Past Orders',      icon: ShoppingBag, role: 'guest', requiresAuth: true },
+];
 
 export default function DashboardSidebar({
   collapsed,
@@ -62,7 +61,19 @@ export default function DashboardSidebar({
   const role = user.role;
   const queue = orders.filter(o => o.status !== 'Delivered' && o.status !== 'Cancelled').length;
   const guestOk = role === 'guest' && !!currentBooking;
-  const navItems = getNavItems(role, guestOk, queue);
+
+  const navItems = ALL_NAV_ITEMS
+    .filter(item => {
+      if (item.role !== role) return false;
+      if (item.role === 'guest' && item.requiresAuth && !guestOk) return false;
+      return true;
+    })
+    .map(item => ({
+      key: item.key,
+      label: item.label,
+      icon: item.icon,
+      badge: item.badge ? item.badge(queue) : undefined
+    }));
 
   const activeTab =
     role === 'admin' ? adminTab :
@@ -84,10 +95,10 @@ export default function DashboardSidebar({
 
   // Helper to resolve active tab styles by role
   const getActiveTabClass = (active: boolean) => {
-    if (!active) return 'text-muted hover:text-foreground hover:bg-muted-light/40';
-    if (role === 'admin') return 'bg-zinc-800 text-zinc-50 font-bold';
-    if (role === 'kitchen') return 'bg-primary-accent text-white font-bold';
-    return 'bg-primary-light text-primary font-bold';
+    if (!active) return 'text-muted hover:text-foreground hover:bg-muted-light/50 border-transparent font-medium';
+    if (role === 'admin') return 'bg-zinc-900 text-zinc-50 font-semibold border-zinc-800/80 shadow-xs';
+    if (role === 'kitchen') return 'bg-primary-accent text-white font-semibold border-primary-accent/15 shadow-sm';
+    return 'bg-primary-light text-primary font-semibold border-primary/10 shadow-xs';
   };
 
   return (
@@ -99,11 +110,18 @@ export default function DashboardSidebar({
         }`}
       >
         {/* Brand Header */}
-        <div className="flex items-center justify-between h-16 px-5 border-b border-border">
+        <div className={`flex items-center h-16 px-5 border-b border-border ${collapsed ? 'justify-center' : 'justify-between'}`}>
           <Link href="/" className="flex items-center gap-2.5 shrink-0 overflow-hidden">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-light">
-              <Compass className="h-4.5 w-4.5" />
-            </span>
+            <div className="relative h-9 w-9 shrink-0 rounded-xl overflow-hidden bg-white flex items-center justify-center border border-border/85 p-0.5 shadow-sm">
+              <Image
+                src="/logo.png"
+                alt="Motimahal Logo"
+                width={36}
+                height={36}
+                className="object-contain"
+                priority
+              />
+            </div>
             {!collapsed && (
               <div className="flex flex-col leading-tight">
                 <span className="text-sm font-bold tracking-tight text-foreground font-serif">Motimahal</span>
@@ -153,7 +171,7 @@ export default function DashboardSidebar({
                 key={item.key}
                 onClick={() => setActiveTab(item.key)}
                 title={collapsed ? item.label : undefined}
-                className={`relative flex items-center gap-3 rounded-xl text-xs transition-all cursor-pointer
+                className={`relative flex items-center gap-3 rounded-xl text-xs border transition-all duration-200 cursor-pointer
                   ${collapsed ? 'justify-center w-11 h-11 mx-auto' : 'px-4 py-2.5 w-full'}
                   ${getActiveTabClass(active)}`}
               >
@@ -174,30 +192,6 @@ export default function DashboardSidebar({
           })}
         </nav>
 
-        {/* Sidebar Footer */}
-        <div className={`border-t border-border p-4 flex flex-col gap-2 ${collapsed ? 'items-center' : ''}`}>
-          <Link
-            href="/"
-            className={`flex items-center gap-2 text-muted hover:text-foreground transition-colors text-xs font-semibold ${
-              collapsed ? 'justify-center w-9 h-9 bg-muted-light rounded-xl border border-border' : ''
-            }`}
-            title="Public Website"
-          >
-            <ArrowLeft className="h-4 w-4 shrink-0" />
-            {!collapsed && <span>Go to Website</span>}
-          </Link>
-
-          <button
-            onClick={handleLogout}
-            className={`flex items-center gap-2 text-primary-accent/80 hover:text-primary-accent transition-colors text-xs font-semibold cursor-pointer ${
-              collapsed ? 'justify-center w-9 h-9 bg-primary-accent/5 rounded-xl border border-primary-accent/10' : ''
-            }`}
-            title="Log Out"
-          >
-            <LogOut className="h-4 w-4 shrink-0" />
-            {!collapsed && <span>Log Out</span>}
-          </button>
-        </div>
       </aside>
 
       {/* ── Mobile Sidebar Drawer ── */}
@@ -210,10 +204,20 @@ export default function DashboardSidebar({
           <aside className="relative flex flex-col w-4/5 max-w-xs bg-card border-r border-border h-full p-5 gap-5 shadow-2xl">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5">
-                <span className="flex h-8.5 w-8.5 items-center justify-center rounded-xl bg-primary text-primary-light">
-                  <Compass className="h-4.5 w-4.5" />
-                </span>
-                <span className="text-sm font-bold font-serif">Motimahal Lodge</span>
+                <div className="relative h-9 w-9 shrink-0 rounded-xl overflow-hidden bg-white flex items-center justify-center border border-border/80 p-0.5 shadow-sm">
+                  <Image
+                    src="/logo.png"
+                    alt="Motimahal Logo"
+                    width={36}
+                    height={36}
+                    className="object-contain"
+                    priority
+                  />
+                </div>
+                <div className="flex flex-col leading-tight">
+                  <span className="text-sm font-bold tracking-tight text-foreground font-serif">Motimahal</span>
+                  <span className="text-nano tracking-wider uppercase text-primary font-bold">Sauraha, Chitwan</span>
+                </div>
               </div>
               <button
                 onClick={() => setMobileOpen(false)}
@@ -224,7 +228,7 @@ export default function DashboardSidebar({
             </div>
 
             {/* Mobile Nav items */}
-            <nav className="flex-1 flex flex-col gap-1 overflow-y-auto">
+            <nav className="flex-1 flex flex-col gap-1.5 overflow-y-auto">
               {navItems.map(item => {
                 const Icon = item.icon;
                 const active = activeTab === item.key;
@@ -232,7 +236,7 @@ export default function DashboardSidebar({
                   <button
                     key={item.key}
                     onClick={() => setActiveTab(item.key)}
-                    className={`flex items-center gap-3 rounded-xl px-4 py-3 text-xs transition-all cursor-pointer ${
+                    className={`flex items-center gap-3 rounded-xl px-4 py-3 text-xs border transition-all duration-200 cursor-pointer ${
                       getActiveTabClass(active)
                     }`}
                   >
@@ -249,20 +253,20 @@ export default function DashboardSidebar({
             </nav>
 
             {/* Mobile Footer */}
-            <div className="border-t border-border pt-4 flex flex-col gap-2">
+            <div className="border-t border-border pt-4 flex flex-col gap-1.5">
               <Link
                 href="/"
-                className="flex items-center gap-2 text-muted hover:text-foreground text-xs font-semibold py-1.5"
+                className="flex items-center gap-3 rounded-xl px-4 py-2.5 text-xs text-muted hover:text-foreground hover:bg-muted-light/50 transition-all border border-transparent"
                 onClick={() => setMobileOpen(false)}
               >
-                <ArrowLeft className="h-4 w-4 shrink-0" />
+                <ArrowLeft className="h-4.5 w-4.5 shrink-0" />
                 <span>Go to Website</span>
               </Link>
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-2 text-primary-accent/80 hover:text-primary-accent text-xs font-semibold py-1.5 cursor-pointer"
+                className="flex items-center gap-3 rounded-xl px-4 py-2.5 text-xs text-primary-accent/80 hover:text-primary-accent hover:bg-primary-accent/5 transition-all border border-transparent cursor-pointer"
               >
-                <LogOut className="h-4 w-4 shrink-0" />
+                <LogOut className="h-4.5 w-4.5 shrink-0" />
                 <span>Log Out</span>
               </button>
             </div>

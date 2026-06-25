@@ -5,24 +5,24 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useApp } from '@/context/AppContext';
 import {
-  Calendar, Users, Shield, CheckCircle2, ChevronRight,
-  Moon, Utensils, ArrowRight, Leaf, Coffee, Compass, Sparkles
+  Calendar, Users, CheckCircle2, ChevronRight,
+  ArrowRight, Utensils,
 } from 'lucide-react';
 
 export default function Home() {
   const { roomTypes, checkAvailability, getAvailableCount, isLoaded, foodItems } = useApp();
 
-  const getTodayStr = () => new Date().toISOString().split('T')[0];
+  const getTodayStr    = () => new Date().toISOString().split('T')[0];
   const getTomorrowStr = () => {
     const d = new Date();
     d.setDate(d.getDate() + 1);
     return d.toISOString().split('T')[0];
   };
 
-  const [checkIn, setCheckIn] = useState(getTodayStr());
-  const [checkOut, setCheckOut] = useState(getTomorrowStr());
-  const [guests, setGuests] = useState('2');
-  const [hasSearched, setHasSearched] = useState(false);
+  const [checkIn, setCheckIn]           = useState(getTodayStr);
+  const [checkOut, setCheckOut]         = useState(getTomorrowStr);
+  const [guests, setGuests]             = useState('2');
+  const [hasSearched, setHasSearched]   = useState(false);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,407 +36,352 @@ export default function Home() {
   return (
     <div className="flex flex-col flex-1 bg-background">
 
-      {/* ── HERO SECTION (Asymmetric Magazine Editorial Layout) ── */}
-      <section className="relative min-h-[85vh] flex items-center pt-20 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden bg-primary-light/35">
-        
-        {/* Soft decorative background elements */}
-        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary-accent/5 rounded-full blur-3xl -translate-y-1/2"></div>
-        <div className="absolute bottom-0 right-10 w-[400px] h-[400px] bg-primary/5 rounded-full blur-3xl translate-y-1/3"></div>
+      {/* ─────────────────────────────────────────────────────────
+          HERO
+          ───────────────────────────────────────────────────────── */}
+      <section className="px-4 sm:px-6 lg:px-8 pt-16 pb-20 bg-background">
+        <div className="mx-auto max-w-7xl">
 
-        <div className="mx-auto max-w-7xl w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
-          
-          {/* Left Column: Brand, Tagline, Booking Widget */}
-          <div className="lg:col-span-7 flex flex-col items-start text-left">
-            <span className="badge-luxury mb-6">
-              <Sparkles className="h-3 w-3" /> Atithi Devo Bhava · Guest is God
-            </span>
-            
-            <h1 className="text-title-hero mb-6">
-              A peaceful garden home on the edge of <span className="font-bold text-primary-accent">Chitwan's forest</span>
-            </h1>
-            
-            <p className="text-sm sm:text-base text-muted max-w-xl mb-8 leading-relaxed">
-              Namaste. Since 1998, our family has welcomed travelers to the quiet village of Sauraha. Inspired by traditional clay-walled cottages, Motimahal is a peaceful green space where you can listen to bird calls from the national park and watch the sunset over the Rapti River.
-            </p>
+          {/* Eyebrow line */}
+          <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-primary-accent mb-6">
+            Sauraha, Chitwan · Family-run since 1998
+          </p>
 
-            {/* Booking Widget Container */}
-            <div className="w-full max-w-2xl bg-card border border-border rounded-3xl p-5 sm:p-6 shadow-xl relative">
-              <form onSubmit={handleSearch} className="flex flex-col gap-4">
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  
-                  {/* Check-In */}
-                  <div className="input-luxury-container">
-                    <label className="input-luxury-label">
-                      <Calendar className="h-3.5 w-3.5 text-primary-accent" /> Check-In
-                    </label>
-                    <input
-                      type="date"
-                      value={checkIn}
-                      min={getTodayStr()}
-                      onChange={(e) => {
-                        setCheckIn(e.target.value);
-                        if (new Date(e.target.value) >= new Date(checkOut)) {
-                          const next = new Date(e.target.value);
-                          next.setDate(next.getDate() + 1);
-                          setCheckOut(next.toISOString().split('T')[0]);
-                        }
-                      }}
-                      className="input-luxury-field"
-                      required
-                    />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
+
+            {/* Left: copy */}
+            <div>
+              <h1 className="text-title-hero mb-6 text-foreground">
+                A quiet garden home<br />
+                near Chitwan's forest
+              </h1>
+              <p className="text-sm sm:text-[15px] text-muted leading-relaxed mb-8 max-w-md">
+                Namaste. Since 1998 our family has opened our garden home to travellers
+                from around the world. Motimahal is a simple, peaceful place in the
+                village of Sauraha. Three minutes from the Rapti River and five from
+                the national park gate.
+              </p>
+              <p className="text-xs text-primary-accent font-semibold tracking-[0.15em] uppercase">
+                अतिथि देवो भव
+              </p>
+
+              {/* Booking widget */}
+              <div className="mt-10 border border-border rounded-2xl bg-card p-5">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-muted mb-4">
+                  Check availability
+                </p>
+                <form onSubmit={handleSearch} className="flex flex-col gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div className="input-luxury-container">
+                      <label className="input-luxury-label">
+                        <Calendar className="h-3.5 w-3.5 text-primary-accent" /> Check-In
+                      </label>
+                      <input
+                        type="date"
+                        value={checkIn}
+                        min={getTodayStr()}
+                        onChange={(e) => {
+                          setCheckIn(e.target.value);
+                          if (new Date(e.target.value) >= new Date(checkOut)) {
+                            const next = new Date(e.target.value);
+                            next.setDate(next.getDate() + 1);
+                            setCheckOut(next.toISOString().split('T')[0]);
+                          }
+                        }}
+                        className="input-luxury-field"
+                        required
+                      />
+                    </div>
+                    <div className="input-luxury-container">
+                      <label className="input-luxury-label">
+                        <Calendar className="h-3.5 w-3.5 text-primary-accent" /> Check-Out
+                      </label>
+                      <input
+                        type="date"
+                        value={checkOut}
+                        min={checkIn}
+                        onChange={(e) => setCheckOut(e.target.value)}
+                        className="input-luxury-field"
+                        required
+                      />
+                    </div>
+                    <div className="input-luxury-container">
+                      <label className="input-luxury-label">
+                        <Users className="h-3.5 w-3.5 text-primary-accent" /> Guests
+                      </label>
+                      <select
+                        value={guests}
+                        onChange={(e) => setGuests(e.target.value)}
+                        className="input-luxury-field cursor-pointer"
+                      >
+                        {['1', '2', '3', '4'].map((n) => (
+                          <option key={n} value={n} className="bg-card text-foreground">
+                            {n} Guest{n !== '1' ? 's' : ''}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
-
-                  {/* Check-Out */}
-                  <div className="input-luxury-container">
-                    <label className="input-luxury-label">
-                      <Calendar className="h-3.5 w-3.5 text-primary-accent" /> Check-Out
-                    </label>
-                    <input
-                      type="date"
-                      value={checkOut}
-                      min={checkIn}
-                      onChange={(e) => setCheckOut(e.target.value)}
-                      className="input-luxury-field"
-                      required
-                    />
-                  </div>
-
-                  {/* Guests */}
-                  <div className="input-luxury-container">
-                    <label className="input-luxury-label">
-                      <Users className="h-3.5 w-3.5 text-primary-accent" /> Guests
-                    </label>
-                    <select
-                      value={guests}
-                      onChange={(e) => setGuests(e.target.value)}
-                      className="input-luxury-field cursor-pointer"
-                    >
-                      {['1', '2', '3', '4'].map((n) => (
-                        <option key={n} value={n} className="bg-card text-foreground">{n} Guest{n !== '1' ? 's' : ''}</option>
-                      ))}
-                    </select>
-                  </div>
-
-                </div>
-
-                <button
-                  type="submit"
-                  className="btn-luxury-primary w-full"
-                >
-                  Check Availability <ChevronRight className="h-4 w-4" />
-                </button>
-              </form>
+                  <button type="submit" className="btn-luxury-primary w-full cursor-pointer">
+                    Check Availability <ChevronRight className="h-4 w-4" />
+                  </button>
+                </form>
+              </div>
             </div>
-          </div>
 
-          {/* Right Column: Staggered Image Collage */}
-          <div className="lg:col-span-5 relative flex items-center justify-center mt-10 lg:mt-0">
-            <div className="relative w-full max-w-[400px] aspect-[4/5] rounded-[2rem] overflow-hidden border-[8px] border-card shadow-2xl">
+            {/* Right: single strong photo */}
+            <div className="relative aspect-[4/5] rounded-2xl overflow-hidden">
               <Image
-                src="https://images.unsplash.com/photo-1581850518616-bcb8077fa213?auto=format&fit=crop&q=80&w=800"
-                alt="Chitwan National Park Wilderness"
+                src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=900"
+                alt="Motimahal Lodge garden veranda"
                 fill
                 className="object-cover"
                 priority
+                sizes="(max-width: 1024px) 100vw, 50vw"
               />
-            </div>
-            
-            {/* Small overlapping image */}
-            <div className="absolute -bottom-8 -left-8 w-44 h-44 rounded-[1.5rem] overflow-hidden border-8 border-card shadow-xl hidden sm:block">
-              <Image
-                src="https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&q=80&w=400"
-                alt="Rapti River Crossing"
-                fill
-                className="object-cover"
-              />
+              <div className="absolute bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-black/50 to-transparent">
+                <p className="text-white/80 text-xs font-medium">Motimahal Lodge · Sauraha</p>
+              </div>
             </div>
 
-            {/* Local Badge */}
-            <div className="absolute -top-6 -right-6 bg-primary-accent text-white p-4 rounded-full shadow-lg hidden sm:flex flex-col items-center justify-center w-24 h-24 text-center leading-tight">
-              <span className="text-micro uppercase font-bold tracking-widest">Sauraha</span>
-              <span className="text-base font-bold">Local</span>
-              <span className="text-nano uppercase font-bold tracking-widest">Guide</span>
-            </div>
           </div>
-
         </div>
       </section>
 
-      {/* ── ROOMS & ACCOMMODATIONS ── */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24 w-full">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
-          <div>
-            <p className="text-subtitle-tag mb-3">Simple, Cool, & Quiet Spaces</p>
-            <h2 className="text-title-section">Our Cottage Rooms</h2>
-            <div className="editorial-line"></div>
+      {/* ─────────────────────────────────────────────────────────
+          ROOMS
+          ───────────────────────────────────────────────────────── */}
+      <section className="px-4 sm:px-6 lg:px-8 py-20 border-t border-border">
+        <div className="mx-auto max-w-7xl">
+
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-10 gap-4">
+            <div>
+              <p className="text-subtitle-tag mb-2">Where you'll stay</p>
+              <h2 className="text-title-section">Our Cottage Rooms</h2>
+              <div className="editorial-line" />
+            </div>
+            {hasSearched ? (
+              <div className="flex items-center gap-2 text-xs text-muted border border-border rounded-xl px-4 py-2 bg-card">
+                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
+                <span>{checkIn} → {checkOut}</span>
+                <button
+                  onClick={() => setHasSearched(false)}
+                  className="ml-1 text-primary-accent underline font-semibold cursor-pointer hover:opacity-75"
+                >
+                  Clear
+                </button>
+              </div>
+            ) : (
+              <Link href="/rooms" className="btn-luxury-link cursor-pointer shrink-0">
+                All rooms <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            )}
           </div>
 
-          {hasSearched ? (
-            <div className="alert-luxury alert-luxury-success items-center py-2.5">
-              <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
-              <span>Available for: <strong>{checkIn}</strong> to <strong>{checkOut}</strong></span>
-              <button
-                onClick={() => setHasSearched(false)}
-                className="ml-2 underline text-primary-accent hover:opacity-80 transition-opacity font-bold uppercase tracking-wider text-micro"
-              >
-                Clear
-              </button>
-            </div>
-          ) : (
-            <Link href="/rooms" className="btn-luxury-link">
-              Browse all sanctuaries <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
-          )}
-        </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {isLoaded && roomTypes.map((room) => {
+              const isAvailable    = checkAvailability(room.id, checkIn, checkOut);
+              const availableUnits = getAvailableCount(room.id, checkIn, checkOut);
+              return (
+                <div key={room.id} className="group flex flex-col border border-border rounded-2xl overflow-hidden bg-card hover:border-primary-accent transition-colors duration-300">
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {isLoaded && roomTypes.map((room) => {
-            const isAvailable = checkAvailability(room.id, checkIn, checkOut);
-            const availableUnits = getAvailableCount(room.id, checkIn, checkOut);
-
-            return (
-              <div key={room.id} className="group card-luxury">
-                
-                {/* Photo & badges */}
-                <div className="relative h-64 w-full overflow-hidden">
-                  <Image
-                    src={room.photos[0]}
-                    alt={room.name}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-700"
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                  />
-                  
-                  {/* Price Tag */}
-                  <div className="absolute top-4 left-4 bg-card/90 backdrop-blur-sm px-4 py-1.5 rounded-full text-xs font-bold text-foreground border border-border/40 shadow-sm">
-                    NPR {room.price.toLocaleString()} <span className="font-normal text-muted">/ night</span>
+                  {/* Photo */}
+                  <div className="relative h-56 overflow-hidden shrink-0">
+                    <Image
+                      src={room.photos[0]}
+                      alt={room.name}
+                      fill
+                      className="object-cover group-hover:scale-[1.03] transition-transform duration-700"
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                    />
+                    {hasSearched && (
+                      <span className={`absolute top-3 right-3 text-[10px] font-bold uppercase tracking-wide px-2.5 py-1 rounded-full ${
+                        isAvailable ? 'bg-emerald-600 text-white' : 'bg-red-600 text-white'
+                      }`}>
+                        {isAvailable ? `${availableUnits} left` : 'Full'}
+                      </span>
+                    )}
                   </div>
 
-                  {/* Availability Badge */}
-                  {hasSearched && (
-                    <div className={`absolute bottom-4 right-4 px-3 py-1 rounded-full text-micro uppercase tracking-wider font-bold shadow-md ${
-                      isAvailable ? 'bg-emerald-600 text-white' : 'bg-red-600 text-white'
-                    }`}>
-                      {isAvailable ? `${availableUnits} Rooms Left` : 'Sold Out'}
+                  {/* Content */}
+                  <div className="p-5 flex flex-col flex-1 gap-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <h3 className="text-sm font-bold text-foreground group-hover:text-primary-accent transition-colors leading-tight">
+                        {room.name}
+                      </h3>
+                      <span className="text-sm font-bold text-primary-accent shrink-0">
+                        NPR {room.price.toLocaleString()}
+                        <span className="text-[10px] font-normal text-muted">/night</span>
+                      </span>
                     </div>
-                  )}
-                </div>
 
-                {/* Info & CTA */}
-                <div className="p-6 sm:p-8 flex flex-col justify-between gap-6">
-                  <div>
-                    <h3 className="text-title-card group-hover:text-primary-accent transition-colors mb-2">
-                      {room.name}
-                    </h3>
-                    
-                    <p className="text-xs sm:text-sm text-muted leading-relaxed mb-5 line-clamp-2">
+                    <p className="text-xs text-muted leading-relaxed line-clamp-2 flex-1">
                       {room.description}
                     </p>
 
-                    {/* Clean bullet-free list of amenities */}
-                    <div className="flex flex-wrap gap-2">
-                      {room.amenities.slice(0, 4).map((a, i) => (
-                        <span key={i} className="badge-tag-luxury">
+                    <div className="flex flex-wrap gap-1.5 pt-1 border-t border-border/60">
+                      {room.amenities.slice(0, 3).map((a, i) => (
+                        <span key={i} className="text-[10px] font-semibold uppercase tracking-wide text-muted bg-muted-light px-2.5 py-1 rounded-lg">
                           {a}
                         </span>
                       ))}
-                      {room.amenities.length > 4 && (
-                        <span className="badge-luxury py-1">
-                          +{room.amenities.length - 4} more
+                      {room.amenities.length > 3 && (
+                        <span className="text-[10px] font-semibold text-muted-light/80 bg-muted px-2.5 py-1 rounded-lg">
+                          +{room.amenities.length - 3}
                         </span>
                       )}
                     </div>
-                  </div>
 
-                  <Link
-                    href={`/rooms/${room.id}?checkIn=${checkIn}&checkOut=${checkOut}&guests=${guests}`}
-                    className="btn-luxury-outline w-full text-center"
-                  >
-                    View Details & Book <ChevronRight className="h-4 w-4" />
-                  </Link>
+                    <Link
+                      href={`/rooms/${room.id}?checkIn=${checkIn}&checkOut=${checkOut}&guests=${guests}`}
+                      className="btn-luxury-outline w-full text-center cursor-pointer"
+                    >
+                      View & Book <ChevronRight className="h-4 w-4" />
+                    </Link>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       </section>
 
-      {/* ── NEW SECTION: CHITWAN EXPERIENCES (Storytelling) ── */}
-      <section className="bg-primary-light/40 border-y border-border py-24 px-4 sm:px-6 lg:px-8">
+      {/* ─────────────────────────────────────────────────────────
+          LODGE LIFE
+          ───────────────────────────────────────────────────────── */}
+      <section className="px-4 sm:px-6 lg:px-8 py-20 border-t border-border bg-primary-light/25">
         <div className="mx-auto max-w-7xl">
-          <div className="text-center max-w-2xl mx-auto mb-16">
-            <p className="text-subtitle-tag mb-3">Chitwan Through Local Eyes</p>
-            <h2 className="text-title-section">Jungle & Village Life</h2>
-            <div className="editorial-line mx-auto"></div>
-            <p className="text-sm text-muted mt-4">
-              We grew up walking these forest paths. We don't just book tours; we walk with you to introduce you to our neighbors in the Tharu village, and share the stories of the forest we call home.
-            </p>
-          </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              {
-                title: 'Jungle Walks',
-                desc: 'Explore the national park with our veteran local guides to spot the great one-horned rhino and wild deer.',
-                photo: 'https://images.unsplash.com/photo-1581850518616-bcb8077fa213?auto=format&fit=crop&q=80&w=400',
-              },
-              {
-                title: 'Rapti Canoe Rides',
-                desc: 'Drift down the Rapti River on a hand-carved wooden canoe as the sun dips below the jungle canopy, painting the water gold.',
-                photo: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&q=80&w=400',
-              },
-              {
-                title: 'Tharu Heritage',
-                desc: 'Walk through nearby villages where mud-and-clay houses are decorated with ancient geometric murals.',
-                photo: 'https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&q=80&w=400',
-              },
-              {
-                title: 'Living with Nature',
-                desc: 'We run our lodge consciously — using solar-heated water, composting organic waste, and serving vegetables from our garden.',
-                photo: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=400',
-              },
-            ].map((exp, idx) => (
-              <div key={idx} className="flex flex-col bg-card border border-border rounded-2xl overflow-hidden shadow-sm hover:border-primary-accent transition-colors">
-                <div className="relative h-44 w-full bg-muted-light">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+
+            {/* Left: copy */}
+            <div>
+              <p className="text-subtitle-tag mb-3">Life here</p>
+              <h2 className="text-title-section mb-4">Slow down. Be here.</h2>
+              <div className="editorial-line" />
+              <p className="text-sm text-muted leading-relaxed mt-5 mb-8">
+                Motimahal is not a resort. It's a family home with a garden. You wake up
+                to birdsong, have tea on your veranda, and walk three minutes to the
+                river. No rush, no itinerary. Just the quiet rhythms of Sauraha.
+              </p>
+
+              <div className="flex flex-col gap-5">
+                {[
+                  { label: 'Our garden & veranda', detail: 'Flowering plants, birds, morning tea.' },
+                  { label: 'Sauraha village',      detail: 'Tea shops, craft stalls, friendly faces.' },
+                  { label: 'Rapti riverside walk', detail: '3 minutes from our gate. Golden evenings.' },
+                  { label: 'Kitchen garden',       detail: 'Herbs, ginger, vegetables for every meal.' },
+                ].map(({ label, detail }) => (
+                  <div key={label} className="flex gap-3 items-start">
+                    <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-primary-accent shrink-0" />
+                    <div>
+                      <p className="text-xs font-bold text-foreground">{label}</p>
+                      <p className="text-xs text-muted mt-0.5">{detail}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right: 2×2 photo grid */}
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                { src: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=500', alt: 'Garden veranda', tall: true },
+                { src: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&q=80&w=500', alt: 'Rapti River', tall: false },
+                { src: 'https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&q=80&w=500', alt: 'Sauraha village', tall: false },
+                { src: 'https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?auto=format&fit=crop&q=80&w=500', alt: 'Kitchen garden', tall: true },
+              ].map((img, i) => (
+                <div key={i} className={`relative rounded-xl overflow-hidden ${i % 2 === 0 ? 'aspect-[3/4]' : 'aspect-square'}`}>
                   <Image
-                    src={exp.photo}
-                    alt={exp.title}
+                    src={img.src}
+                    alt={img.alt}
                     fill
-                    className="object-cover"
+                    className="object-cover hover:scale-[1.03] transition-transform duration-700"
+                    sizes="25vw"
                   />
                 </div>
-                <div className="p-6">
-                  <h4 className="text-title-card mb-2">{exp.title}</h4>
-                  <p className="text-xs text-muted leading-relaxed">{exp.desc}</p>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
+
           </div>
         </div>
       </section>
 
-      {/* ── FOOD & RESTAURANT ── */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-16 gap-6">
-          <div>
-            <p className="text-subtitle-tag mb-3">Ghar ko Khana</p>
-            <h2 className="text-title-section">Fresh Meals from Our Family Kitchen</h2>
-            <div className="editorial-line"></div>
+      {/* ─────────────────────────────────────────────────────────
+          FOOD
+          ───────────────────────────────────────────────────────── */}
+      <section className="border-t border-border">
+
+        {/* Full-width kitchen photo banner */}
+        <div className="relative h-[420px] sm:h-[500px] w-full overflow-hidden">
+          <Image
+            src="https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?auto=format&fit=crop&q=80&w=1800"
+            alt="Family kitchen at Motimahal Lodge"
+            fill
+            className="object-cover"
+            sizes="100vw"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-foreground/75 via-foreground/40 to-transparent" />
+          <div className="absolute inset-0 flex items-end px-4 sm:px-6 lg:px-8 pb-12">
+            <div className="max-w-7xl mx-auto w-full">
+              <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-primary-accent mb-3">
+                Ghar ko Khana
+              </p>
+              <h2 className="text-3xl sm:text-4xl font-bold text-white mb-3 leading-snug max-w-md">
+                Fresh meals from our family kitchen
+              </h2>
+              <p className="text-sm text-white/70 max-w-sm leading-relaxed mb-6">
+                Cooked daily from our garden and the Sauraha market.
+                Dal bhat, momos, saag, fresh pickle. Eat in the garden or order to your veranda.
+              </p>
+              <Link href="/food" className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary-accent text-white text-xs font-bold uppercase tracking-wider hover:bg-primary-accent/90 transition-colors cursor-pointer">
+                <Utensils className="h-3.5 w-3.5" /> View full menu
+              </Link>
+            </div>
           </div>
-          
-          <Link
-            href="/food"
-            className="btn-luxury-link"
-          >
-            <Utensils className="h-3.5 w-3.5" /> View Menu & Order
-          </Link>
         </div>
 
-        {/* Chalkboard Menu Card Teaser style layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch">
-          
-          {/* Left Column: Cozy Description Banner */}
-          <div className="lg:col-span-4 bg-primary text-primary-light rounded-3xl p-8 sm:p-10 flex flex-col justify-between gap-10 relative overflow-hidden">
-            {/* Background pattern */}
-            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?auto=format&fit=crop&q=80&w=600')] bg-cover bg-center opacity-10 mix-blend-overlay"></div>
-            
-            <div className="relative z-10">
-              <span className="text-micro uppercase font-bold tracking-widest text-primary-accent">Mitho Bhojan</span>
-              <h3 className="text-2xl sm:text-3xl font-bold mt-4 mb-4 text-white">Traditional home cooking style</h3>
-              <p className="text-xs text-primary-light/80 leading-relaxed font-normal">
-                We prepare everything fresh using vegetables from our kitchen garden and local markets. Sit in our garden for a hot plate of Thakali Dal Bhat with local greens (Saag) and fresh tomato pickle (Golbheda ko Achar).
-              </p>
-            </div>
-
-            <div className="relative z-10 border-t border-primary-light/20 pt-6">
-              <p className="text-xs text-primary-accent font-bold uppercase tracking-widest mb-2">Room Service</p>
-              <p className="text-mini text-primary-light/60">
-                Staying in our cottages? Type in your room number in the cart to order hot food directly to your veranda.
-              </p>
-            </div>
-          </div>
-
-          {/* Right Column: Chalkboard Menu List Grid */}
-          <div className="lg:col-span-8 bg-card border border-border rounded-3xl p-6 sm:p-8 flex flex-col justify-between">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
+        {/* Food items grid below the photo */}
+        <div className="px-4 sm:px-6 lg:px-8 py-12 bg-card border-b border-border">
+          <div className="mx-auto max-w-7xl">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-border rounded-2xl overflow-hidden border border-border">
               {isLoaded && featuredFood.map((item) => (
-                <div key={item.id} className="flex gap-4 items-start group">
+                <div key={item.id} className="flex items-center gap-4 bg-card px-5 py-4 hover:bg-muted-light/30 transition-colors group">
                   {item.image && (
-                    <div className="relative h-16 w-16 rounded-xl overflow-hidden shrink-0 border border-border">
+                    <div className="relative h-14 w-14 rounded-xl overflow-hidden shrink-0">
                       <Image
                         src={item.image}
                         alt={item.name}
                         fill
-                        className="object-cover group-hover:scale-105 transition-transform"
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"
                       />
                     </div>
                   )}
-                  
-                  <div className="flex-1 flex flex-col min-w-0">
-                    <div className="flex justify-between items-baseline gap-2">
-                      <h4 className="text-sm font-semibold text-foreground truncate group-hover:text-primary-accent transition-colors">
-                        {item.name}
-                      </h4>
-                      <span className="text-xs font-bold text-primary shrink-0">
-                        NPR {item.price}
-                      </span>
-                    </div>
-                    <p className="text-mini text-muted line-clamp-2 mt-1 leading-normal">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-foreground group-hover:text-primary-accent transition-colors truncate">
+                      {item.name}
+                    </p>
+                    <p className="text-[10px] text-muted mt-0.5 line-clamp-1 leading-relaxed">
                       {item.description}
+                    </p>
+                    <p className="text-xs font-bold text-primary-accent mt-1 tabular-nums">
+                      NPR {item.price}
                     </p>
                   </div>
                 </div>
               ))}
             </div>
 
-            <div className="mt-8 pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
-              <p className="text-xs text-muted font-medium">
-                Want to taste authentic local thali, momos, or fresh beverages?
-              </p>
-              <Link
-                href="/food"
-                className="btn-luxury-primary py-3.5 px-6 shrink-0"
-              >
-                Go to Ordering Desk <ArrowRight className="h-4 w-4" />
+            <div className="mt-6 text-center">
+              <Link href="/food" className="btn-luxury-outline inline-flex cursor-pointer">
+                Order from kitchen <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
-
           </div>
         </div>
       </section>
 
-      {/* ── WHY US & BADGES ── */}
-      <section className="bg-primary-light/20 border-t border-border py-16 px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl grid grid-cols-1 md:grid-cols-3 gap-10">
-          {[
-            {
-              icon: Shield,
-              title: 'Warm Nepalese Welcome',
-              desc: 'From a hot cup of masala tea when you arrive to helping you plan your day, we treat you like family.',
-            },
-            {
-              icon: Moon,
-              title: 'Steps from the Rapti River',
-              desc: 'We are located in a quiet green lane, just a 5-minute walk from the park entrance gate and river bank.',
-            },
-            {
-              icon: Leaf,
-              title: 'Honest, Fair Prices',
-              desc: 'Book directly with us online and pay easily via eSewa, bank transfer, or cash when you check in.',
-            },
-          ].map(({ icon: Icon, title, desc }) => (
-            <div key={title} className="flex gap-4 items-start">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-card border border-border text-primary-accent shadow-sm">
-                <Icon className="h-5 w-5 stroke-[1.5]" />
-              </span>
-              <div>
-                <h4 className="text-sm font-semibold text-foreground mb-1">{title}</h4>
-                <p className="text-xs text-muted leading-relaxed">{desc}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+   
 
     </div>
   );

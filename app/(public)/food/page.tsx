@@ -4,54 +4,45 @@ import React, { useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useApp } from '@/context/AppContext';
-import { 
-  Coffee, Utensils, Search, Plus, Minus, X, 
-  ShoppingBag, ArrowRight, UserCheck, Check, ChefHat, Clock3, Sparkles
+import {
+  Search, Plus, Minus, X,
+  ShoppingBag, ArrowRight, Check,
 } from 'lucide-react';
 
 export default function FoodMenuPage() {
-  const { 
-    currentBooking, currentRoomNumber, foodItems, cart, 
-    addToCart, updateCartQuantity, removeFromCart, placeOrder, isLoaded 
+  const {
+    currentBooking, currentRoomNumber, foodItems, cart,
+    addToCart, updateCartQuantity, removeFromCart, placeOrder, isLoaded,
   } = useApp();
   const cartPanelRef = useRef<HTMLDivElement | null>(null);
 
   const [activeCategory, setActiveCategory] = useState<string>('All');
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [orderSuccess, setOrderSuccess] = useState(false);
-  const [placedOrderId, setPlacedOrderId] = useState('');
-  const [customRoom, setCustomRoom] = useState('');
+  const [searchQuery, setSearchQuery]       = useState<string>('');
+  const [orderSuccess, setOrderSuccess]     = useState(false);
+  const [placedOrderId, setPlacedOrderId]   = useState('');
+  const [customRoom, setCustomRoom]         = useState('');
 
-  // Categories list
   const categories = ['All', 'Momo', 'Thali', 'Snacks', 'Beverages'];
 
-  // Filter items based on active category & search query
-  const filteredItems = foodItems.filter(item => {
+  const filteredItems = foodItems.filter((item) => {
     if (!item.isAvailable) return false;
-    
     const matchesCategory = activeCategory === 'All' || item.category === activeCategory;
-    const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          item.description.toLowerCase().includes(searchQuery.toLowerCase());
-    
+    const matchesSearch   = item.name.toLowerCase().includes(searchQuery.toLowerCase())
+                         || item.description.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
 
-  const cartTotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
-  const targetRoom = customRoom || currentRoomNumber || '101';
-  const cartItemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const cartTotal     = cart.reduce((t, i) => t + i.price * i.quantity, 0);
+  const targetRoom    = customRoom || currentRoomNumber || '101';
+  const cartItemCount = cart.reduce((s, i) => s + i.quantity, 0);
 
-  const scrollToCart = () => {
+  const scrollToCart = () =>
     cartPanelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
 
   const handlePlaceOrder = () => {
     if (cart.length === 0) return;
-    
     const order = placeOrder(targetRoom);
-    if (order) {
-      setPlacedOrderId(order.id);
-      setOrderSuccess(true);
-    }
+    if (order) { setPlacedOrderId(order.id); setOrderSuccess(true); }
   };
 
   const handleAddAndOrder = (item: (typeof foodItems)[number]) => {
@@ -67,299 +58,260 @@ export default function FoodMenuPage() {
 
   return (
     <div className="flex flex-col flex-1 bg-background">
-      
-      {/* ── HERO BANNER ── */}
-      <section className="banner-luxury">
-        <div
-          className="absolute inset-0 opacity-5 bg-[url('https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?auto=format&fit=crop&q=80&w=1600')]"
-        />
-        
-        <div className="relative max-w-3xl z-10">
-          <span className="badge-luxury mb-4">
-            <ChefHat className="h-3.5 w-3.5 text-primary-accent" /> Fresh Home Cooking
-          </span>
-          <h1 className="text-title-section mb-4">
-            Our Dining Desk
-          </h1>
-          <div className="editorial-line mx-auto"></div>
-          <p className="text-xs sm:text-sm text-muted max-w-md mx-auto leading-relaxed mt-4">
-            Enjoy fresh, hot meals prepared directly in our family kitchen. Dine at our garden tables, request veranda service, or order room service to your cottage.
+
+      {/* Page header */}
+      <div className="border-b border-border px-4 sm:px-6 lg:px-8 py-10 bg-card">
+        <div className="mx-auto max-w-7xl">
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary-accent mb-3">
+            Ghar ko Khana
           </p>
-
-          <div className="mt-8 flex flex-wrap gap-3 justify-center">
-            {currentBooking ? (
-              <>
-                <button
-                  onClick={scrollToCart}
-                  className="btn-luxury-primary flex items-center gap-2"
-                >
-                  View Reservation Cart <ArrowRight className="h-4 w-4" />
-                </button>
-                <Link
-                  href="#menu-grid"
-                  className="btn-luxury-outline"
-                >
-                  Browse Menu
-                </Link>
-              </>
-            ) : (
-              <Link
-                href="/portal"
-                className="btn-luxury-primary flex items-center gap-2"
-              >
-                Login to Order Room Service <ArrowRight className="h-4 w-4" />
-              </Link>
-            )}
-          </div>
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">
+            Our Food Menu
+          </h1>
+          <p className="text-sm text-muted max-w-lg leading-relaxed">
+            Everything is cooked fresh each day. Dine in the garden or order to your cottage veranda.
+          </p>
         </div>
-      </section>
+      </div>
 
-      {/* ── MAIN CONTENT ── */}
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 flex-1 w-full grid grid-cols-1 lg:grid-cols-12 gap-10" id="menu-grid">
-        
-        {/* Left side: Menu items */}
+      {/* Main */}
+      <div
+        className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 flex-1 w-full grid grid-cols-1 lg:grid-cols-12 gap-10"
+        id="menu-grid"
+      >
+
+        {/* Left: menu */}
         <div className="lg:col-span-8 flex flex-col gap-8">
-          
-          {/* Controls */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-between sm:items-center border-b border-border pb-6">
-            
+
+          {/* Filters */}
+          <div className="flex flex-col sm:flex-row gap-4 sm:items-center justify-between">
+
             {/* Category tabs */}
-            <div className="flex gap-2 overflow-x-auto pb-2 sm:pb-0 scrollbar-none flex-nowrap shrink-0">
-              {categories.map((category) => (
+            <div className="flex gap-2 overflow-x-auto scrollbar-none flex-nowrap">
+              {categories.map((cat) => (
                 <button
-                  key={category}
-                  onClick={() => setActiveCategory(category)}
-                  className={`px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all whitespace-nowrap ${
-                    activeCategory === category
-                      ? 'bg-primary text-primary-light shadow-sm'
-                      : 'bg-muted-light text-muted hover:text-foreground hover:bg-border/60'
+                  key={cat}
+                  onClick={() => setActiveCategory(cat)}
+                  className={`px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
+                    activeCategory === cat
+                      ? 'bg-primary text-primary-light'
+                      : 'bg-muted-light text-muted hover:text-foreground'
                   }`}
                 >
-                  {category}
+                  {cat}
                 </button>
               ))}
             </div>
 
             {/* Search */}
-            <div className="input-luxury-container !py-2 sm:w-64 w-full">
-              <div className="input-luxury-label">
-                <Search className="h-3.5 w-3.5 text-primary-accent" /> Search Menu
-              </div>
-              <input 
-                type="text" 
-                placeholder="Momo, Thali..."
+            <div className="relative sm:w-56">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted pointer-events-none" />
+              <input
+                type="text"
+                placeholder="Search dishes..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="input-luxury-field"
+                className="w-full pl-9 pr-3 py-2.5 text-xs bg-card border border-border rounded-xl text-foreground placeholder-muted focus:outline-none focus:border-primary-accent transition-colors"
               />
             </div>
           </div>
 
-          {/* Items Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {/* Items */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             {isLoaded && filteredItems.map((item) => (
-              <div 
-                key={item.id} 
-                className="group card-luxury flex flex-col"
+              <div
+                key={item.id}
+                className="group flex flex-col border border-border rounded-2xl overflow-hidden bg-card hover:border-primary-accent transition-colors duration-300"
               >
                 {/* Photo */}
-                <div className="relative h-52 w-full bg-muted-light overflow-hidden">
+                <div className="relative h-48 w-full overflow-hidden bg-muted-light shrink-0">
                   {item.image ? (
-                    <Image 
-                      src={item.image} 
-                      alt={item.name} 
-                      fill 
-                      className="object-cover group-hover:scale-105 transition-transform duration-700" 
+                    <Image
+                      src={item.image}
+                      alt={item.name}
+                      fill
+                      className="object-cover group-hover:scale-[1.03] transition-transform duration-700"
                       sizes="(max-width: 640px) 100vw, 300px"
                     />
                   ) : (
-                    <div className="h-full w-full flex items-center justify-center">
-                      <Coffee className="h-10 w-10 text-muted/30" />
+                    <div className="h-full flex items-center justify-center text-muted/20 text-xs">
+                      No photo
                     </div>
                   )}
-                  {/* Category */}
-                  <div className="absolute top-4 left-4 bg-card/95 backdrop-blur-sm px-3.5 py-1.5 rounded-full text-nano font-bold uppercase tracking-wider text-primary border border-border/40 shadow-sm">
+                  <span className="absolute top-3 left-3 text-[10px] font-semibold uppercase tracking-wide bg-card/90 text-muted px-2.5 py-1 rounded-full border border-border/50">
                     {item.category}
-                  </div>
+                  </span>
                 </div>
 
-                {/* Content */}
-                <div className="p-6 flex flex-col justify-between gap-5 flex-1">
-                  <div className="flex justify-between items-start gap-4">
-                    <h3 className="text-title-card group-hover:text-primary-accent transition-colors leading-snug">
+                {/* Info */}
+                <div className="p-5 flex flex-col flex-1 gap-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <h3 className="text-sm font-bold text-foreground group-hover:text-primary-accent transition-colors leading-snug">
                       {item.name}
                     </h3>
-                    <span className="text-sm font-bold text-primary shrink-0">
+                    <span className="text-sm font-bold text-primary shrink-0 tabular-nums">
                       NPR {item.price}
                     </span>
                   </div>
-
-                  <p className="text-xs text-muted leading-relaxed line-clamp-2">
+                  <p className="text-xs text-muted leading-relaxed line-clamp-2 flex-1">
                     {item.description}
                   </p>
 
-                  {/* Action Buttons */}
-                  {currentBooking ? (
-                    <div className="grid grid-cols-2 gap-3 mt-2 border-t border-border pt-4">
-                      <button 
-                        onClick={() => addToCart(item, 1)}
-                        className="w-full bg-muted-light hover:bg-muted text-muted font-bold py-3 rounded-xl text-micro uppercase tracking-wider transition-colors flex items-center justify-center gap-1 border border-border/40"
+                  {/* Actions */}
+                  <div className="pt-3 border-t border-border/60">
+                    {currentBooking ? (
+                      <div className="grid grid-cols-2 gap-2">
+                        <button
+                          onClick={() => addToCart(item, 1)}
+                          className="flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-muted-light text-muted text-xs font-semibold hover:bg-border/50 transition-colors cursor-pointer border border-border/40"
+                        >
+                          <Plus className="h-3.5 w-3.5" /> Add
+                        </button>
+                        <button
+                          onClick={() => handleAddAndOrder(item)}
+                          className="flex items-center justify-center py-2.5 rounded-xl bg-primary text-primary-light text-xs font-semibold hover:bg-primary/90 transition-colors cursor-pointer"
+                        >
+                          Order now
+                        </button>
+                      </div>
+                    ) : (
+                      <Link
+                        href="/portal"
+                        className="block w-full text-center py-2.5 rounded-xl bg-muted-light text-muted text-xs font-semibold hover:bg-border/50 transition-colors"
                       >
-                        <Plus className="h-3.5 w-3.5" /> Add to cart
-                      </button>
-                      <button 
-                        onClick={() => handleAddAndOrder(item)}
-                        className="w-full bg-primary hover:bg-primary/95 text-primary-light font-bold py-3 rounded-xl text-micro uppercase tracking-wider transition-colors flex items-center justify-center"
-                      >
-                        Order Now
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="mt-2 border-t border-border pt-4">
-                       <Link
-                         href="/portal"
-                         className="block w-full text-center bg-muted-light hover:bg-border/50 text-muted font-bold py-3 rounded-xl text-micro uppercase tracking-wider transition-colors"
-                       >
-                         Login to Order
-                       </Link>
-                    </div>
-                  )}
+                        Login to order
+                      </Link>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}
-            
+
             {isLoaded && filteredItems.length === 0 && (
-              <div className="col-span-full py-20 text-center text-sm text-muted flex flex-col items-center gap-4">
-                <Utensils className="h-10 w-10 text-muted/30" />
-                <p className="text-title-card text-lg">No dishes found</p>
-                <p className="text-xs text-muted max-w-xs mx-auto">Try refining your search terms or selecting another dining category.</p>
+              <div className="col-span-full py-20 text-center flex flex-col items-center gap-3">
+                <p className="text-sm font-semibold text-foreground">Nothing found</p>
+                <p className="text-xs text-muted">Try a different category or clear your search.</p>
               </div>
             )}
           </div>
         </div>
 
-        {/* Right side: Cart */}
+        {/* Right: cart / callout */}
         <div className="lg:col-span-4" ref={cartPanelRef}>
           {isLoaded && currentBooking ? (
-            <div className="bg-card border border-border rounded-3xl p-6 sm:p-8 shadow-xl flex flex-col gap-6 sticky top-24">
+            <div className="bg-card border border-border rounded-2xl p-5 flex flex-col gap-5 sticky top-24">
               {orderSuccess ? (
-                /* Success screen */
-                <div className="text-center py-10 flex flex-col items-center gap-5">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">
-                    <Check className="h-8 w-8" />
+                /* Success */
+                <div className="text-center py-10 flex flex-col items-center gap-4">
+                  <div className="h-14 w-14 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                    <Check className="h-7 w-7 text-emerald-600" />
                   </div>
                   <div>
-                    <h3 className="text-title-card">Order Placed Successfully!</h3>
-                    <p className="text-xs text-muted mt-2 leading-relaxed">
-                      We are preparing your food now for Room <strong>{targetRoom}</strong>. You can see its status on your guest screen.
+                    <p className="text-sm font-bold text-foreground">Order sent to kitchen</p>
+                    <p className="text-xs text-muted mt-1.5 leading-relaxed">
+                      Preparing for Room <strong>{targetRoom}</strong>. Check your guest screen for updates.
                     </p>
                   </div>
-                  <button 
+                  <button
                     onClick={handleResetSuccess}
-                    className="btn-luxury-primary w-full mt-4"
+                    className="btn-luxury-primary w-full cursor-pointer"
                   >
-                    Order More Food
+                    Order more
                   </button>
                 </div>
               ) : (
-                /* Cart details */
                 <>
+                  {/* Cart header */}
                   <div className="flex items-center justify-between border-b border-border pb-4">
                     <div className="flex items-center gap-2">
-                      <ShoppingBag className="h-5 w-5 text-primary-accent" />
-                      <h2 className="text-xs font-bold uppercase tracking-widest text-foreground">Your Selection</h2>
+                      <ShoppingBag className="h-4 w-4 text-primary-accent" />
+                      <h2 className="text-xs font-bold uppercase tracking-widest text-foreground">
+                        Your order
+                      </h2>
                     </div>
                     {cartItemCount > 0 && (
-                      <span className="text-micro bg-primary text-primary-light px-3 py-1 rounded-full font-bold">
-                        {cartItemCount} Items
+                      <span className="text-[10px] font-bold bg-primary text-primary-light px-2.5 py-1 rounded-full">
+                        {cartItemCount}
                       </span>
                     )}
                   </div>
 
                   {cart.length === 0 ? (
-                    <div className="text-center py-16 flex flex-col items-center gap-4">
-                      <ShoppingBag className="h-12 w-12 text-muted/20" />
-                      <p className="text-sm font-medium text-muted">Your order list is empty.</p>
-                      <p className="text-xs text-muted/70 max-w-xs mx-auto">Add some fresh momos, Thali sets, or a warm cup of masala tea to start your order!</p>
+                    <div className="text-center py-12 flex flex-col items-center gap-3">
+                      <ShoppingBag className="h-10 w-10 text-muted/20" />
+                      <p className="text-xs text-muted">Your order is empty.</p>
+                      <p className="text-[10px] text-muted/60">Add a dish from the menu.</p>
                     </div>
                   ) : (
                     <div className="flex flex-col gap-5">
-                      
-                      {/* Room delivery details */}
-                      <div className="input-luxury-container !flex-row !items-center !gap-3 !py-1.5">
-                        <span className="input-luxury-label shrink-0">Deliver to Room:</span>
-                        <input 
-                          type="text" 
+
+                      {/* Room input */}
+                      <div className="flex items-center gap-3 bg-muted-light rounded-xl px-4 py-3 border border-border/50">
+                        <span className="text-xs text-muted shrink-0">Room</span>
+                        <input
+                          type="text"
                           value={targetRoom}
                           onChange={(e) => setCustomRoom(e.target.value)}
-                          placeholder="Room #"
-                          className="input-luxury-field !w-16 !text-center font-bold"
+                          placeholder="101"
+                          className="flex-1 bg-transparent text-xs font-bold text-foreground focus:outline-none text-center"
                         />
                       </div>
 
-                      {/* Cart Items list */}
-                      <div className="flex flex-col gap-4 max-h-[280px] overflow-y-auto pr-2 scrollbar-thin">
+                      {/* Cart items */}
+                      <div className="flex flex-col gap-3 max-h-64 overflow-y-auto">
                         {cart.map((item) => (
-                          <div key={item.foodItemId} className="flex justify-between items-center gap-4 text-xs">
-                            <div className="flex-1 flex flex-col min-w-0">
-                              <span className="font-semibold text-foreground truncate">{item.name}</span>
-                              <span className="text-micro text-muted font-bold mt-0.5">NPR {item.price}</span>
+                          <div key={item.foodItemId} className="flex items-center gap-3 text-xs">
+                            <div className="flex-1 min-w-0">
+                              <p className="font-semibold text-foreground truncate">{item.name}</p>
+                              <p className="text-muted tabular-nums">NPR {item.price}</p>
                             </div>
-                            
-                            {/* Quantity selection pill */}
-                            <div className="flex items-center gap-2.5 bg-muted-light border border-border/50 px-2 py-1 rounded-xl shrink-0">
-                              <button 
+                            <div className="flex items-center gap-2 bg-card border border-border rounded-lg px-2 py-1 shrink-0">
+                              <button
                                 onClick={() => updateCartQuantity(item.foodItemId, item.quantity - 1)}
-                                className="text-muted hover:text-foreground hover:bg-border/60 rounded p-0.5 transition-colors"
+                                className="text-muted hover:text-foreground transition-colors cursor-pointer"
                               >
                                 <Minus className="h-3 w-3" />
                               </button>
-                              <span className="font-bold font-mono text-mini text-foreground w-4 text-center">{item.quantity}</span>
-                              <button 
+                              <span className="font-bold w-4 text-center tabular-nums">{item.quantity}</span>
+                              <button
                                 onClick={() => updateCartQuantity(item.foodItemId, item.quantity + 1)}
-                                className="text-muted hover:text-foreground hover:bg-border/60 rounded p-0.5 transition-colors"
+                                className="text-muted hover:text-foreground transition-colors cursor-pointer"
                               >
                                 <Plus className="h-3 w-3" />
                               </button>
                             </div>
-
-                            <button 
+                            <button
                               onClick={() => removeFromCart(item.foodItemId)}
-                              className="text-muted hover:text-red-500 shrink-0 p-1.5 transition-colors"
-                              title="Remove"
+                              className="text-muted hover:text-red-500 transition-colors cursor-pointer p-1"
                             >
-                              <X className="h-4 w-4" />
+                              <X className="h-3.5 w-3.5" />
                             </button>
                           </div>
                         ))}
                       </div>
 
-                      <div className="h-px bg-border my-1"></div>
-
-                      {/* Bill Details */}
-                      <div className="flex flex-col gap-2.5 text-xs text-muted">
-                        <div className="flex justify-between">
+                      {/* Bill */}
+                      <div className="border-t border-border pt-4 flex flex-col gap-2 text-xs">
+                        <div className="flex justify-between text-muted">
                           <span>Subtotal</span>
-                          <span className="font-bold text-foreground">NPR {cartTotal.toLocaleString()}</span>
+                          <span className="font-semibold text-foreground tabular-nums">NPR {cartTotal.toLocaleString()}</span>
                         </div>
-                        <div className="flex justify-between">
-                          <span>Veranda Delivery</span>
-                          <span className="font-bold text-emerald-600">Free</span>
+                        <div className="flex justify-between text-muted">
+                          <span>Room delivery</span>
+                          <span className="font-semibold text-emerald-600">Free</span>
                         </div>
-                        <div className="h-px bg-border/60 my-1"></div>
-                        <div className="flex justify-between text-sm text-foreground font-bold">
-                          <span>Total Cost</span>
-                          <span className="text-primary font-bold text-base">NPR {cartTotal.toLocaleString()}</span>
+                        <div className="flex justify-between text-sm font-bold text-foreground border-t border-border pt-2 mt-1">
+                          <span>Total</span>
+                          <span className="text-primary tabular-nums">NPR {cartTotal.toLocaleString()}</span>
                         </div>
                       </div>
 
-                      {/* Submit Order */}
-                      <button 
+                      <button
                         onClick={handlePlaceOrder}
                         disabled={cart.length === 0}
-                        className="btn-luxury-primary w-full mt-2"
+                        className="btn-luxury-primary w-full cursor-pointer"
                       >
-                        Send Order to Kitchen <ArrowRight className="h-4 w-4" />
+                        Send to kitchen <ArrowRight className="h-4 w-4" />
                       </button>
                     </div>
                   )}
@@ -367,41 +319,36 @@ export default function FoodMenuPage() {
               )}
             </div>
           ) : (
-            /* Portal callout advertisement */
-            <div className="bg-card border border-border rounded-3xl p-6 sm:p-8 shadow-xl flex flex-col gap-6 overflow-hidden sticky top-24">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -mr-10 -mt-10"></div>
-              
+            /* Not logged in */
+            <div className="bg-card border border-border rounded-2xl p-6 flex flex-col gap-5 sticky top-24">
               <div>
-                <p className="text-subtitle-tag mb-2">Veranda Dining</p>
-                <h3 className="text-title-card text-lg">
-                  Dine in Your Cottage
+                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary-accent mb-2">
+                  In-room dining
+                </p>
+                <h3 className="text-sm font-bold text-foreground mb-2">
+                  Order to your veranda
                 </h3>
-                <div className="editorial-line"></div>
-                <p className="text-xs sm:text-sm text-muted mt-4 leading-relaxed">
-                  Staying in one of our cottages? Log in with your booking code to order hot food directly to your veranda.
+                <p className="text-xs text-muted leading-relaxed">
+                  Staying with us? Log in with your booking code to order
+                  fresh food delivered hot to your cottage veranda.
                 </p>
               </div>
 
-              <div className="flex flex-col gap-4 text-xs text-muted">
+              <ul className="flex flex-col gap-2.5 text-xs text-muted">
                 {[
-                  { icon: ChefHat, text: 'Home-cooked local meals' },
-                  { icon: Clock3, text: 'Delivered hot to your cottage porch' },
-                  { icon: UserCheck, text: 'Paid at check-out or via eSewa' },
-                ].map((feature, idx) => (
-                  <div key={idx} className="flex items-center gap-3">
-                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary border border-primary-accent/10">
-                      <feature.icon className="h-4.5 w-4.5 text-primary" />
-                    </span>
-                    <span className="font-medium">{feature.text}</span>
-                  </div>
+                  'Home-cooked local meals',
+                  'Delivered to your cottage porch',
+                  'Pay via eSewa or at check-out',
+                ].map((t) => (
+                  <li key={t} className="flex items-center gap-2">
+                    <span className="h-1.5 w-1.5 rounded-full bg-primary-accent shrink-0" />
+                    {t}
+                  </li>
                 ))}
-              </div>
+              </ul>
 
-              <Link 
-                href="/portal" 
-                className="btn-luxury-primary w-full mt-2 text-center"
-              >
-                Go to Portal to Order <ArrowRight className="h-4 w-4" />
+              <Link href="/portal" className="btn-luxury-primary w-full text-center cursor-pointer">
+                Log in to order <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
           )}

@@ -2,21 +2,21 @@
 
 import React, { useState } from 'react';
 import { UtensilsCrossed, Clock, Check, Play, Printer, ShoppingBag, X } from 'lucide-react';
-import { Order } from '../../types';
+import { Order } from '@/types';
 
-interface KitchenWorkspaceProps {
+interface KitchenViewProps {
   orders: Order[];
   updateOrderStatus: (id: string, status: any) => void;
   activeTab: 'queue' | 'completed';
   setActiveTab: (tab: 'queue' | 'completed') => void;
 }
 
-export default function KitchenWorkspace({
+export default function KitchenView({
   orders,
   updateOrderStatus,
   activeTab,
   setActiveTab
-}: KitchenWorkspaceProps) {
+}: KitchenViewProps) {
   
   const [printTicket, setPrintTicket] = useState<Order | null>(null);
 

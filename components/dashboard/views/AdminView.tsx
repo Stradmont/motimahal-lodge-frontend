@@ -2,10 +2,10 @@
 
 import React, { useState } from 'react';
 import { Search, Plus, Calendar, BedDouble, Coffee, BarChart3, Image as ImageIcon, X, Trash2 } from 'lucide-react';
-import { Booking, RoomType, Order, MaintenanceBlock } from '../../types';
+import { Booking, RoomType, Order, MaintenanceBlock } from '@/types';
 import { Table, ConfigProvider } from 'antd';
 
-interface AdminWorkspaceProps {
+interface AdminViewProps {
   bookings: Booking[];
   roomTypes: RoomType[];
   orders: Order[];
@@ -20,7 +20,7 @@ interface AdminWorkspaceProps {
   setActiveTab: (tab: 'bookings' | 'rooms' | 'orders' | 'reports') => void;
 }
 
-export default function AdminWorkspace({
+export default function AdminView({
   bookings,
   roomTypes,
   orders,
@@ -33,7 +33,7 @@ export default function AdminWorkspace({
   deleteMaintenanceBlock,
   activeTab,
   setActiveTab
-}: AdminWorkspaceProps) {
+}: AdminViewProps) {
 
   // Search & Filter
   const [searchQuery, setSearchQuery] = useState('');
@@ -430,6 +430,7 @@ export default function AdminWorkspace({
                 dataSource={filteredBookings} 
                 columns={bookingsColumns} 
                 rowKey="id"
+                scroll={{ x: 'max-content' }}
                 pagination={{
                   pageSize: 10,
                   showSizeChanger: false,
@@ -513,6 +514,7 @@ export default function AdminWorkspace({
               dataSource={[...orders].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())} 
               columns={ordersColumns} 
               rowKey="id"
+              scroll={{ x: 'max-content' }}
               pagination={{
                 pageSize: 10,
                 showSizeChanger: false,
