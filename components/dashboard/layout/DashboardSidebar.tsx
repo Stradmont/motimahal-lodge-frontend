@@ -125,7 +125,7 @@ export default function DashboardSidebar({
             {!collapsed && (
               <div className="flex flex-col leading-tight">
                 <span className="text-sm font-bold tracking-tight text-foreground font-serif">Motimahal</span>
-                <span className="text-nano tracking-wider uppercase text-primary font-bold">Sauraha, Chitwan</span>
+                <span className="text-nano tracking-wider uppercase text-primary font-bold">Bharatpur, Chitwan</span>
               </div>
             )}
           </Link>
@@ -216,7 +216,7 @@ export default function DashboardSidebar({
                 </div>
                 <div className="flex flex-col leading-tight">
                   <span className="text-sm font-bold tracking-tight text-foreground font-serif">Motimahal</span>
-                  <span className="text-nano tracking-wider uppercase text-primary font-bold">Sauraha, Chitwan</span>
+                  <span className="text-nano tracking-wider uppercase text-primary font-bold">Bharatpur, Chitwan</span>
                 </div>
               </div>
               <button

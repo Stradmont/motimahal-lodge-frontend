@@ -301,7 +301,7 @@ export default function RoomDetailPage({ params }: PageProps) {
                 <div className="input-luxury-container">
                   <label className="input-luxury-label">Special Requests / Message</label>
                   <textarea 
-                    placeholder="Let us know if you need pick-up from Sauraha bus park, early check-in, or have dietary preferences."
+                    placeholder="Let us know if you need pick-up from Bharatpur Airport or Narayanghat station, early check-in, or have dietary preferences."
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
                     rows={2}

@@ -44,7 +44,7 @@ export default function Home() {
 
           {/* Eyebrow line */}
           <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-primary-accent mb-6">
-            Sauraha, Chitwan · Family-run since 1998
+            Bharatpur, Chitwan · Family-run since 2061 B.S.
           </p>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
@@ -56,10 +56,10 @@ export default function Home() {
                 near Chitwan's forest
               </h1>
               <p className="text-sm sm:text-[15px] text-muted leading-relaxed mb-8 max-w-md">
-                Namaste. Since 1998 our family has opened our garden home to travellers
-                from around the world. Motimahal is a simple, peaceful place in the
-                village of Sauraha. Three minutes from the Rapti River and five from
-                the national park gate.
+                Namaste. Our journey began in 2061 B.S. with Motimahal Hotel & Tandoori Restaurant,
+                built on warm family values and dedication. Today, Motimahal Lodge stands proudly
+                beside the Narayani River, offering comfortable stays, peaceful gardens, and
+                delicious food just 900 meters away.
               </p>
               <p className="text-xs text-primary-accent font-semibold tracking-[0.15em] uppercase">
                 अतिथि देवो भव
@@ -140,7 +140,7 @@ export default function Home() {
                 sizes="(max-width: 1024px) 100vw, 50vw"
               />
               <div className="absolute bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-black/50 to-transparent">
-                <p className="text-white/80 text-xs font-medium">Motimahal Lodge · Sauraha</p>
+                <p className="text-white/80 text-xs font-medium">Motimahal Lodge · Bharatpur</p>
               </div>
             </div>
 
@@ -246,67 +246,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ─────────────────────────────────────────────────────────
-          LODGE LIFE
-          ───────────────────────────────────────────────────────── */}
-      <section className="px-4 sm:px-6 lg:px-8 py-20 border-t border-border bg-primary-light/25">
-        <div className="mx-auto max-w-7xl">
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-
-            {/* Left: copy */}
-            <div>
-              <p className="text-subtitle-tag mb-3">Life here</p>
-              <h2 className="text-title-section mb-4">Slow down. Be here.</h2>
-              <div className="editorial-line" />
-              <p className="text-sm text-muted leading-relaxed mt-5 mb-8">
-                Motimahal is not a resort. It's a family home with a garden. You wake up
-                to birdsong, have tea on your veranda, and walk three minutes to the
-                river. No rush, no itinerary. Just the quiet rhythms of Sauraha.
-              </p>
-
-              <div className="flex flex-col gap-5">
-                {[
-                  { label: 'Our garden & veranda', detail: 'Flowering plants, birds, morning tea.' },
-                  { label: 'Sauraha village',      detail: 'Tea shops, craft stalls, friendly faces.' },
-                  { label: 'Rapti riverside walk', detail: '3 minutes from our gate. Golden evenings.' },
-                  { label: 'Kitchen garden',       detail: 'Herbs, ginger, vegetables for every meal.' },
-                ].map(({ label, detail }) => (
-                  <div key={label} className="flex gap-3 items-start">
-                    <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-primary-accent shrink-0" />
-                    <div>
-                      <p className="text-xs font-bold text-foreground">{label}</p>
-                      <p className="text-xs text-muted mt-0.5">{detail}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Right: 2×2 photo grid */}
-            <div className="grid grid-cols-2 gap-3">
-              {[
-                { src: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=500', alt: 'Garden veranda', tall: true },
-                { src: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&q=80&w=500', alt: 'Rapti River', tall: false },
-                { src: 'https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&q=80&w=500', alt: 'Sauraha village', tall: false },
-                { src: 'https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?auto=format&fit=crop&q=80&w=500', alt: 'Kitchen garden', tall: true },
-              ].map((img, i) => (
-                <div key={i} className={`relative rounded-xl overflow-hidden ${i % 2 === 0 ? 'aspect-[3/4]' : 'aspect-square'}`}>
-                  <Image
-                    src={img.src}
-                    alt={img.alt}
-                    fill
-                    className="object-cover hover:scale-[1.03] transition-transform duration-700"
-                    sizes="25vw"
-                  />
-                </div>
-              ))}
-            </div>
-
-          </div>
-        </div>
-      </section>
-
+    
       {/* ─────────────────────────────────────────────────────────
           FOOD
           ───────────────────────────────────────────────────────── */}
@@ -331,8 +271,8 @@ export default function Home() {
                 Fresh meals from our family kitchen
               </h2>
               <p className="text-sm text-white/70 max-w-sm leading-relaxed mb-6">
-                Cooked daily from our garden and the Sauraha market.
-                Dal bhat, momos, saag, fresh pickle. Eat in the garden or order to your veranda.
+                Fresh ingredients cooked daily from our garden and the local market.
+                Enjoy our famous tandoori dishes, dal bhat, momos, and fresh local pickles.
               </p>
               <Link href="/food" className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary-accent text-white text-xs font-bold uppercase tracking-wider hover:bg-primary-accent/90 transition-colors cursor-pointer">
                 <Utensils className="h-3.5 w-3.5" /> View full menu

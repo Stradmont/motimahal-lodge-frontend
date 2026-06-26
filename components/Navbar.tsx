@@ -13,6 +13,7 @@ import LogoutConfirmationModal from '@/components/LogoutConfirmationModal';
 
 const NAV_LINKS = [
   { href: '/',        label: 'Home' },
+  { href: '/about',   label: 'About Us' },
   { href: '/rooms',   label: 'Rooms' },
   { href: '/food',    label: 'Food Menu' },
   { href: '/contact', label: 'Contact' },

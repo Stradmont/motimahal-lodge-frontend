@@ -20,8 +20,8 @@ export default function Footer() {
                 className="object-contain brightness-0 invert opacity-90"
               />
             <p className="text-xs text-white/55 leading-relaxed max-w-xs">
-              A family-run lodge in Sauraha, Chitwan. Simple rooms, home-cooked
-              meals, and a quiet garden. Three minutes from the Rapti River.
+              A family-run lodge in Bharatpur, Chitwan. Comfortable rooms, tandoori cuisine,
+              and a peaceful riverside sanctuary near the beautiful Narayani River.
             </p>
           </div>
 
@@ -33,6 +33,7 @@ export default function Footer() {
             <ul className="flex flex-col gap-2">
               {[
                 { href: '/',        label: 'Home' },
+                { href: '/about',   label: 'About Us' },
                 { href: '/rooms',   label: 'Rooms' },
                 { href: '/food',    label: 'Food Menu' },
                 { href: '/contact', label: 'Contact' },
@@ -58,7 +59,7 @@ export default function Footer() {
               <li className="flex items-start gap-2.5">
                 <MapPin className="h-3.5 w-3.5 text-primary-accent shrink-0 mt-0.5" />
                 <span className="text-xs text-white/55 leading-relaxed">
-                  Sauraha, Chitwan, Nepal
+                  New Road, Bharatpur, Chitwan, Nepal
                 </span>
               </li>
               <li className="flex items-start gap-2.5">
@@ -76,7 +77,7 @@ export default function Footer() {
 
         <div className="border-t border-white/10 pt-8 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-[10px] text-white/30">
-            © {new Date().getFullYear()} Motimahal Lodge · Sauraha, Chitwan
+            © {new Date().getFullYear()} Motimahal Lodge · Bharatpur, Chitwan
           </p>
           <p className="text-[10px] text-white/20">
             अतिथि देवो भव

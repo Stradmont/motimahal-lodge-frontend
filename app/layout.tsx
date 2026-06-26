@@ -17,9 +17,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'Motimahal Boutique Lodge | Sauraha, Chitwan',
+  title: 'Motimahal Lodge & Restaurant | Bharatpur, Chitwan',
   description:
-    'Welcome to Motimahal Lodge in Sauraha. Experience warm Tharu hospitality, cozy cottage rooms, and authentic home-cooked Nepali kitchen meals right next to Chitwan National Park.',
+    'Welcome to Motimahal Lodge & Restaurant in Bharatpur, Chitwan. Experience warm family hospitality, comfortable rooms, and authentic tandoori cuisine near the beautiful Narayani River.',
 };
 
 export default function RootLayout({

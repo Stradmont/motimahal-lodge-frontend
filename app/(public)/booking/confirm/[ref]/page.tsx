@@ -234,7 +234,7 @@ export default function BookingConfirmPage({ params }: PageProps) {
                 </div>
                 <h4 className="font-semibold text-foreground text-sm">Payment Confirmed!</h4>
                 <p className="text-mini text-muted max-w-xs leading-relaxed">
-                  Thank you! We have received your payment. Your booking is now confirmed, and we look forward to welcoming you to Sauraha.
+                  Thank you! We have received your payment. Your booking is now confirmed, and we look forward to welcoming you to Motimahal Lodge.
                 </p>
                 <Link 
                   href="/dashboard?role=guest"
@@ -282,7 +282,7 @@ export default function BookingConfirmPage({ params }: PageProps) {
                   <div className="bg-primary-light/50 border border-primary-accent/40 p-4 rounded-2xl flex flex-col gap-2 text-xs text-muted leading-relaxed">
                     <span className="font-semibold text-primary block uppercase tracking-wider text-nano">Direct Deposit Info:</span>
                     <div>
-                      <span className="font-bold text-foreground">Bank Name:</span> Nabil Bank Ltd. (Sauraha Branch)
+                      <span className="font-bold text-foreground">Bank Name:</span> Nabil Bank Ltd. (Bharatpur Branch)
                     </div>
                     <div>
                       <span className="font-bold text-foreground">Account Name:</span> Motimahal Lodge Pvt. Ltd.

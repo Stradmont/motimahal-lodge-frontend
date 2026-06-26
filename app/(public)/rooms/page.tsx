@@ -18,14 +18,14 @@ export default function RoomsPage() {
         
         <div className="relative max-w-3xl z-10">
           <span className="badge-luxury mb-4">
-            <Sparkles className="h-3 w-3" /> Comfortable Sauraha Cottages
+            <Sparkles className="h-3 w-3" /> Comfortable Riverside Rooms
           </span>
           <h1 className="text-title-section mb-4">
             Our Rooms
           </h1>
           <div className="editorial-line mx-auto"></div>
           <p className="text-xs sm:text-sm text-muted max-w-md mx-auto leading-relaxed mt-4">
-            We offer clean, cozy, and budget-friendly cottage rooms in Sauraha. Each room is designed to stay naturally cool and looks out to our organic gardens.
+            We offer clean, cozy, and comfortable rooms in Bharatpur, near the beautiful Narayani River. Each room is designed to stay naturally cool and looks out to our gardens.
           </p>
         </div>
       </section>
@@ -124,8 +124,8 @@ export default function RoomsPage() {
             },
             {
               icon: Sparkles,
-              title: 'Chitwan Heritage Stepway',
-              desc: 'Located at the peaceful edge of Sauraha town, with walking pathways leading directly into wildlife zones.',
+              title: 'Narayani River Access',
+              desc: 'Located near the beautiful Narayani River, with easy access to central Pulchowk and Narayanghat.',
             },
           ].map(({ icon: Icon, title, desc }) => (
             <div key={title} className="flex gap-4 items-start">

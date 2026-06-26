@@ -44,7 +44,7 @@ export default function ContactPage() {
           </h1>
           <div className="editorial-line mx-auto"></div>
           <p className="text-xs sm:text-sm text-muted max-w-xl mx-auto leading-relaxed mt-4">
-            Have questions about cottage availability, jeep safaris, or finding the lodge? Send us a message, and we will get back to you personally.
+            Have questions about room availability, dining at our restaurant, or finding the lodge? Send us a message, and we will get back to you personally.
           </p>
         </div>
       </section>
@@ -69,8 +69,8 @@ export default function ContactPage() {
                 </span>
                 <div>
                   <h4 className="text-[10px] font-bold text-muted uppercase tracking-wider">Our Address</h4>
-                  <p className="text-sm font-semibold text-foreground mt-0.5">Sauraha, Chitwan, Nepal</p>
-                  <p className="text-xs text-muted mt-0.5">Adjacent to Chitwan National Park Entrance Gate</p>
+                  <p className="text-sm font-semibold text-foreground mt-0.5">New Road, Bharatpur, Chitwan, Nepal</p>
+                  <p className="text-xs text-muted mt-0.5">Beside the Narayani River, 900 meters from Pulchowk</p>
                 </div>
               </div>
 
@@ -102,21 +102,21 @@ export default function ContactPage() {
           <div className="card-luxury p-6 sm:p-8 flex flex-col gap-5">
             <h2 className="text-title-card border-b border-border pb-3 flex items-center gap-2">
               <Map className="h-5 w-5 text-primary-accent" />
-              <span>Getting to Sauraha</span>
+              <span>Getting to Bharatpur</span>
             </h2>
 
             <div className="flex flex-col gap-5">
               <div className="flex gap-3">
                 <Bus className="h-4.5 w-4.5 text-primary shrink-0 mt-0.5" />
                 <div className="text-xs leading-relaxed text-muted">
-                  <span className="font-bold text-foreground block mb-0.5">By Tourist Bus:</span> Tourist buses leave Kathmandu (Sorhakhutte) and Pokhara (Lakeside) every morning at 7:00 AM. The journey takes about 6-7 hours to reach Sauraha. Let us know your bus company, and we will pick you up from Sauraha bus park for free!
+                  <span className="font-bold text-foreground block mb-0.5">By Tourist Bus:</span> Tourist buses leave Kathmandu (Sorhakhutte) and Pokhara (Lakeside) every morning at 7:00 AM. The journey takes about 5-6 hours to reach Narayanghat / Bharatpur. Let us know your bus company, and we can arrange pick-up from the station!
                 </div>
               </div>
 
               <div className="flex gap-3">
                 <Plane className="h-4.5 w-4.5 text-primary shrink-0 mt-0.5" />
                 <div className="text-xs leading-relaxed text-muted">
-                  <span className="font-bold text-foreground block mb-0.5">By Domestic Flight:</span> You can take a quick 25-minute flight from Kathmandu to Bharatpur Airport. From there, it is a 30-minute taxi ride to our lodge in Sauraha. We can also arrange a private car to pick you up.
+                  <span className="font-bold text-foreground block mb-0.5">By Domestic Flight:</span> You can take a quick 25-minute flight from Kathmandu to Bharatpur Airport. From there, it is just a 10-minute taxi ride to our lodge in New Road. Let us know, and we can arrange a pickup.
                 </div>
               </div>
 
@@ -225,9 +225,9 @@ export default function ContactPage() {
           {/* Map Card */}
           <div className="bg-card border border-border rounded-3xl overflow-hidden shadow-sm flex flex-col h-80">
             <iframe 
-              src="https://www.openstreetmap.org/export/embed.html?bbox=84.475%2C27.568%2C84.495%2C27.585&amp;layer=mapnik&amp;marker=27.5768%2C84.4852"
+              src="https://www.openstreetmap.org/export/embed.html?bbox=84.407%2C27.688%2C84.427%2C27.705&amp;layer=mapnik&amp;marker=27.6975%2C84.4172"
               className="w-full h-full border-0 select-none"
-              title="Motimahal Lodge location in Sauraha, Chitwan, Nepal"
+              title="Motimahal Lodge location in Bharatpur, Chitwan, Nepal"
             ></iframe>
           </div>
         </div>
