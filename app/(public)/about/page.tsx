@@ -3,160 +3,151 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { 
-  Heart, Waves, Compass, Sparkles, Building2, MapPin, 
-  UtensilsCrossed, Calendar, Check, ArrowRight 
-} from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 export default function AboutPage() {
   const timelineMilestones = [
     {
-      year: '2061 B.S.',
-      title: 'The Journey Begins',
-      description: 'Our founder opened the original Motimahal Hotel & Tandoori Restaurant with a simple mission: to serve delicious tandoori cuisine, provide genuine hospitality, and build a welcoming community space like family.'
+      year: '2061 B.S. (2004 A.D.)',
+      title: 'Beginning with Tandoori',
+      description: 'Our founder opened the original Motimahal Hotel & Tandoori Restaurant at Pulchowk. The mission was simple: serve delicious food, treat guests like family, and build a trusted name for hospitality in Bharatpur.'
     },
     {
-      year: '2069 B.S.',
-      title: 'A Vision Architected',
-      description: 'Seeing travelers and families struggle to find peaceful, high-quality stays in Narayanghat, our founder designed our family home. It was thoughtfully structured from day one with the blueprint of a future guest house and lodge.'
+      year: '2069 B.S. (2012 A.D.)',
+      title: 'A House Designed for Guests',
+      description: 'With travelers and visiting families struggling to find a comfortable and quiet place to stay in Narayanghat, our founder designed our family home. Long before it became reality, the building was structured to one day serve as a lodge.'
     },
     {
-      year: 'The Transition',
-      title: 'Commitment & Rebuilding',
-      description: 'Turning the dream into reality required patience. Years of careful planning, requesting long-term tenants to relocate, and major renovations followed to rebuild the space into a premium riverside escape.'
+      year: 'The Renovation',
+      title: 'Patient Rebuilding',
+      description: 'Dreams take time. After more than a decade, we requested long-term tenants to relocate so we could begin the transition. Years of renovations, rebuilding, and planning followed to bring the lodge to life.'
     },
     {
       year: 'Today',
       title: 'Motimahal Lodge Opens',
-      description: 'After 13 years of dreaming and nearly two decades of culinary hospitality, the vision officially came alive. Motimahal Lodge now stands beside the Narayani River, offering peaceful stays and delicious food.'
+      description: 'Our vision finally came alive as Motimahal Lodge. Today, we welcome travelers to a peaceful sanctuary by the Narayani River, combining comfortable lodging with our family’s 20-year history of hospitality.'
     }
   ];
 
-  const highlights = [
-    'Comfortable lodging with modern rooms',
-    'Authentic tandoori & family-kitchen cuisine',
-    'Warm family-run hospitality and personal care',
-    'Peaceful surroundings by the Narayani River',
-    'Convenient access from Narayanghat & Bharatpur'
-  ];
-
   return (
-    <div className="flex flex-col flex-1 bg-background">
+    <div className="flex flex-col flex-1 bg-background text-foreground">
       {/* ─────────────────────────────────────────────────────────
-          HERO BANNER
+          HERO HEADER
           ───────────────────────────────────────────────────────── */}
-      <section className="banner-luxury relative overflow-hidden py-24 sm:py-32">
-        <div className="absolute inset-0 opacity-10 bg-[url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=1600')] bg-cover bg-center mix-blend-overlay"></div>
-        <div className="relative max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8 z-10">
-          <span className="badge-luxury mb-4 inline-flex items-center gap-1.5 mx-auto">
-            <Sparkles className="h-3 w-3" /> Namaste
-          </span>
-          <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-foreground mb-4">
-            About Us
-          </h1>
-          <div className="editorial-line mx-auto"></div>
-          <p className="text-sm sm:text-base text-muted max-w-2xl mx-auto leading-relaxed mt-5">
-            Motimahal is more than just a restaurant and lodge—it is a dream built with patience, 
-            family values, and nearly two decades of dedication to hospitality in Chitwan.
-          </p>
+      <section className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8 pt-20 pb-16">
+        <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-primary-accent mb-3">
+          ESTABLISHED 2061 B.S. · BHARATPUR, CHITWAN
+        </p>
+        <h1 className="text-4xl sm:text-5xl font-serif font-bold tracking-tight text-foreground mb-6">
+          About Motimahal
+        </h1>
+        <div className="w-12 h-0.5 bg-primary-accent mx-auto mb-8"></div>
+        <p className="text-base sm:text-lg text-muted max-w-2xl mx-auto leading-relaxed font-sans">
+          Motimahal is a family-run hospitality destination built with patience, family values, and nearly two decades of dedication.
+        </p>
+      </section>
+
+      {/* ─────────────────────────────────────────────────────────
+          THE NARRATIVE
+          ───────────────────────────────────────────────────────── */}
+      <section className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-12 border-t border-border">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+
+          {/* Story Content */}
+          <div className="lg:col-span-7 flex flex-col gap-6 font-sans text-sm sm:text-[15px] text-muted leading-relaxed">
+            <h2 className="text-xl sm:text-2xl font-serif font-bold text-foreground tracking-tight">
+              A Family Dream in Chitwan
+            </h2>
+
+            <p>
+              In the heart of New Road, Bharatpur, Motimahal is more than just a restaurant and lodge—it is a family dream. Our journey began in <strong>2061 B.S.</strong>, when our founder started Motimahal Hotel & Tandoori Restaurant in Pulchowk. We focused on simple hospitality: warm service, comfortable settings, and authentic, delicious food.
+            </p>
+            <p>
+              For nearly twenty years, the restaurant grew as a local landmark. However, our founder held a second dream: seeing travelers, families, and visitors struggle to find a truly peaceful, high-quality place to relax and stay in Narayanghat, he envisioned a dedicated lodge.
+            </p>
+            <p>
+              He designed our family home with this future in mind. In <strong>2069 B.S.</strong>, the building was thoughtfully structured to eventually act as a guest house and lodge, years before construction even commenced.
+            </p>
+            <blockquote className="border-l-2 border-primary-accent pl-4 py-1 my-2 text-foreground font-serif italic text-base">
+              "We believe hospitality is not only about rooms or food. It is about warmth. Care. Comfort. Stories. And making every guest feel at home."
+            </blockquote>
+            <p>
+              Turning a dream into reality takes time. After more than a decade, long-term tenants were respectfully requested to relocate, and years of renovation, rebuilding, planning, and commitment followed. Today, that vision stands proudly beside the Narayani River as <strong>Motimahal Lodge</strong>.
+            </p>
+          </div>
+
+          {/* Side visual & quick facts */}
+          <div className="lg:col-span-5 flex flex-col gap-8">
+            <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-muted-light">
+              <Image
+                src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=800"
+                alt="Motimahal Lodge Veranda"
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 40vw"
+                priority
+              />
+            </div>
+
+            <div className="bg-card border border-border rounded-2xl p-6">
+              <h3 className="text-xs font-bold uppercase tracking-widest text-foreground mb-4">
+                At a Glance
+              </h3>
+              <ul className="flex flex-col gap-3.5 text-xs text-muted">
+                <li className="flex items-start gap-2.5">
+                  <span className="h-1.5 w-1.5 rounded-full bg-primary-accent shrink-0 mt-1.5" />
+                  <span><strong>Comfortable Lodging:</strong> Quiet rooms designed to stay naturally cool.</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <span className="h-1.5 w-1.5 rounded-full bg-primary-accent shrink-0 mt-1.5" />
+                  <span><strong>Authentic Food:</strong> Renowned tandoori cuisine served daily.</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <span className="h-1.5 w-1.5 rounded-full bg-primary-accent shrink-0 mt-1.5" />
+                  <span><strong>Riverside Surroundings:</strong> Located by the beautiful Narayani River.</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <span className="h-1.5 w-1.5 rounded-full bg-primary-accent shrink-0 mt-1.5" />
+                  <span><strong>Prime Location:</strong> 900 meters from our Pulchowk restaurant.</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
         </div>
       </section>
 
       {/* ─────────────────────────────────────────────────────────
-          EDITORIAL STORY SECTION
+          TIMELINE / MILESTONES (EDITORIAL & TYPOGRAPHIC)
           ───────────────────────────────────────────────────────── */}
-      <section className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-20">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center">
-          
-          {/* Left Column: Visual assets */}
-          <div className="lg:col-span-5 grid grid-cols-2 gap-4">
-            <div className="relative aspect-[3/4] rounded-2xl overflow-hidden shadow-md">
-              <Image 
-                src="https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&q=80&w=600" 
-                alt="Narayani River Sunset" 
-                fill 
-                className="object-cover"
-                sizes="(max-width: 1024px) 50vw, 25vw"
-              />
-            </div>
-            <div className="relative aspect-[3/4] rounded-2xl overflow-hidden shadow-md translate-y-6">
-              <Image 
-                src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=600" 
-                alt="Motimahal Lodge Veranda" 
-                fill 
-                className="object-cover"
-                sizes="(max-width: 1024px) 50vw, 25vw"
-              />
-            </div>
-          </div>
-
-          {/* Right Column: Historical Narrative */}
-          <div className="lg:col-span-7 flex flex-col gap-6">
+      <section className="bg-primary-light/35 border-t border-b border-border py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-3xl mx-auto">
+          <div className="text-center mb-14">
             <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-primary-accent">
-              Behind the Brand
+              OUR HISTORY
             </span>
-            <h2 className="text-3xl font-extrabold tracking-tight text-foreground">
-              A Legacy of Warmth & Care
+            <h2 className="text-2xl sm:text-3xl font-serif font-bold text-foreground mt-2">
+              Milestones Over 20 Years
             </h2>
-            <div className="editorial-line"></div>
-            
-            <div className="text-sm sm:text-[15px] text-muted leading-relaxed flex flex-col gap-5 mt-2">
-              <p>
-                In the heart of New Road, Bharatpur – Chitwan, Motimahal stands proudly as a family-run 
-                hospitality destination. Our journey began in <strong>2061 B.S.</strong>, when our founder started 
-                Motimahal Hotel & Tandoori Restaurant with a simple mission: serve delicious food, provide 
-                genuine hospitality, and create a place where people feel welcomed like family.
-              </p>
-              <p>
-                For almost 20 years, Motimahal became a trusted name for good food and warm service. 
-                But there was another dream quietly growing. Seeing travelers, families, and visitors 
-                struggle to find a comfortable, peaceful, and quality place to stay in Narayanghat, 
-                our founder imagined something bigger—a place where people could truly relax, stay, and 
-                experience hospitality beyond food.
-              </p>
-              <p>
-                Long before it became reality, he had already designed our family home with this vision in mind. 
-                In <strong>2069 B.S.</strong>, our building was thoughtfully designed as a future guest house and lodge—a 
-                dream planned years before construction even began.
-              </p>
-            </div>
+            <div className="w-10 h-0.5 bg-primary-accent mx-auto mt-4"></div>
           </div>
 
-        </div>
-      </section>
-
-      {/* ─────────────────────────────────────────────────────────
-          TIMELINE SECTION
-          ───────────────────────────────────────────────────────── */}
-      <section className="bg-primary-light/20 border-t border-b border-border py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-16">
-            <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-primary-accent">
-              Our Journey
-            </span>
-            <h2 className="text-3xl font-extrabold tracking-tight text-foreground mt-2">
-              Timeline of Motimahal
-            </h2>
-            <div className="editorial-line mx-auto mt-3"></div>
-          </div>
-
-          <div className="relative border-l-2 border-primary-accent/35 ml-4 sm:ml-6 flex flex-col gap-12">
+          <div className="flex flex-col gap-10">
             {timelineMilestones.map((milestone, idx) => (
-              <div key={idx} className="relative pl-8 sm:pl-10">
-                {/* Timeline dot */}
-                <span className="absolute -left-[11px] top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-background border-2 border-primary-accent shadow-sm">
-                  <span className="h-1.5 w-1.5 rounded-full bg-primary-accent"></span>
-                </span>
-                
-                <span className="text-xs font-bold text-primary-accent tracking-wider uppercase">
-                  {milestone.year}
-                </span>
-                <h3 className="text-lg font-bold text-foreground mt-1">
-                  {milestone.title}
-                </h3>
-                <p className="text-xs sm:text-sm text-muted leading-relaxed mt-2 max-w-2xl">
-                  {milestone.description}
-                </p>
+              <div key={idx} className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 items-start pt-6 border-t border-border/60 first:border-none">
+                <div className="md:col-span-3">
+                  <span className="font-serif text-lg font-bold text-primary-accent">
+                    {milestone.year}
+                  </span>
+                </div>
+                <div className="md:col-span-9 flex flex-col gap-1.5">
+                  <h3 className="text-base font-bold text-foreground">
+                    {milestone.title}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-muted leading-relaxed font-sans">
+                    {milestone.description}
+                  </p>
+                </div>
               </div>
             ))}
           </div>
@@ -164,72 +155,56 @@ export default function AboutPage() {
       </section>
 
       {/* ─────────────────────────────────────────────────────────
-          TODAY & THE RIVER SECTION
+          RIVERSIDE SURROUNDINGS & Wildlife
           ───────────────────────────────────────────────────────── */}
-      <section className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-20">
+      <section className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-20">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-          
-          {/* Left Column: Riverside Copy */}
+
           <div className="lg:col-span-7 flex flex-col gap-5">
             <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-primary-accent">
-              Nature & Location
+              RIVERSIDE SANCTUARY
             </span>
-            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
-              Beside the Narayani River
+            <h2 className="text-2xl sm:text-3xl font-serif font-bold text-foreground">
+              A Peaceful Escape Beside the Narayani River
             </h2>
-            <div className="editorial-line"></div>
-            
-            <div className="text-sm sm:text-[15px] text-muted leading-relaxed flex flex-col gap-4 mt-2">
+            <div className="w-10 h-0.5 bg-primary-accent"></div>
+
+            <div className="text-sm sm:text-[15px] text-muted leading-relaxed flex flex-col gap-4 font-sans mt-2">
               <p>
-                Today, Motimahal Lodge stands proudly beside the beautiful Narayani River, offering guests 
-                a peaceful escape surrounded by nature, fresh air, and authentic hospitality built from over 
-                20 years of experience.
+                Located proudly by the flowing waters of the Narayani River, Motimahal Lodge offers guests a quiet retreat surrounded by greenery and fresh air. It is a place where you can sit by the garden verandas, listen to birds, and feel connected to the environment.
               </p>
               <p>
-                Wake up to greenery, flowing river views, and the calmness of nature. During summer, you may 
-                even witness one of Chitwan’s magical surprises—rhinos occasionally roaming near the riverside 
-                area, creating unforgettable moments for our guests.
+                During the warm summer months, guests may even spot Chitwan's roaming rhinos near the riverbed, offering a memorable look at the area's wild nature.
               </p>
               <p>
-                Located just <strong>900 metres</strong> from our iconic Motimahal Tandoori Restaurant in Pulchowk, 
-                our lodge gives guests the best of both worlds—comfortable stays and delicious food nearby. At 
-                Motimahal Lodge, nights come with the soothing sound of the nearby river—nature’s own sleep 
-                music, no playlist needed.
+                At night, the lodge is filled with the soothing sound of the Narayani—nature's own peaceful sleep music. And when you are ready for a meal, our famous tandoori kitchen in Pulchowk is just a short 900-meter walk away.
               </p>
             </div>
           </div>
 
-          {/* Right Column: Key Offerings Grid */}
-          <div className="lg:col-span-5 bg-card border border-border rounded-3xl p-8 shadow-md">
-            <h3 className="text-lg font-bold text-foreground mb-6 flex items-center gap-2">
-              <Compass className="h-5 w-5 text-primary-accent" /> About Us
-            </h3>
-            
-            <div className="flex flex-col gap-4">
-              {highlights.map((highlight, index) => (
-                <div key={index} className="flex gap-3.5 items-start">
-                  <span className="flex h-5 w-5 items-center justify-center rounded-md bg-primary-light text-primary border border-primary-accent/20 shrink-0 mt-0.5 shadow-sm">
-                    <Check className="h-3 w-3 stroke-[3]" />
-                  </span>
-                  <span className="text-xs sm:text-sm text-muted font-medium">
-                    {highlight}
-                  </span>
-                </div>
-              ))}
+          <div className="lg:col-span-5 flex flex-col gap-6">
+            <div className="relative aspect-square rounded-2xl overflow-hidden bg-muted-light">
+              <Image
+                src="https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&q=80&w=800"
+                alt="Narayani River Sunset"
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 40vw"
+              />
             </div>
 
-            <div className="border-t border-border mt-8 pt-6 flex flex-col sm:flex-row gap-3 justify-between items-center">
-              <Link 
-                href="/rooms" 
-                className="btn-luxury-primary text-center w-full sm:w-auto"
+            <div className="flex gap-4">
+              <Link
+                href="/rooms"
+                className="btn-luxury-primary text-center flex-1"
               >
-                Book a Room <ArrowRight className="h-3.5 w-3.5" />
+                View Rooms <ArrowRight className="h-3.5 w-3.5" />
               </Link>
-              <Link 
-                href="/contact" 
-                className="btn-luxury-outline text-center w-full sm:w-auto"
+              <Link
+                href="/contact"
+                className="btn-luxury-outline text-center flex-1"
               >
-                Contact Us
+                Find Us
               </Link>
             </div>
           </div>
