@@ -4,12 +4,10 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import PageHero from '@/components/PageHero';
-import RoomCard from '@/components/RoomCard';
 import WhyChooseSection from '@/components/WhyChooseSection';
 import BookingModal from '@/components/BookingModal';
 import { ROOMS_DATA } from '@/lib/data';
-import { Check, Calendar, ArrowRight, ShieldCheck, Sparkles, Coffee, Wifi, ShowerHead, ThermometerSun } from 'lucide-react';
+import { Check, Calendar, ArrowRight, ThermometerSun, ShowerHead, Wifi, Coffee } from 'lucide-react';
 
 export default function RoomsPage() {
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
@@ -24,16 +22,9 @@ export default function RoomsPage() {
     <div className="min-h-screen flex flex-col bg-[#FAF7F2] text-[#2D2B2A]">
       <Navbar />
 
-      <main className="flex-1">
+      <main className="flex-1 pt-24 sm:pt-28">
         
-        {/* 1. PAGE HERO / HEADER */}
-        <PageHero
-          title="ACCOMMODATION"
-          subtitle="Clean air-conditioned rooms, peaceful garden surroundings, and 24/7 solar hot showers in Bharatpur-10."
-          breadcrumbs={[{ label: 'Rooms & Accommodation' }]}
-        />
-
-        {/* 2. ROOMS LISTING SECTION WITH backs.png BACKGROUND TEXTURE */}
+        {/* 1. ROOMS LISTING SECTION WITH backs.png BACKGROUND TEXTURE */}
         <section
           className="py-16 sm:py-24 border-b border-[#E6DFD5] relative text-[#2D2B2A]"
           style={{
@@ -48,15 +39,15 @@ export default function RoomsPage() {
               <span className="text-[#1F3A2B] text-xs sm:text-sm font-semibold uppercase tracking-[0.2em] block">
                 Stay With Us
               </span>
-              <h2 className="font-heading text-3xl sm:text-5xl lg:text-6xl font-bold text-[#2D2B2A] tracking-wider uppercase">
-                OUR ROOMS & SUITES
-              </h2>
-              <p className="text-stone-600 text-base sm:text-lg leading-relaxed font-normal">
+              <h1 className="font-heading text-4xl sm:text-6xl font-bold text-[#2D2B2A] tracking-wider uppercase">
+                ROOMS & ACCOMMODATION
+              </h1>
+              <p className="text-stone-600 text-base sm:text-lg lg:text-xl leading-relaxed font-normal">
                 Every room is maintained with fresh linens, quiet air conditioning, attached ensuite bathroom, and friendly family service.
               </p>
             </div>
 
-            {/* Alternating Horizontal Room Cards Layout matching existing design system */}
+            {/* Alternating Horizontal Room Cards Layout */}
             <div className="space-y-12">
               {ROOMS_DATA.map((room, idx) => {
                 const isEven = idx % 2 === 0;
@@ -101,9 +92,9 @@ export default function RoomsPage() {
                         </div>
                       </div>
 
-                      <h3 className="font-heading text-2xl sm:text-4xl font-bold text-[#2D2B2A] group-hover:text-[#1F3A2B] transition-colors">
+                      <h2 className="font-heading text-2xl sm:text-4xl font-bold text-[#2D2B2A] group-hover:text-[#1F3A2B] transition-colors">
                         {room.name}
-                      </h3>
+                      </h2>
 
                       <p className="text-stone-700 text-base sm:text-lg leading-relaxed font-normal">
                         {room.description}
@@ -153,10 +144,10 @@ export default function RoomsPage() {
           </div>
         </section>
 
-        {/* 3. INCLUDED LODGE AMENITIES & EXPERIENCE SECTION */}
+        {/* 2. INCLUDED AMENITIES SECTION */}
         <section className="py-20 sm:py-28 bg-white border-b border-[#E6DFD5]">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12">
-            
+
             <div className="text-center max-w-3xl mx-auto space-y-3">
               <span className="text-[#1F3A2B] text-xs sm:text-sm font-semibold uppercase tracking-[0.2em] block">
                 Included Comforts
@@ -170,12 +161,12 @@ export default function RoomsPage() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-              
+
               <div className="bg-[#FAF7F2] p-8 rounded-lg border border-[#E6DFD5] space-y-4 shadow-2xs">
                 <div className="w-12 h-12 bg-white rounded-lg border border-[#E6DFD5] flex items-center justify-center text-[#1F3A2B]">
                   <ThermometerSun className="h-6 w-6" />
                 </div>
-                <h4 className="font-heading text-xl font-bold text-[#2D2B2A]">Silent Air Conditioning</h4>
+                <h3 className="font-heading text-xl font-bold text-[#2D2B2A]">Silent Air Conditioning</h3>
                 <p className="text-stone-600 text-sm sm:text-base leading-relaxed font-normal">
                   Individual AC units in every room keep your room cool during hot Chitwan afternoons.
                 </p>
@@ -185,7 +176,7 @@ export default function RoomsPage() {
                 <div className="w-12 h-12 bg-white rounded-lg border border-[#E6DFD5] flex items-center justify-center text-[#1F3A2B]">
                   <ShowerHead className="h-6 w-6" />
                 </div>
-                <h4 className="font-heading text-xl font-bold text-[#2D2B2A]">24/7 Solar Hot Water</h4>
+                <h3 className="font-heading text-xl font-bold text-[#2D2B2A]">24/7 Solar Hot Water</h3>
                 <p className="text-stone-600 text-sm sm:text-base leading-relaxed font-normal">
                   Enjoy continuous hot showers after a long day of highway travel or jungle safari walks.
                 </p>
@@ -195,7 +186,7 @@ export default function RoomsPage() {
                 <div className="w-12 h-12 bg-white rounded-lg border border-[#E6DFD5] flex items-center justify-center text-[#1F3A2B]">
                   <Wifi className="h-6 w-6" />
                 </div>
-                <h4 className="font-heading text-xl font-bold text-[#2D2B2A]">Complimentary Wi-Fi</h4>
+                <h3 className="font-heading text-xl font-bold text-[#2D2B2A]">Complimentary Wi-Fi</h3>
                 <p className="text-stone-600 text-sm sm:text-base leading-relaxed font-normal">
                   High-speed internet access throughout all rooms, outdoor garden, and dining area.
                 </p>
@@ -205,7 +196,7 @@ export default function RoomsPage() {
                 <div className="w-12 h-12 bg-white rounded-lg border border-[#E6DFD5] flex items-center justify-center text-[#1F3A2B]">
                   <Coffee className="h-6 w-6" />
                 </div>
-                <h4 className="font-heading text-xl font-bold text-[#2D2B2A]">On-Site Tandoori Kitchen</h4>
+                <h3 className="font-heading text-xl font-bold text-[#2D2B2A]">On-Site Tandoori Kitchen</h3>
                 <p className="text-stone-600 text-sm sm:text-base leading-relaxed font-normal">
                   Order clay-oven tandoori grills, fresh Naan bread, or authentic Nepali thali set meals directly to your room.
                 </p>
@@ -216,10 +207,10 @@ export default function RoomsPage() {
           </div>
         </section>
 
-        {/* 4. WHY CHOOSE MOTIMAHAL SECTION */}
+        {/* 3. WHY CHOOSE MOTIMAHAL SECTION */}
         <WhyChooseSection />
 
-        {/* 5. FINAL BOOKING CTA SECTION */}
+        {/* 4. FINAL BOOKING CTA SECTION */}
         <section className="py-20 sm:py-28 bg-[#FAF7F2] text-[#2D2B2A] text-center border-t border-[#E6DFD5]">
           <div className="mx-auto max-w-4xl px-6 space-y-6">
             <span className="text-[#1F3A2B] text-xs sm:text-sm font-semibold uppercase tracking-[0.2em] block">
