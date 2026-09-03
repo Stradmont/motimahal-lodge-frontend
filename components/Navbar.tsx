@@ -64,7 +64,7 @@ export default function Navbar() {
             </div>
           </Link>
 
-          {/* Desktop Right Navigation: Clean Links + Book Now Button with backs.png + Hamburger Toggle */}
+          {/* Desktop Right Navigation */}
           <div className="hidden lg:flex items-center gap-6">
             <nav className="flex items-center gap-6 text-sm font-medium tracking-wide text-white/90">
               {HEADER_NAV_ITEMS.slice(0, 5).map((item) => (
@@ -80,12 +80,12 @@ export default function Navbar() {
               ))}
             </nav>
 
-            {/* Book Now Button styled with backs.png texture background */}
+            {/* Book Now Button: Deep Forest Green with subtle textured overlay */}
             <button
               onClick={() => setBookingModalOpen(true)}
-              className="bg-[#1F3A2B] hover:bg-[#162B20] border border-[#2D4D3B] text-white font-semibold text-xs sm:text-sm px-6 py-2.5 rounded-full transition-all cursor-pointer tracking-wider shadow-xs"
+              className="bg-[#1F3A2B] hover:bg-[#162B20] border border-[#2D4D3B] text-white font-semibold text-xs sm:text-sm px-6 py-2.5 rounded-full transition-all cursor-pointer tracking-wider shadow-sm"
               style={{
-                backgroundImage: "url('/backs.png')",
+                backgroundImage: "linear-gradient(rgba(31, 58, 43, 0.88), rgba(31, 58, 43, 0.88)), url('/backs.png')",
                 backgroundRepeat: 'repeat',
               }}
             >
@@ -101,13 +101,13 @@ export default function Navbar() {
             </button>
           </div>
 
-          {/* Mobile Right: Book Now + Hamburger */}
+          {/* Mobile Right */}
           <div className="flex lg:hidden items-center gap-3">
             <button
               onClick={() => setBookingModalOpen(true)}
-              className="bg-[#1F3A2B] border border-[#2D4D3B] text-white font-semibold text-xs px-4 py-2 rounded-full shadow-xs"
+              className="bg-[#1F3A2B] hover:bg-[#162B20] border border-[#2D4D3B] text-white font-semibold text-xs px-4 py-2 rounded-full shadow-sm"
               style={{
-                backgroundImage: "url('/backs.png')",
+                backgroundImage: "linear-gradient(rgba(31, 58, 43, 0.88), rgba(31, 58, 43, 0.88)), url('/backs.png')",
                 backgroundRepeat: 'repeat',
               }}
             >
