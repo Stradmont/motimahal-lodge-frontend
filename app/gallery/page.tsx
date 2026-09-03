@@ -5,31 +5,24 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import WhyChooseSection from '@/components/WhyChooseSection';
 import BookingModal from '@/components/BookingModal';
-import { GALLERY_DATA, GalleryItem } from '@/lib/data';
+import { GALLERY_DATA } from '@/lib/data';
 import { Maximize2, X, ChevronLeft, ChevronRight } from 'lucide-react';
 
-const CATEGORIES = ['All', 'Lodge & Grounds', 'Rooms', 'Tandoori Dining', 'Narayani & Chitwan'];
-
 export default function GalleryPage() {
-  const [selectedCategory, setSelectedCategory] = useState('All');
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
 
-  const filteredItems = selectedCategory === 'All'
-    ? GALLERY_DATA
-    : GALLERY_DATA.filter((item) => item.category === selectedCategory);
-
-  const activeItem = lightboxIndex !== null ? filteredItems[lightboxIndex] : null;
+  const activeItem = lightboxIndex !== null ? GALLERY_DATA[lightboxIndex] : null;
 
   const handlePrev = useCallback(() => {
     if (lightboxIndex === null) return;
-    setLightboxIndex(lightboxIndex === 0 ? filteredItems.length - 1 : lightboxIndex - 1);
-  }, [lightboxIndex, filteredItems.length]);
+    setLightboxIndex(lightboxIndex === 0 ? GALLERY_DATA.length - 1 : lightboxIndex - 1);
+  }, [lightboxIndex]);
 
   const handleNext = useCallback(() => {
     if (lightboxIndex === null) return;
-    setLightboxIndex(lightboxIndex === filteredItems.length - 1 ? 0 : lightboxIndex + 1);
-  }, [lightboxIndex, filteredItems.length]);
+    setLightboxIndex(lightboxIndex === GALLERY_DATA.length - 1 ? 0 : lightboxIndex + 1);
+  }, [lightboxIndex]);
 
   // Keyboard navigation for Lightbox
   useEffect(() => {
@@ -72,7 +65,7 @@ export default function GalleryPage() {
           </div>
         </section>
 
-        {/* 2. GALLERY SECTION WITH backs.png BACKGROUND TEXTURE */}
+        {/* 2. CLEAN GALLERY GRID SECTION WITH backs.png BACKGROUND TEXTURE */}
         <section
           className="py-16 sm:py-24 border-b border-[#E6DFD5] relative text-[#2D2B2A]"
           style={{
@@ -80,34 +73,11 @@ export default function GalleryPage() {
             backgroundRepeat: 'repeat',
           }}
         >
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             
-            {/* Category Filter Pills */}
-            <div className="flex items-center justify-center flex-wrap gap-2.5 sm:gap-3">
-              {CATEGORIES.map((category) => {
-                const isActive = selectedCategory === category;
-                return (
-                  <button
-                    key={category}
-                    onClick={() => {
-                      setSelectedCategory(category);
-                      setLightboxIndex(null);
-                    }}
-                    className={`px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all cursor-pointer tracking-wider uppercase shadow-xs ${
-                      isActive
-                        ? 'bg-[#1F3A2B] text-white border border-[#2D4D3B]'
-                        : 'bg-white text-stone-700 hover:bg-[#FAF7F2] border border-[#E6DFD5]'
-                    }`}
-                  >
-                    {category}
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Responsive Grid Arrangement */}
+            {/* Responsive Masonry-Style Grid Arrangement */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-              {filteredItems.map((item, idx) => (
+              {GALLERY_DATA.map((item, idx) => (
                 <div
                   key={item.id}
                   onClick={() => setLightboxIndex(idx)}
@@ -237,7 +207,7 @@ export default function GalleryPage() {
             {/* Caption & Counter Bar */}
             <div className="text-center text-white space-y-1 bg-black/60 px-6 py-3 rounded-full border border-white/10 backdrop-blur-xs max-w-2xl">
               <span className="text-[11px] font-semibold text-[#A8BBA2] uppercase tracking-widest block">
-                {activeItem.category} • ({lightboxIndex + 1} of {filteredItems.length})
+                {activeItem.category} • ({lightboxIndex + 1} of {GALLERY_DATA.length})
               </span>
               <h3 className="font-heading text-xl font-bold text-white">
                 {activeItem.title}
