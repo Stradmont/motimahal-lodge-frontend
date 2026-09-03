@@ -1,3 +1,5 @@
-import BlogPage from '../blog/page';
+import { redirect } from 'next/navigation';
 
-export default BlogPage;
+export default function StoriesPage() {
+  redirect('/blog');
+}

@@ -48,7 +48,7 @@ export default function WhyChooseSection() {
         
         {/* Section Heading */}
         <div className="text-center max-w-3xl mx-auto space-y-3">
-          <h2 className="font-heading text-2xl sm:text-4xl font-bold uppercase tracking-wider text-[#2D2B2A]">
+          <h2 className="font-heading text-3xl sm:text-5xl font-bold uppercase tracking-wider text-[#2D2B2A]">
             WHY CHOOSE MOTIMAHAL LODGE AND RESTAURANT
           </h2>
         </div>
@@ -69,12 +69,12 @@ export default function WhyChooseSection() {
               </div>
 
               {/* Title */}
-              <h3 className="font-heading text-lg sm:text-xl font-bold text-[#2D2B2A]">
+              <h3 className="font-heading text-xl sm:text-2xl font-bold text-[#2D2B2A]">
                 {item.title}
               </h3>
 
               {/* Description */}
-              <p className="text-stone-600 text-sm sm:text-base leading-relaxed font-normal">
+              <p className="text-stone-600 text-base sm:text-lg leading-relaxed font-normal">
                 {item.description}
               </p>
 

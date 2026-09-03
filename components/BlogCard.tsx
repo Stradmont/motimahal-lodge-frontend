@@ -20,40 +20,40 @@ export default function BlogCard({ story }: BlogCardProps) {
           alt={story.title}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
-        <div className="absolute top-3 left-3 bg-[#1F3A2B] text-white text-[10px] font-bold px-2 py-0.5 rounded shadow">
+        <div className="absolute top-3 left-3 bg-[#1F3A2B] text-white text-xs font-bold px-3 py-1 rounded shadow">
           {story.category}
         </div>
       </div>
 
-      <div className="p-5 sm:w-3/5 space-y-3 flex flex-col justify-between">
-        <div className="space-y-2">
-          <div className="flex items-center gap-3 text-[11px] text-stone-500">
-            <span className="flex items-center gap-1">
-              <Calendar className="h-3 w-3 text-[#1F3A2B]" />
+      <div className="p-6 sm:p-8 sm:w-3/5 space-y-4 flex flex-col justify-between">
+        <div className="space-y-3">
+          <div className="flex items-center gap-4 text-xs sm:text-sm text-stone-500 font-medium">
+            <span className="flex items-center gap-1.5">
+              <Calendar className="h-4 w-4 text-[#1F3A2B]" />
               {story.date}
             </span>
-            <span className="flex items-center gap-1">
-              <User className="h-3 w-3 text-[#1F3A2B]" />
+            <span className="flex items-center gap-1.5">
+              <User className="h-4 w-4 text-[#1F3A2B]" />
               {story.author}
             </span>
           </div>
 
-          <h3 className="font-heading text-lg font-bold text-[#1F3A2B] group-hover:text-[#162B20] transition-colors leading-snug">
+          <h3 className="font-heading text-xl sm:text-2xl font-bold text-[#1F3A2B] group-hover:text-[#162B20] transition-colors leading-snug">
             {story.title}
           </h3>
 
-          <p className="text-xs text-stone-600 leading-relaxed line-clamp-2">
+          <p className="text-stone-600 text-base sm:text-lg leading-relaxed font-normal line-clamp-3">
             {story.excerpt}
           </p>
         </div>
 
-        <div className="pt-2 border-t border-[#E6DFD5]">
+        <div className="pt-3 border-t border-[#E6DFD5]">
           <Link
             href={`/blog/${story.id}`}
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-[#1F3A2B] hover:text-[#162B20] transition-colors"
+            className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-[#1F3A2B] hover:text-[#162B20] transition-colors"
           >
             <span>Read Full Story</span>
-            <ArrowRight className="h-3.5 w-3.5" />
+            <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
       </div>

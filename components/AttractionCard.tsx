@@ -20,32 +20,32 @@ export default function AttractionCard({ attraction }: AttractionCardProps) {
           alt={attraction.title}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
-        <div className="absolute top-3 left-3 bg-[#1F3A2B] text-white text-[10px] font-bold px-2.5 py-1 rounded shadow flex items-center gap-1">
-          <MapPin className="h-3 w-3 text-white" />
+        <div className="absolute top-3 left-3 bg-[#1F3A2B] text-white text-xs font-bold px-3 py-1 rounded shadow flex items-center gap-1.5">
+          <MapPin className="h-3.5 w-3.5 text-white" />
           <span>{attraction.distance}</span>
         </div>
       </div>
 
-      <div className="p-5 space-y-3 flex-1 flex flex-col justify-between">
-        <div className="space-y-2">
-          <span className="text-[#1F3A2B] text-[10px] font-bold uppercase tracking-wider block">
+      <div className="p-6 sm:p-8 space-y-4 flex-1 flex flex-col justify-between">
+        <div className="space-y-3">
+          <span className="text-[#1F3A2B] text-xs font-bold uppercase tracking-wider block">
             {attraction.category}
           </span>
-          <h3 className="font-heading text-xl font-bold text-[#1F3A2B] group-hover:text-[#162B20] transition-colors">
+          <h3 className="font-heading text-2xl sm:text-3xl font-bold text-[#1F3A2B] group-hover:text-[#162B20] transition-colors">
             {attraction.title}
           </h3>
-          <p className="text-xs text-stone-600 leading-relaxed line-clamp-3">
+          <p className="text-stone-600 text-base sm:text-lg leading-relaxed font-normal">
             {attraction.shortDesc}
           </p>
         </div>
 
-        <div className="pt-3 border-t border-[#E6DFD5]">
+        <div className="pt-4 border-t border-[#E6DFD5]">
           <Link
             href={`/attractions/${attraction.id}`}
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-[#1F3A2B] hover:text-[#162B20] transition-colors"
+            className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-[#1F3A2B] hover:text-[#162B20] transition-colors"
           >
             <span>Explore Experience</span>
-            <ArrowRight className="h-3.5 w-3.5" />
+            <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
       </div>

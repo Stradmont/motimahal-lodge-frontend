@@ -5,7 +5,7 @@ import { ChevronDown } from 'lucide-react';
 
 export default function Hero() {
   return (
-    <section className="relative w-full h-screen min-h-[640px] flex items-center justify-center overflow-hidden bg-stone-900">
+    <section className="relative w-full h-screen min-h-[680px] flex items-center justify-center overflow-hidden bg-stone-900">
       {/* Full Screen Edge-to-Edge Photography Background */}
       <div
         className="absolute inset-0 z-0 bg-cover bg-center transition-transform duration-1000 scale-105"
@@ -18,8 +18,8 @@ export default function Hero() {
       <div className="absolute inset-0 z-10 bg-black/45" />
 
       {/* Centered Main Title */}
-      <div className="relative z-20 mx-auto max-w-5xl px-4 text-center text-white space-y-5">
-        <span className="text-white/90 text-xs sm:text-sm font-semibold uppercase tracking-[0.25em] block">
+      <div className="relative z-20 mx-auto max-w-5xl px-6 text-center text-white space-y-6">
+        <span className="text-white/95 text-sm sm:text-base font-semibold uppercase tracking-[0.25em] block">
           Bharatpur-10, Chitwan, Nepal
         </span>
 
@@ -27,7 +27,7 @@ export default function Hero() {
           MOTIMAHAL LODGE & RESTAURANT
         </h1>
 
-        <p className="text-stone-200 text-base sm:text-lg max-w-2xl mx-auto font-light leading-relaxed tracking-wide">
+        <p className="text-stone-100 text-lg sm:text-xl lg:text-2xl max-w-3xl mx-auto font-light leading-relaxed tracking-wide">
           A family-owned sanctuary in Chitwan offering clean AC lodging, 24/7 hot showers, and authentic clay-oven tandoori dining.
         </p>
       </div>
