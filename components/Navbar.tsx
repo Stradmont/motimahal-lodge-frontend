@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X, PhoneCall } from 'lucide-react';
+import { Menu, X, Phone } from 'lucide-react';
 import BookingModal from './BookingModal';
 
 const HEADER_NAV_ITEMS = [
@@ -80,7 +80,7 @@ export default function Navbar() {
               ))}
             </nav>
 
-            {/* Book Now Button: Deep Forest Green with subtle textured overlay */}
+            {/* Book Now Button */}
             <button
               onClick={() => setBookingModalOpen(true)}
               className="bg-[#1F3A2B] hover:bg-[#162B20] border border-[#2D4D3B] text-white font-semibold text-xs sm:text-sm px-6 py-2.5 rounded-full transition-all cursor-pointer tracking-wider shadow-sm"
@@ -125,7 +125,7 @@ export default function Navbar() {
         </div>
       </header>
 
-      {/* Side Slide-Over Navigation Drawer matching Panorama reference */}
+      {/* Side Slide-Over Navigation Drawer */}
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-50 flex justify-end bg-black/50 backdrop-blur-xs transition-opacity duration-300">
           
@@ -196,13 +196,13 @@ export default function Navbar() {
               })}
             </nav>
 
-            {/* Drawer Footer Callout (Matching Screenshot) */}
+            {/* Drawer Footer Callout */}
             <div className="p-6 sm:p-8 border-t border-[#E6DFD5]">
               <a
                 href="tel:+9779855012345"
                 className="flex items-center gap-4 group transition-colors"
               >
-                <PhoneCall className="h-8 w-8 text-[#1F3A2B] shrink-0 group-hover:scale-105 transition-transform" />
+                <Phone className="h-8 w-8 text-[#1F3A2B] shrink-0 group-hover:scale-105 transition-transform" />
                 <div className="space-y-0.5">
                   <span className="text-[11px] font-bold text-stone-500 uppercase tracking-widest block">
                     INFO AND BOOKINGS
