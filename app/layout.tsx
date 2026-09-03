@@ -1,36 +1,39 @@
 import type { Metadata } from 'next';
-import { Plus_Jakarta_Sans, Inter } from 'next/font/google';
+import { Mirza, Jost } from 'next/font/google';
 import './globals.css';
-import { AppProvider } from '@/context/AppContext';
-import { AuthProvider } from '@/context/AuthContext';
 
-const plusJakartaSans = Plus_Jakarta_Sans({
+const mirza = Mirza({
+  weight: ['400', '500', '600', '700'],
   variable: '--font-heading',
   subsets: ['latin'],
   display: 'swap',
 });
 
-const inter = Inter({
+const jost = Jost({
+  weight: ['300', '400', '500', '600', '700'],
   variable: '--font-sans',
   subsets: ['latin'],
   display: 'swap',
 });
 
 export const metadata: Metadata = {
-  title: 'Motimahal Lodge & Restaurant | Bharatpur, Chitwan',
+  title: 'Motimahal Lodge & Restaurant | Bharatpur, Chitwan, Nepal',
   description:
-    'Welcome to Motimahal Lodge & Restaurant in Bharatpur, Chitwan. Experience warm family hospitality, comfortable rooms, and authentic tandoori cuisine near the beautiful Narayani River.',
+    'Experience luxury lodge accommodations, authentic Chitwan hospitality, and mouthwatering tandoori cuisine near the Narayani River and Chitwan National Park.',
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
-    <html lang="en" className={`${plusJakartaSans.variable} ${inter.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-primary-accent/30 selection:text-foreground">
-        <AuthProvider>
-          <AppProvider>{children}</AppProvider>
-        </AuthProvider>
+    <html
+      lang="en"
+      className={`${mirza.variable} ${jost.variable} h-full antialiased`}
+    >
+      <body className="min-h-full flex flex-col bg-background text-[#333333] font-sans selection:bg-[#EAB308]/30 selection:text-foreground">
+        {children}
       </body>
     </html>
   );

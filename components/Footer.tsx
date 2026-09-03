@@ -1,89 +1,104 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { MapPin, Phone, Mail } from 'lucide-react';
 
 export default function Footer() {
   return (
-    <footer className="bg-primary border-t border-primary-accent/10 px-4 sm:px-6 lg:px-8 py-14">
-      <div className="max-w-7xl mx-auto">
+    <footer
+      className="relative text-stone-200 py-16 border-t border-[#2D4D3B] overflow-hidden bg-[#162B20]"
+      style={{
+        backgroundImage: "url('/backs-2.png')",
+        backgroundRepeat: 'repeat',
+        backgroundPosition: 'center',
+      }}
+    >
+      {/* Background SVG Pattern Accent */}
+      <div
+        className="absolute inset-0 z-0 bg-no-repeat bg-right-bottom opacity-20 pointer-events-none"
+        style={{
+          backgroundImage: "url('/footer-element.svg')",
+          backgroundSize: '360px auto',
+        }}
+      />
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-12">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pb-12 border-b border-stone-700/50 text-xs">
 
-          {/* Brand */}
-          <div className="flex flex-col gap-4">
-              <Image
-                src="/logo.png"
-                alt="Motimahal Lodge"
-                width={110}
-                height={40}
-                className="object-contain brightness-0 invert opacity-90"
-              />
-            <p className="text-xs text-white/55 leading-relaxed max-w-xs">
-              A family-run lodge in Bharatpur, Chitwan. Comfortable rooms, tandoori cuisine,
-              and a peaceful riverside sanctuary near the beautiful Narayani River.
+          {/* Brand Column (4 cols) */}
+          <div className="md:col-span-4 space-y-3">
+            <Link href="/" className="inline-block">
+              <span className="font-heading text-xl font-bold text-white block tracking-wide">
+                MOTIMAHAL LODGE
+              </span>
+              <span className="text-[10px] text-stone-300 font-medium tracking-wider">
+                & TANDOORI KITCHEN • BHARATPUR
+              </span>
+            </Link>
+            <p className="text-stone-300 text-xs leading-relaxed max-w-sm">
+              A family-owned lodge in Bharatpur-10, Chitwan offering clean AC rooms, continuous hot showers, clay-oven tandoori grills, and local hospitality.
             </p>
           </div>
 
-          {/* Links */}
-          <div className="flex flex-col gap-3">
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary-accent">
-              Pages
-            </p>
-            <ul className="flex flex-col gap-2">
-              {[
-                { href: '/',        label: 'Home' },
-                { href: '/about',   label: 'About Us' },
-                { href: '/rooms',   label: 'Rooms' },
-                { href: '/food',    label: 'Food Menu' },
-                { href: '/contact', label: 'Contact' },
-              ].map(({ href, label }) => (
-                <li key={href}>
-                  <Link
-                    href={href}
-                    className="text-xs text-white/55 hover:text-white transition-colors"
-                  >
-                    {label}
-                  </Link>
-                </li>
-              ))}
+          {/* Navigation Column (2 cols) */}
+          <div className="md:col-span-2 space-y-3">
+            <h4 className="font-heading text-sm font-bold text-white uppercase tracking-wider">
+              Explore
+            </h4>
+            <ul className="space-y-2 text-stone-300">
+              <li><Link href="/" className="hover:text-white transition-colors">• Home</Link></li>
+              <li><Link href="/about" className="hover:text-white transition-colors">• About Us</Link></li>
+              <li><Link href="/rooms" className="hover:text-white transition-colors">• Accommodations</Link></li>
+              <li><Link href="/food" className="hover:text-white transition-colors">• Tandoori Menu</Link></li>
+              <li><Link href="/attractions" className="hover:text-white transition-colors">• Chitwan Sights</Link></li>
             </ul>
           </div>
 
-          {/* Contact */}
-          <div className="flex flex-col gap-3">
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary-accent">
-              Find us
-            </p>
-            <ul className="flex flex-col gap-3">
-              <li className="flex items-start gap-2.5">
-                <MapPin className="h-3.5 w-3.5 text-primary-accent shrink-0 mt-0.5" />
-                <span className="text-xs text-white/55 leading-relaxed">
-                  New Road, Bharatpur, Chitwan, Nepal
-                </span>
+          {/* Practical Info Column (3 cols) */}
+          <div className="md:col-span-3 space-y-3">
+            <h4 className="font-heading text-sm font-bold text-white uppercase tracking-wider">
+              Lodge Details
+            </h4>
+            <ul className="space-y-2.5 text-stone-300">
+              <li className="flex items-start gap-2">
+                <MapPin className="h-4 w-4 text-[#A8BBA2] shrink-0 mt-0.5" />
+                <span>Bharatpur-10, Narayangarh, Chitwan District, Nepal</span>
               </li>
-              <li className="flex items-start gap-2.5">
-                <Phone className="h-3.5 w-3.5 text-primary-accent shrink-0 mt-0.5" />
-                <span className="text-xs text-white/55">+977 56 580123</span>
+              <li className="flex items-center gap-2">
+                <Phone className="h-4 w-4 text-[#A8BBA2] shrink-0" />
+                <span>+977 98550 12345 / 056-520123</span>
               </li>
-              <li className="flex items-start gap-2.5">
-                <Mail className="h-3.5 w-3.5 text-primary-accent shrink-0 mt-0.5" />
-                <span className="text-xs text-white/55">stay@motimahallodge.com</span>
+              <li className="flex items-center gap-2">
+                <Mail className="h-4 w-4 text-[#A8BBA2] shrink-0" />
+                <span>info@motimahallodge.com</span>
               </li>
             </ul>
+          </div>
+
+          {/* Direct Contact Column (3 cols) */}
+          <div className="md:col-span-3 space-y-3">
+            <h4 className="font-heading text-sm font-bold text-white uppercase tracking-wider">
+              Direct Contact
+            </h4>
+            <p className="text-stone-300 leading-relaxed">
+              Call our front desk 24/7 for direct room availability, safari booking assistance, or highway directions.
+            </p>
+            <a
+              href="tel:+9779855012345"
+              className="inline-block px-5 py-2.5 bg-[#1F3A2B] hover:bg-[#112319] border border-stone-600 text-white font-semibold rounded-full text-xs transition-colors shadow-xs uppercase tracking-wider"
+            >
+              Call Front Desk: +977 98550 12345
+            </a>
           </div>
 
         </div>
 
-        <div className="border-t border-white/10 pt-8 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-[10px] text-white/30">
-            © {new Date().getFullYear()} Motimahal Lodge · Bharatpur, Chitwan
-          </p>
-          <p className="text-[10px] text-white/20">
-            अतिथि देवो भव
-          </p>
+        {/* Bottom Bar */}
+        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between text-stone-400 text-[11px] gap-2">
+          <span>© {new Date().getFullYear()} Motimahal Lodge & Tandoori Kitchen. All rights reserved.</span>
+          <span>Bharatpur, Chitwan, Nepal</span>
         </div>
-
       </div>
     </footer>
   );
