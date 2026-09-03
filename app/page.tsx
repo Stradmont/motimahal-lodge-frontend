@@ -102,7 +102,7 @@ export default function HomePage() {
           <div
             className="absolute inset-0 z-0 bg-cover bg-center"
             style={{
-              backgroundImage: `url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&q=80&w=2000')`,
+              backgroundImage: "url('/narayani-river-break.jpg')",
             }}
           />
           <div className="absolute inset-0 z-10 bg-black/35" />

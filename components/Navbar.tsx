@@ -10,8 +10,6 @@ const HEADER_NAV_ITEMS = [
   { label: 'Home', href: '/' },
   { label: 'About Us', href: '/about' },
   { label: 'Rooms', href: '/rooms' },
-  { label: 'Dining', href: '/food' },
-  { label: 'Attractions', href: '/attractions' },
   { label: 'Guest Reviews', href: '/reviews' },
   { label: 'Gallery', href: '/gallery' },
   { label: 'Stories', href: '/blog' },
@@ -22,11 +20,6 @@ const DRAWER_NAV_ITEMS = [
   { label: 'HOME', href: '/' },
   { label: 'ABOUT US', href: '/about' },
   { label: 'GUEST REVIEWS AND TESTIMONIALS', href: '/reviews' },
-  { label: 'ATTRACTIONS IN CHITWAN', href: '/attractions' },
-  { label: 'ROOMS & ACCOMMODATION', href: '/rooms' },
-  { label: 'TANDOORI DINING MENU', href: '/food' },
-  { label: 'GALLERY', href: '/gallery' },
-  { label: 'STORIES FROM CHITWAN', href: '/blog' },
   { label: 'CONTACT', href: '/contact' },
 ];
 
