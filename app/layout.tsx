@@ -19,7 +19,7 @@ const jost = Jost({
 export const metadata: Metadata = {
   title: 'Motimahal Lodge & Restaurant | Bharatpur, Chitwan, Nepal',
   description:
-    'Experience luxury lodge accommodations, authentic Chitwan hospitality, and mouthwatering tandoori cuisine near the Narayani River and Chitwan National Park.',
+    'Experience lodge accommodations, authentic Chitwan hospitality, and mouthwatering tandoori cuisine near the Narayani River and Chitwan National Park.',
 };
 
 export default function RootLayout({
@@ -32,7 +32,7 @@ export default function RootLayout({
       lang="en"
       className={`${mirza.variable} ${jost.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-background text-[#333333] font-sans selection:bg-[#EAB308]/30 selection:text-foreground">
+      <body className="min-h-full flex flex-col bg-background text-[#333333] font-sans">
         {children}
       </body>
     </html>
