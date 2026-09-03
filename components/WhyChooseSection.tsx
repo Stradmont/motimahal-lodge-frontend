@@ -45,7 +45,7 @@ export default function WhyChooseSection() {
       }}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-16">
-        
+
         {/* Section Heading */}
         <div className="text-center max-w-3xl mx-auto space-y-3">
           <h2 className="font-heading text-3xl sm:text-5xl font-bold uppercase tracking-wider text-[#2D2B2A]">
@@ -57,7 +57,7 @@ export default function WhyChooseSection() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 sm:gap-16 text-center">
           {WHY_CHOOSE_ITEMS.map((item, index) => (
             <div key={index} className="space-y-4 max-w-sm mx-auto">
-              
+
               {/* SVG Icon */}
               <div className="h-16 flex items-center justify-center">
                 {/* eslint-disable-next-line @next/next/no-img-element */}

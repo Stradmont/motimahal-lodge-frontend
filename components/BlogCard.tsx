@@ -12,7 +12,7 @@ interface BlogCardProps {
 export default function BlogCard({ story }: BlogCardProps) {
   return (
     <div className="bg-white rounded-lg border border-[#E6DFD5] overflow-hidden shadow-xs hover:shadow-md transition-all flex flex-col sm:flex-row group">
-      
+
       <div className="sm:w-2/5 relative aspect-4/3 sm:aspect-auto overflow-hidden bg-stone-100 shrink-0">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img

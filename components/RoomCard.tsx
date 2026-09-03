@@ -16,7 +16,7 @@ export default function RoomCard({ room }: RoomCardProps) {
   return (
     <>
       <div className="bg-white rounded-lg border border-[#E6DFD5] overflow-hidden shadow-xs flex flex-col justify-between group">
-        
+
         {/* Card Image */}
         <div className="relative aspect-4/3 overflow-hidden bg-stone-100">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -39,7 +39,7 @@ export default function RoomCard({ room }: RoomCardProps) {
             <h3 className="font-heading text-2xl sm:text-3xl font-bold text-[#1F3A2B] group-hover:text-[#162B20] transition-colors">
               {room.name}
             </h3>
-            
+
             <div className="flex items-center gap-5 text-sm text-stone-700 font-medium">
               <span className="flex items-center gap-1.5">
                 <Users className="h-4 w-4 text-[#1F3A2B]" />

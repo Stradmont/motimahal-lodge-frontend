@@ -12,7 +12,7 @@ interface AttractionCardProps {
 export default function AttractionCard({ attraction }: AttractionCardProps) {
   return (
     <div className="bg-white rounded-lg border border-[#E6DFD5] overflow-hidden shadow-xs hover:shadow-md transition-all flex flex-col justify-between group">
-      
+
       <div className="relative aspect-4/3 overflow-hidden bg-stone-100">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
