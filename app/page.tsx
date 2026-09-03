@@ -117,8 +117,14 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* 5. ACCOMMODATION SECTION */}
-        <section className="py-20 sm:py-28 bg-[#FAF7F2] border-b border-[#E6DFD5]">
+        {/* 5. ACCOMMODATION SECTION WITH backs.png BACKGROUND TEXTURE */}
+        <section
+          className="py-20 sm:py-28 border-b border-[#E6DFD5] relative text-[#2D2B2A]"
+          style={{
+            backgroundImage: "url('/backs.png')",
+            backgroundRepeat: 'repeat',
+          }}
+        >
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-16">
             
             <div className="text-center max-w-3xl mx-auto space-y-3">
