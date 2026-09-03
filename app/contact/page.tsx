@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import PageHero from '@/components/PageHero';
 import { MapPin, Mail, Phone, CheckCircle2 } from 'lucide-react';
 
 export default function ContactPage() {
@@ -24,15 +23,8 @@ export default function ContactPage() {
     <div className="min-h-screen flex flex-col bg-[#FAF7F2] text-[#2D2B2A]">
       <Navbar />
 
-      <main className="flex-1">
+      <main className="flex-1 pt-24 sm:pt-28">
         
-        {/* HERO BANNER */}
-        <PageHero
-          title="Contact Us"
-          subtitle="Get in touch with Motimahal Lodge front desk for room inquiries, travel directions, or safari assistance."
-          breadcrumbs={[{ label: 'Contact Us' }]}
-        />
-
         {/* GET IN TOUCH SECTION WITH backs.png BACKGROUND TEXTURE */}
         <section
           className="py-20 sm:py-28 border-b border-[#E6DFD5] relative text-[#2D2B2A]"
@@ -46,16 +38,16 @@ export default function ContactPage() {
               
               {/* Left Column: Form (7 cols) */}
               <div className="lg:col-span-7 space-y-6">
-                <h2 className="font-heading text-3xl sm:text-4xl font-bold text-[#2D2B2A]">
+                <h1 className="font-heading text-3xl sm:text-4xl font-bold text-[#2D2B2A]">
                   Get in Touch
-                </h2>
+                </h1>
 
                 {submitted ? (
                   <div className="bg-white p-8 rounded-lg border border-[#E6DFD5] text-center space-y-4 shadow-xs">
                     <CheckCircle2 className="h-12 w-12 text-[#1F3A2B] mx-auto" />
-                    <h3 className="font-heading text-2xl font-bold text-[#2D2B2A]">
+                    <h2 className="font-heading text-2xl font-bold text-[#2D2B2A]">
                       Message Sent Successfully!
-                    </h3>
+                    </h2>
                     <p className="text-stone-600 text-base leading-relaxed max-w-md mx-auto">
                       Thank you, {firstName}! We have received your message and our front desk family will get back to you shortly.
                     </p>
@@ -158,9 +150,9 @@ export default function ContactPage() {
                     <div className="w-10 h-10 rounded-full flex items-center justify-center text-[#C88A3B]">
                       <MapPin className="h-7 w-7" />
                     </div>
-                    <h3 className="font-heading text-lg font-bold text-[#2D2B2A] tracking-wide">
+                    <h2 className="font-heading text-lg font-bold text-[#2D2B2A] tracking-wide">
                       Address
-                    </h3>
+                    </h2>
                     <p className="text-stone-700 text-base leading-relaxed font-normal">
                       Bharatpur-10, Narayangarh, Chitwan District, Bagmati Province, Nepal
                     </p>
@@ -171,9 +163,9 @@ export default function ContactPage() {
                     <div className="w-10 h-10 rounded-full flex items-center justify-center text-[#C88A3B]">
                       <Mail className="h-7 w-7" />
                     </div>
-                    <h3 className="font-heading text-lg font-bold text-[#2D2B2A] tracking-wide">
+                    <h2 className="font-heading text-lg font-bold text-[#2D2B2A] tracking-wide">
                       Email address
-                    </h3>
+                    </h2>
                     <a
                       href="mailto:info@motimahallodge.com"
                       className="text-[#C88A3B] font-semibold text-base hover:underline block"
@@ -187,9 +179,9 @@ export default function ContactPage() {
                     <div className="w-10 h-10 rounded-full flex items-center justify-center text-[#C88A3B]">
                       <Phone className="h-7 w-7" />
                     </div>
-                    <h3 className="font-heading text-lg font-bold text-[#2D2B2A] tracking-wide">
+                    <h2 className="font-heading text-lg font-bold text-[#2D2B2A] tracking-wide">
                       Telephone
-                    </h3>
+                    </h2>
                     <a
                       href="tel:+9779855012345"
                       className="text-[#C88A3B] font-bold text-xl hover:underline block"
