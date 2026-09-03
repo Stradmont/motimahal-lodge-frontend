@@ -43,25 +43,20 @@ export default function Navbar() {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
-      // Toggle scrolled state for solid background styling when scrolling down
       if (currentScrollY > 40) {
         setIsScrolled(true);
       } else {
         setIsScrolled(false);
       }
 
-      // Threshold check to avoid jittery movements from tiny scroll amounts
       const diff = currentScrollY - lastScrollY;
       if (Math.abs(diff) < 8) return;
 
       if (currentScrollY <= 80) {
-        // Always show navbar near top of page
         setIsVisible(true);
       } else if (diff > 0) {
-        // Scrolling DOWN -> Smoothly hide navbar upward
         setIsVisible(false);
       } else {
-        // Scrolling UP -> Smoothly bring navbar back into view
         setIsVisible(true);
       }
 
@@ -79,13 +74,15 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Sticky / Fixed Smart Navbar with Smooth Hide-on-Scroll-Down & Show-on-Scroll-Up */}
+      {/* Sticky / Fixed Smart Navbar — Clean without dark gradient overlays */}
       <header
-        className={`fixed top-0 left-0 right-0 z-40 w-full transition-all duration-300 ease-in-out ${isVisible ? 'translate-y-0' : '-translate-y-full'
-          } ${isScrolled
-            ? 'bg-[#162B20]/95 backdrop-blur-md border-b border-[#2D4D3B]/40 py-3.5 sm:py-4 px-4 sm:px-8 lg:px-12 shadow-md text-white'
-            : 'bg-gradient-to-b from-black/75 via-black/35 to-transparent text-white py-5 sm:py-6 px-4 sm:px-8 lg:px-12'
-          }`}
+        className={`fixed top-0 left-0 right-0 z-40 w-full transition-all duration-300 ease-in-out ${
+          isVisible ? 'translate-y-0' : '-translate-y-full'
+        } ${
+          isScrolled
+            ? 'bg-[#162B20]/95 backdrop-blur-md border-b border-[#2D4D3B]/40 py-3.5 sm:py-4 px-4 sm:px-8 lg:px-12 shadow-sm text-white'
+            : 'bg-transparent text-white py-5 sm:py-6 px-4 sm:px-8 lg:px-12'
+        }`}
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between">
 
@@ -95,13 +92,13 @@ export default function Navbar() {
             <img
               src="/logo.png"
               alt="Motimahal Lodge Logo"
-              className="h-10 sm:h-12 w-auto object-contain"
+              className="h-10 sm:h-12 w-auto object-contain brightness-0 invert"
             />
             <div className="flex flex-col justify-center">
-              <span className="font-heading text-xl sm:text-2xl font-bold text-white leading-tight">
+              <span className="font-heading text-xl sm:text-2xl font-bold text-white leading-tight drop-shadow-xs">
                 MOTIMAHAL
               </span>
-              <span className="text-xs text-white/80 font-medium tracking-wider uppercase">
+              <span className="text-xs text-white/90 font-medium tracking-wider uppercase drop-shadow-xs">
                 Lodge & Restaurant
               </span>
             </div>
@@ -109,13 +106,14 @@ export default function Navbar() {
 
           {/* Desktop Right Navigation */}
           <div className="hidden lg:flex items-center gap-6">
-            <nav className="flex items-center gap-6 text-sm font-medium tracking-wide text-white/90">
+            <nav className="flex items-center gap-6 text-sm font-medium tracking-wide text-white/95">
               {HEADER_NAV_ITEMS.slice(0, 5).map((item) => (
                 <Link
                   key={item.label}
                   href={item.href}
-                  className={`transition-colors hover:text-white ${isActive(item.href) ? 'text-white border-b-2 border-white pb-0.5 font-bold' : 'text-white/85'
-                    }`}
+                  className={`transition-colors hover:text-white drop-shadow-xs ${
+                    isActive(item.href) ? 'text-white border-b-2 border-white pb-0.5 font-bold' : 'text-white/90'
+                  }`}
                 >
                   {item.label}
                 </Link>
@@ -170,7 +168,7 @@ export default function Navbar() {
       {/* Side Slide-Over Navigation Drawer */}
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-50 flex justify-end bg-black/50 backdrop-blur-xs transition-opacity duration-300">
-
+          
           {/* Backdrop Click to Close */}
           <div
             className="fixed inset-0"
@@ -186,7 +184,7 @@ export default function Navbar() {
               backgroundRepeat: 'repeat',
             }}
           >
-
+            
             {/* Drawer Header with Logo & Close Button */}
             <div className="p-6 sm:p-8 border-b border-[#E6DFD5] flex items-center justify-between">
               <Link
@@ -228,8 +226,9 @@ export default function Navbar() {
                     key={item.label}
                     href={item.href}
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`block font-heading text-base sm:text-lg font-bold uppercase tracking-wider transition-colors ${active ? 'text-[#1F3A2B]' : 'text-[#2D2B2A] hover:text-[#1F3A2B]'
-                      }`}
+                    className={`block font-heading text-base sm:text-lg font-bold uppercase tracking-wider transition-colors ${
+                      active ? 'text-[#1F3A2B]' : 'text-[#2D2B2A] hover:text-[#1F3A2B]'
+                    }`}
                   >
                     {item.label}
                   </Link>
