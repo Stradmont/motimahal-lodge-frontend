@@ -57,6 +57,7 @@ export interface GalleryItem {
   category: string;
   image: string;
   caption: string;
+  aspect?: string;
 }
 
 export interface Testimonial {
@@ -203,25 +204,76 @@ export const BLOG_DATA: BlogPost[] = [
 
 export const GALLERY_DATA: GalleryItem[] = [
   {
-    id: 'g1',
+    id: 'narayani-sunset',
+    title: 'Narayani River Sunset Promenade',
+    category: 'Narayani & Chitwan',
+    image: '/narayani-river-gallery.jpg',
+    caption: 'Evening calm along Narayani River in Bharatpur, minutes from Motimahal Lodge.',
+    aspect: 'aspect-16/10',
+  },
+  {
+    id: 'deluxe-ac-room',
     title: 'Deluxe AC Garden Room Interior',
     category: 'Rooms',
     image: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&q=80&w=800',
-    caption: 'Spacious bed with air conditioning and garden outlook.',
+    caption: 'Spacious air-conditioned bedroom with clean linen and garden view.',
+    aspect: 'aspect-4/3',
   },
   {
-    id: 'g2',
-    title: 'Clay Oven Tandoori Cooking',
-    category: 'Dining',
+    id: 'tandoori-clay-oven',
+    title: 'Charcoal Clay-Oven Tandoori Grills',
+    category: 'Tandoori Dining',
     image: 'https://images.unsplash.com/photo-1625220194771-7ebedd0b70b9?auto=format&fit=crop&q=80&w=800',
-    caption: 'Fresh chicken roasted over charcoal heat in traditional clay tandoors.',
+    caption: 'Fresh chicken and naan bread roasted daily over charcoal in our clay tandoor.',
+    aspect: 'aspect-square',
   },
   {
-    id: 'g3',
-    title: 'Lodge Courtyard & Garden',
+    id: 'lodge-courtyard',
+    title: 'Lodge Courtyard & Garden Lawns',
     category: 'Lodge & Grounds',
     image: 'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&q=80&w=800',
-    caption: 'Quiet green garden courtyard for morning tea and evening relaxation.',
+    caption: 'Quiet green courtyard garden where guests gather for morning tea and evening relaxation.',
+    aspect: 'aspect-16/10',
+  },
+  {
+    id: 'nepalese-thali-set',
+    title: 'Nepalese Thakali Meal Set',
+    category: 'Tandoori Dining',
+    image: 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&q=80&w=800',
+    caption: 'Traditional thali set with local rice, black lentil daal, ghee, and fresh pickles.',
+    aspect: 'aspect-square',
+  },
+  {
+    id: 'family-executive-suite',
+    title: 'Family Executive Suite View',
+    category: 'Rooms',
+    image: 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&q=80&w=800',
+    caption: 'Generous suite featuring dual queen beds and sitting area for family stays.',
+    aspect: 'aspect-4/3',
+  },
+  {
+    id: 'chitwan-rhino-safari',
+    title: 'Chitwan Wildlife Jeep Safari',
+    category: 'Narayani & Chitwan',
+    image: 'https://images.unsplash.com/photo-1547970810-dc9223d49122?auto=format&fit=crop&q=80&w=800',
+    caption: 'One-Horned Rhinoceros spotted during a morning safari in Chitwan National Park.',
+    aspect: 'aspect-16/10',
+  },
+  {
+    id: 'garden-evening-glow',
+    title: 'Evening Garden Outdoor Seating',
+    category: 'Lodge & Grounds',
+    image: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&q=80&w=800',
+    caption: 'Outdoor garden dining tables illuminated under Chitwan evening skies.',
+    aspect: 'aspect-4/3',
+  },
+  {
+    id: 'standard-double',
+    title: 'Standard AC Room Details',
+    category: 'Rooms',
+    image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80&w=800',
+    caption: 'Clean, comfortable room with ensuite hot shower and air conditioning.',
+    aspect: 'aspect-square',
   },
 ];
 
