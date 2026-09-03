@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Menu, X, Phone } from 'lucide-react';
@@ -34,6 +34,43 @@ export default function Navbar() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      // Toggle scrolled state for solid background styling when scrolling down
+      if (currentScrollY > 40) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+
+      // Threshold check to avoid jittery movements from tiny scroll amounts
+      const diff = currentScrollY - lastScrollY;
+      if (Math.abs(diff) < 8) return;
+
+      if (currentScrollY <= 80) {
+        // Always show navbar near top of page
+        setIsVisible(true);
+      } else if (diff > 0) {
+        // Scrolling DOWN -> Smoothly hide navbar upward
+        setIsVisible(false);
+      } else {
+        // Scrolling UP -> Smoothly bring navbar back into view
+        setIsVisible(true);
+      }
+
+      lastScrollY = currentScrollY;
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const isActive = (href: string) => {
     if (href === '/') return pathname === '/';
@@ -42,8 +79,16 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Top Header Navbar */}
-      <header className="absolute top-0 left-0 right-0 z-40 w-full bg-gradient-to-b from-black/75 via-black/35 to-transparent text-white py-5 sm:py-6 px-4 sm:px-8 lg:px-12">
+      {/* Sticky / Fixed Smart Navbar with Smooth Hide-on-Scroll-Down & Show-on-Scroll-Up */}
+      <header
+        className={`fixed top-0 left-0 right-0 z-40 w-full transition-all duration-300 ease-in-out ${
+          isVisible ? 'translate-y-0' : '-translate-y-full'
+        } ${
+          isScrolled
+            ? 'bg-[#162B20]/95 backdrop-blur-md border-b border-[#2D4D3B]/40 py-3.5 sm:py-4 px-4 sm:px-8 lg:px-12 shadow-md text-white'
+            : 'bg-gradient-to-b from-black/75 via-black/35 to-transparent text-white py-5 sm:py-6 px-4 sm:px-8 lg:px-12'
+        }`}
+      >
         <div className="mx-auto flex max-w-7xl items-center justify-between">
 
           {/* Brand Logo */}
