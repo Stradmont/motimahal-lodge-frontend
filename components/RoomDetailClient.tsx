@@ -5,6 +5,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import RoomCard from '@/components/RoomCard';
 import WhatToExpectSection from '@/components/WhatToExpectSection';
+import CtaSection from '@/components/CtaSection';
 import { Room, ROOMS_DATA } from '@/lib/data';
 
 import RoomDetailHero from './room-detail/RoomDetailHero';
@@ -159,6 +160,15 @@ export default function RoomDetailClient({ room }: RoomDetailClientProps) {
             </div>
           </section>
         )}
+
+        {/* REUSABLE BOOKING CTA SECTION WITH BACKS.PNG TEXTURE */}
+        <CtaSection
+          title="Planning Your Stay at Motimahal Lodge?"
+          description="Book directly with Motimahal Lodge for guaranteed rates, solar hot water, and authentic tandoori dining in Chitwan."
+          buttonText="Check Availability & Enquire"
+          buttonHref="#enquiry-section"
+          bgTexture={true}
+        />
       </main>
 
       <Footer />

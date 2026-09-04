@@ -134,7 +134,7 @@ export default function RoomsPage() {
           title="Reserve your room directly with our family"
           description="Book directly with Motimahal Lodge for guaranteed nightly rates, airport pickup, and Chitwan safari assistance."
           buttonText="Check room availability & enquiry"
-          bgTexture={false}
+          bgTexture={true}
         />
       </main>
 

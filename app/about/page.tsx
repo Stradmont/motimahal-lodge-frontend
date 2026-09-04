@@ -131,8 +131,7 @@ export default function AboutPage() {
           title="Plan Your Stay at Motimahal Lodge"
           description="Have questions about room rates, airport pickup, or Chitwan safari excursions? Our family desk is at your service."
           buttonText="Check Availability"
-          bgTexture={false}
-          className="bg-white"
+          bgTexture={true}
         />
 
       </main>

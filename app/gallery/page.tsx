@@ -132,7 +132,7 @@ export default function GalleryPage() {
           description="Book your stay directly with our family for direct room rates and safari trip arrangements in Bharatpur."
           buttonText="Check Room Availability & Enquire"
           buttonHref="/enquiry"
-          bgTexture={false}
+          bgTexture={true}
         />
       </main>
 
