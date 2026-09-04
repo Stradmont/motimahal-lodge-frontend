@@ -1,27 +1,52 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { X } from 'lucide-react';
+import { X, ExternalLink, Play } from 'lucide-react';
+import { InstagramIcon } from '@/components/SocialIcons';
 
 export interface VideoItem {
   id: string;
   title: string;
   thumbnail: string;
-  videoUrl: string; // Embed URL e.g. https://www.youtube.com/embed/... or Facebook embed
+  videoUrl: string;
+  instagramUrl: string;
 }
 
-const DEFAULT_VIDEOS: VideoItem[] = [
+const INSTAGRAM_REELS: VideoItem[] = [
   {
-    id: '1',
-    title: 'Visiting Nepal in October 2022',
-    thumbnail: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&q=80&w=800',
-    videoUrl: 'https://www.youtube.com/embed/ScMzIvxBSi4',
+    id: 'DcyNwQJT_4R',
+    title: '20 Years of Trusted Hospitality & New Lodge Facilities',
+    thumbnail: '/gallery/reel-dcy.jpg',
+    videoUrl: 'https://www.instagram.com/reel/DcyNwQJT_4R/embed/',
+    instagramUrl: 'https://www.instagram.com/reel/DcyNwQJT_4R/',
   },
   {
-    id: '2',
-    title: 'Visiting Nepal in October 2022',
-    thumbnail: 'https://images.unsplash.com/photo-1588416936097-41850ab3d86d?auto=format&fit=crop&q=80&w=800',
-    videoUrl: 'https://www.youtube.com/embed/ScMzIvxBSi4',
+    id: 'DbDrRUGv5CM',
+    title: 'Looking for a Place to Stay in Chitwan? Motimahal Lodge',
+    thumbnail: '/about/outside-image.png',
+    videoUrl: 'https://www.instagram.com/reel/DbDrRUGv5CM/embed/',
+    instagramUrl: 'https://www.instagram.com/reel/DbDrRUGv5CM/',
+  },
+  {
+    id: 'DbVV6NTPOj8',
+    title: 'Your Happy & Comfy Space to Stay at Chitwan',
+    thumbnail: '/about/room1.PNG',
+    videoUrl: 'https://www.instagram.com/reel/DbVV6NTPOj8/embed/',
+    instagramUrl: 'https://www.instagram.com/reel/DbVV6NTPOj8/',
+  },
+  {
+    id: 'DbtEjKEvREb',
+    title: 'Your Perfect Gateway Spot with a View & Garden Vibes',
+    thumbnail: '/gallery/narayani-river-break.jpg',
+    videoUrl: 'https://www.instagram.com/reel/DbtEjKEvREb/embed/',
+    instagramUrl: 'https://www.instagram.com/reel/DbtEjKEvREb/',
+  },
+  {
+    id: 'Db3Nzatgb8F',
+    title: 'Beautiful Views & Nightlife at Motimahal Restaurant & Lodge',
+    thumbnail: '/gallery/narayani-river-gallery.jpg',
+    videoUrl: 'https://www.instagram.com/reel/Db3Nzatgb8F/embed/',
+    instagramUrl: 'https://www.instagram.com/reel/Db3Nzatgb8F/',
   },
 ];
 
@@ -53,14 +78,17 @@ export default function VideoSection() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-10 sm:space-y-12">
         {/* Section Heading */}
         <div className="text-center max-w-3xl mx-auto space-y-2">
+          <span className="text-brand-green text-xs sm:text-sm font-semibold uppercase tracking-[0.2em] block">
+            Watch Our Stories
+          </span>
           <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-brand-charcoal uppercase tracking-wider">
-            VIDEO
+            FEATURED VIDEO REELS
           </h2>
         </div>
 
         {/* Video Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 justify-center max-w-4xl mx-auto">
-          {DEFAULT_VIDEOS.map((video) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 justify-center max-w-6xl mx-auto">
+          {INSTAGRAM_REELS.map((video) => (
             <div
               key={video.id}
               onClick={() => setActiveVideo(video)}
@@ -73,18 +101,32 @@ export default function VideoSection() {
                 }
               }}
             >
-              {/* Thumbnail Container (Clean, direct image click without play icon) */}
-              <div className="relative w-full aspect-4/3 rounded-xl overflow-hidden bg-stone-100 border border-brand-border shadow-xs group-hover:shadow-md transition-all duration-300">
+              {/* Thumbnail Container */}
+              <div className="relative w-full aspect-16/10 rounded-xl overflow-hidden bg-stone-100 border border-brand-border shadow-xs group-hover:shadow-lg transition-all duration-300">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={video.thumbnail}
                   alt={video.title}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103"
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
+
+                {/* Hover Play Button Badge */}
+                <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
+                  <div className="p-3.5 rounded-full bg-brand-green text-white border border-white/30 backdrop-blur-xs transform scale-90 group-hover:scale-100 transition-all duration-300 shadow-lg flex items-center gap-1.5 px-4">
+                    <Play className="h-4 w-4 fill-current" />
+                    <span className="text-xs font-semibold uppercase tracking-wider">Watch Reel</span>
+                  </div>
+                </div>
+
+                {/* Instagram Badge */}
+                <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-xs text-white text-[10px] sm:text-xs font-semibold px-2.5 py-1 rounded-full border border-white/20 flex items-center gap-1.5 shadow-xs">
+                  <InstagramIcon className="w-3 h-3" />
+                  <span>Instagram Reel</span>
+                </div>
               </div>
 
               {/* Caption */}
-              <p className="font-medium text-stone-800 text-sm sm:text-base text-center leading-snug group-hover:text-brand-green transition-colors">
+              <p className="font-medium text-stone-800 text-sm sm:text-base text-center leading-snug group-hover:text-brand-green transition-colors px-2">
                 {video.title}
               </p>
             </div>
@@ -95,29 +137,44 @@ export default function VideoSection() {
       {/* Modal / Lightbox */}
       {activeVideo && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-xs transition-opacity duration-300 animate-in fade-in"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md transition-opacity duration-300 animate-in fade-in"
           onClick={() => setActiveVideo(null)}
         >
           <div
-            className="relative w-full max-w-4xl bg-stone-900 rounded-xl overflow-hidden shadow-2xl border border-stone-800"
+            className="relative w-full max-w-xl bg-stone-900 rounded-xl overflow-hidden shadow-2xl border border-stone-800 flex flex-col max-h-[92vh]"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
-            <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-stone-800 bg-stone-950 text-white">
-              <h3 className="font-heading text-base sm:text-xl font-bold truncate pr-4 text-stone-200">
-                {activeVideo.title}
-              </h3>
-              <button
-                onClick={() => setActiveVideo(null)}
-                className="p-1.5 sm:p-2 rounded-full text-stone-400 hover:text-white hover:bg-stone-800 transition-colors focus:outline-none"
-                aria-label="Close modal"
-              >
-                <X className="w-5 h-5 sm:w-6 sm:h-6" />
-              </button>
+            <div className="flex items-center justify-between px-4 sm:px-6 py-3.5 border-b border-stone-800 bg-stone-950 text-white shrink-0">
+              <div className="flex items-center gap-2 truncate pr-2">
+                <InstagramIcon className="w-4 h-4 text-brand-gold shrink-0" />
+                <h3 className="font-heading text-sm sm:text-base font-bold truncate text-stone-200">
+                  {activeVideo.title}
+                </h3>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <a
+                  href={activeVideo.instagramUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-1.5 sm:p-2 rounded-full text-stone-400 hover:text-brand-gold hover:bg-stone-800 transition-colors inline-flex items-center gap-1 text-xs font-medium"
+                  title="Open on Instagram"
+                >
+                  <span className="hidden sm:inline">Open App</span>
+                  <ExternalLink className="w-4 h-4" />
+                </a>
+                <button
+                  onClick={() => setActiveVideo(null)}
+                  className="p-1.5 sm:p-2 rounded-full text-stone-400 hover:text-white hover:bg-stone-800 transition-colors focus:outline-none cursor-pointer"
+                  aria-label="Close modal"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
             </div>
 
-            {/* Video Iframe Container */}
-            <div className="relative w-full aspect-video bg-black flex items-center justify-center">
+            {/* Reel Video Iframe Container */}
+            <div className="relative w-full aspect-[9/16] max-h-[75vh] bg-black flex items-center justify-center overflow-hidden">
               <iframe
                 src={activeVideo.videoUrl}
                 title={activeVideo.title}
