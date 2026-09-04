@@ -1,0 +1,293 @@
+'use client';
+
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+
+export interface AboutSlide {
+  id: string;
+  title: string;
+  image: string;
+  caption: string;
+}
+
+const REAL_SLIDES: AboutSlide[] = [
+  {
+    id: 'lodge-grounds',
+    title: 'Tranquil Courtyard & Garden Lawns',
+    image: 'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&q=80&w=1800',
+    caption: 'Peaceful green courtyard garden where guests relax after Chitwan wildlife safaris and enjoy morning tea.',
+  },
+  {
+    id: 'narayani-river',
+    title: 'Narayani Riverfront Promenade',
+    image: '/narayani-river-gallery.jpg',
+    caption: 'Stunning golden sunset views along the Narayani River, perfect for evening strolls just 5 minutes away.',
+  },
+  {
+    id: 'deluxe-room',
+    title: 'Clean, Spacious AC Guest Rooms',
+    image: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&q=80&w=1800',
+    caption: 'Restful air-conditioned bedrooms featuring continuous hot showers, premium linens, and garden views.',
+  },
+  {
+    id: 'tandoori-dining',
+    title: 'Charcoal Clay-Oven Tandoori Grills',
+    image: 'https://images.unsplash.com/photo-1625220194771-7ebedd0b70b9?auto=format&fit=crop&q=80&w=1800',
+    caption: 'Fresh tandoori chicken, naan, and authentic Nepalese thali prepared daily over glowing coals.',
+  },
+  {
+    id: 'family-suite',
+    title: 'Family Executive Suite Comfort',
+    image: 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&q=80&w=1800',
+    caption: 'Generous suite with dual queen beds and dedicated sitting corner for family travels.',
+  },
+  {
+    id: 'chitwan-safari',
+    title: 'Chitwan Wildlife Safaris',
+    image: 'https://images.unsplash.com/photo-1547970810-dc9223d49122?auto=format&fit=crop&q=80&w=1800',
+    caption: 'Unforgettable 30-minute gateway to jungle safaris and rhino sightings in Chitwan National Park.',
+  },
+];
+
+// Build extended array for infinite seamless looping: [Clone Last, ...Real Slides, Clone First]
+const EXTENDED_SLIDES: AboutSlide[] = [
+  REAL_SLIDES[REAL_SLIDES.length - 1],
+  ...REAL_SLIDES,
+  REAL_SLIDES[0],
+];
+
+export default function AboutCarousel() {
+  const [displayIndex, setDisplayIndex] = useState(1);
+  const [withTransition, setWithTransition] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [isHovered, setIsHovered] = useState(false);
+  const [dragOffset, setDragOffset] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(1200);
+
+  const dragStartX = useRef<number>(0);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const totalRealSlides = REAL_SLIDES.length;
+  const activeRealIndex = (displayIndex - 1 + totalRealSlides) % totalRealSlides;
+
+  // Track window resize for responsive centering
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Card dimensions based on viewport width
+  let cardWidth = 720;
+  let cardGap = 24;
+  let cardHeight = 460;
+
+  if (windowWidth < 640) {
+    cardWidth = Math.min(windowWidth - 48, 340);
+    cardGap = 16;
+    cardHeight = 300;
+  } else if (windowWidth < 1024) {
+    cardWidth = 540;
+    cardGap = 20;
+    cardHeight = 400;
+  } else if (windowWidth < 1400) {
+    cardWidth = 680;
+    cardGap = 24;
+    cardHeight = 460;
+  } else {
+    cardWidth = 760;
+    cardGap = 28;
+    cardHeight = 500;
+  }
+
+  // Calculate track position to center the active card
+  const centerOffset = (windowWidth - cardWidth) / 2;
+  const trackTranslateX = centerOffset - displayIndex * (cardWidth + cardGap) + dragOffset;
+
+  const nextSlide = useCallback(() => {
+    setWithTransition(true);
+    setDisplayIndex((prev) => prev + 1);
+  }, []);
+
+  const prevSlide = useCallback(() => {
+    setWithTransition(true);
+    setDisplayIndex((prev) => prev - 1);
+  }, []);
+
+  // Handle boundary jumps for infinite continuous loop
+  const handleTransitionEnd = () => {
+    if (displayIndex === 0) {
+      setWithTransition(false);
+      setDisplayIndex(totalRealSlides);
+    } else if (displayIndex === EXTENDED_SLIDES.length - 1) {
+      setWithTransition(false);
+      setDisplayIndex(1);
+    }
+  };
+
+  const goToSlide = (realIdx: number) => {
+    setWithTransition(true);
+    setDisplayIndex(realIdx + 1);
+  };
+
+  // Continuous auto-slide (pauses on hover/drag)
+  useEffect(() => {
+    if (isPlaying && !isHovered && !isDragging) {
+      timerRef.current = setInterval(() => {
+        nextSlide();
+      }, 5000);
+    }
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [isPlaying, isHovered, isDragging, nextSlide]);
+
+  // Pointer & Drag Handlers
+  const handlePointerDown = (clientX: number) => {
+    dragStartX.current = clientX;
+    setIsDragging(true);
+    setWithTransition(false);
+  };
+
+  const handlePointerMove = (clientX: number) => {
+    if (!isDragging) return;
+    const deltaX = clientX - dragStartX.current;
+    setDragOffset(deltaX);
+  };
+
+  const handlePointerUp = () => {
+    if (!isDragging) return;
+    setIsDragging(false);
+    setWithTransition(true);
+
+    const threshold = 50;
+    if (dragOffset < -threshold) {
+      nextSlide();
+    } else if (dragOffset > threshold) {
+      prevSlide();
+    }
+    setDragOffset(0);
+  };
+
+  const currentSlide = REAL_SLIDES[activeRealIndex];
+
+  return (
+    <div className="w-full relative overflow-hidden py-4 select-none">
+      {/* Viewport Track Container spanning edge-to-edge */}
+      <div
+        className="w-full relative overflow-hidden cursor-grab active:cursor-grabbing"
+        style={{ height: `${cardHeight + 20}px` }}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => {
+          setIsHovered(false);
+          handlePointerUp();
+        }}
+        onMouseDown={(e) => handlePointerDown(e.clientX)}
+        onMouseMove={(e) => handlePointerMove(e.clientX)}
+        onMouseUp={handlePointerUp}
+        onTouchStart={(e) => handlePointerDown(e.touches[0].clientX)}
+        onTouchMove={(e) => handlePointerMove(e.touches[0].clientX)}
+        onTouchEnd={handlePointerUp}
+      >
+        {/* Sliding Track */}
+        <div
+          className={`flex items-center h-full ${
+            withTransition ? 'transition-transform duration-700 ease-out' : 'transition-none'
+          }`}
+          style={{
+            gap: `${cardGap}px`,
+            transform: `translateX(${trackTranslateX}px)`,
+          }}
+          onTransitionEnd={handleTransitionEnd}
+        >
+          {EXTENDED_SLIDES.map((slide, idx) => {
+            const isActive = idx === displayIndex;
+
+            return (
+              <div
+                key={`${slide.id}-${idx}`}
+                className={`shrink-0 rounded-2xl overflow-hidden relative transition-all duration-700 ease-out border ${
+                  isActive
+                    ? 'scale-100 opacity-100 shadow-md border-[#E6DFD5] z-20'
+                    : 'scale-[0.92] opacity-55 shadow-xs border-transparent z-10'
+                }`}
+                style={{
+                  width: `${cardWidth}px`,
+                  height: `${cardHeight}px`,
+                }}
+              >
+                {/* Pure, Unvarnished Photography — No Gradients, No Overlays */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={slide.image}
+                  alt={slide.title}
+                  className="w-full h-full object-cover"
+                  draggable={false}
+                />
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Simple, Functional Arrow Buttons */}
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            prevSlide();
+          }}
+          aria-label="Previous Slide"
+          className="absolute left-3 sm:left-8 md:left-12 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/95 hover:bg-white text-[#2D2B2A] shadow-md border border-[#E6DFD5] flex items-center justify-center transition-transform hover:scale-105 active:scale-95 cursor-pointer"
+        >
+          <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+        </button>
+
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            nextSlide();
+          }}
+          aria-label="Next Slide"
+          className="absolute right-3 sm:right-8 md:right-12 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/95 hover:bg-white text-[#2D2B2A] shadow-md border border-[#E6DFD5] flex items-center justify-center transition-transform hover:scale-105 active:scale-95 cursor-pointer"
+        >
+          <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
+        </button>
+      </div>
+
+      {/* Clean, Natural Caption & Navigation Below the Image */}
+      <div className="max-w-3xl mx-auto px-6 mt-6 text-center space-y-3">
+        <h3 className="font-heading text-2xl sm:text-3xl font-bold text-[#2D2B2A]">
+          {currentSlide.title}
+        </h3>
+        <p className="text-stone-600 text-sm sm:text-base leading-relaxed font-normal">
+          {currentSlide.caption}
+        </p>
+
+        {/* Minimal Dot Indicators & Counter */}
+        <div className="pt-2 flex items-center justify-center gap-4">
+          <div className="flex items-center gap-2">
+            {REAL_SLIDES.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => goToSlide(idx)}
+                aria-label={`Go to slide ${idx + 1}`}
+                className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
+                  activeRealIndex === idx
+                    ? 'w-6 bg-[#1F3A2B]'
+                    : 'w-2 bg-stone-300 hover:bg-stone-400'
+                }`}
+              />
+            ))}
+          </div>
+
+          <span className="text-stone-400 font-mono text-xs">
+            {String(activeRealIndex + 1).padStart(2, '0')} / {String(totalRealSlides).padStart(2, '0')}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}

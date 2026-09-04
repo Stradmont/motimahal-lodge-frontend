@@ -1,21 +1,26 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
+import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import WhyChooseSection from '@/components/WhyChooseSection';
-import BookingModal from '@/components/BookingModal';
+import AboutCarousel from '@/components/AboutCarousel';
 import { Bookmark } from 'lucide-react';
 
 export default function AboutPage() {
-  const [bookingModalOpen, setBookingModalOpen] = useState(false);
-
   return (
-    <div className="min-h-screen flex flex-col bg-[#FAF7F2] text-[#2D2B2A]">
+    <div
+      className="min-h-screen flex flex-col text-[#2D2B2A]"
+      style={{
+        backgroundImage: "url('/backs.png')",
+        backgroundRepeat: 'repeat',
+      }}
+    >
       <Navbar />
 
       <main className="flex-1">
-        
+
         {/* 1. HERO SECTION */}
         <section className="relative w-full h-[60vh] min-h-[440px] flex items-center justify-center overflow-hidden bg-stone-900">
           <div
@@ -38,19 +43,19 @@ export default function AboutPage() {
 
         {/* 2. ABOUT MOTIMAHAL SECTION WITH backs.png BACKGROUND TEXTURE */}
         <section
-          className="py-20 sm:py-28 border-b border-[#E6DFD5] relative text-[#2D2B2A]"
+          className="py-20 sm:py-28 border-b border-[#E6DFD5] relative text-[#2D2B2A] overflow-hidden"
           style={{
             backgroundImage: "url('/backs.png')",
             backgroundRepeat: 'repeat',
           }}
         >
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12 mb-16 sm:mb-20">
             <h2 className="font-heading text-3xl sm:text-5xl lg:text-6xl font-bold text-[#2D2B2A] tracking-wider uppercase text-center lg:text-left">
               ABOUT MOTIMAHAL
             </h2>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-              
+
               {/* Left Image: Large Lodge Photography */}
               <div className="lg:col-span-5 rounded-lg overflow-hidden border border-[#E6DFD5] shadow-xs">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -63,7 +68,7 @@ export default function AboutPage() {
 
               {/* Right Content: Family Portrait Inset + Narrative Story */}
               <div className="lg:col-span-7 space-y-8">
-                
+
                 {/* Family Portrait Inset */}
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 bg-white p-6 sm:p-8 rounded-lg border border-[#E6DFD5] shadow-xs">
                   <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-lg overflow-hidden shrink-0 border border-[#E6DFD5]">
@@ -83,7 +88,7 @@ export default function AboutPage() {
                   </div>
                 </div>
 
-                {/* Editorial Story Paragraphs — Increased to text-base sm:text-lg lg:text-xl */}
+                {/* Editorial Story Paragraphs */}
                 <div className="space-y-6 text-stone-700 text-base sm:text-lg lg:text-xl leading-relaxed font-normal">
                   <p>
                     Welcome to Motimahal Lodge and Restaurant, a cherished haven located in Bharatpur-10, Chitwan. Established over three decades ago by our family, our lodge stands as a testament to an unwavering passion for genuine hospitality, fresh regional dining, and peaceful rest.
@@ -103,6 +108,11 @@ export default function AboutPage() {
 
             </div>
           </div>
+
+          {/* Full Viewport Width (Edge-to-Edge) Interactive Image Carousel */}
+          <div className="w-full">
+            <AboutCarousel />
+          </div>
         </section>
 
         {/* 3. FACILITIES SECTION WITH backs-2.png BACKGROUND TEXTURE */}
@@ -119,10 +129,10 @@ export default function AboutPage() {
             </h2>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-              
+
               {/* Left Column: Bookmark Facility Items List */}
               <div className="lg:col-span-6 space-y-10">
-                
+
                 {/* Facility 1: Restaurant & Dining */}
                 <div className="flex items-start gap-5">
                   <Bookmark className="h-6 w-6 text-[#1F3A2B] shrink-0 mt-1" />
@@ -213,8 +223,6 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* 5. WHY CHOOSE MOTIMAHAL SECTION */}
-        <WhyChooseSection />
 
         {/* 6. FINAL PLAN YOUR STAY CTA */}
         <section className="py-24 bg-white text-[#2D2B2A] text-center">
@@ -226,12 +234,12 @@ export default function AboutPage() {
               Have questions about room rates, airport pickup, or Chitwan safari excursions? Our family desk is at your service.
             </p>
             <div className="pt-2">
-              <button
-                onClick={() => setBookingModalOpen(true)}
-                className="bg-[#1F3A2B] hover:bg-[#162B20] text-white font-semibold text-sm sm:text-base py-4 px-9 rounded-md transition-colors cursor-pointer tracking-wider uppercase shadow-xs"
+              <Link
+                href="/enquiry"
+                className="inline-flex items-center justify-center bg-[#1F3A2B] hover:bg-[#162B20] text-white font-semibold text-sm sm:text-base py-4 px-9 rounded-md transition-colors cursor-pointer shadow-xs"
               >
                 Check Availability
-              </button>
+              </Link>
             </div>
           </div>
         </section>
@@ -239,8 +247,6 @@ export default function AboutPage() {
       </main>
 
       <Footer />
-
-      <BookingModal isOpen={bookingModalOpen} onClose={() => setBookingModalOpen(false)} />
     </div>
   );
 }

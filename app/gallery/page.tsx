@@ -4,13 +4,11 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import WhyChooseSection from '@/components/WhyChooseSection';
-import BookingModal from '@/components/BookingModal';
 import { GALLERY_DATA } from '@/lib/data';
 import { Maximize2, Eye, X, ChevronLeft, ChevronRight } from 'lucide-react';
 
 export default function GalleryPage() {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
-  const [bookingModalOpen, setBookingModalOpen] = useState(false);
 
   const activeItem = lightboxIndex !== null ? GALLERY_DATA[lightboxIndex] : null;
 
@@ -38,7 +36,13 @@ export default function GalleryPage() {
   }, [lightboxIndex, handlePrev, handleNext]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FAF7F2] text-[#2D2B2A]">
+    <div
+      className="min-h-screen flex flex-col text-[#2D2B2A]"
+      style={{
+        backgroundImage: "url('/backs.png')",
+        backgroundRepeat: 'repeat',
+      }}
+    >
       <Navbar />
 
       <main className="flex-1">
@@ -75,37 +79,37 @@ export default function GalleryPage() {
         >
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
-            {/* Responsive Masonry-Style Grid Arrangement */}
+            {/* Uniform 3-Column Gallery Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
               {GALLERY_DATA.map((item, idx) => (
                 <div
                   key={item.id}
                   onClick={() => setLightboxIndex(idx)}
-                  className={`bg-white rounded-lg border border-[#E6DFD5] overflow-hidden shadow-xs hover:shadow-md transition-all duration-300 cursor-pointer group relative ${item.aspect || 'aspect-16/10'}`}
+                  className="bg-white rounded-lg border border-[#E6DFD5] overflow-hidden shadow-xs hover:shadow-md transition-shadow duration-300 cursor-pointer group relative aspect-4/3 w-full"
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={item.image}
                     alt={item.title}
-                    className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                    className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:transform-none"
                   />
 
-                  {/* Subtle Dark Backdrop Overlay */}
-                  <div className="absolute inset-0 bg-black/45 backdrop-blur-[1px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">
+                  {/* Soft Light Overlay Container on Hover */}
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out pointer-events-none motion-reduce:transition-none">
 
                     {/* Centered Expand Icon Button */}
                     <div className="absolute inset-0 flex items-center justify-center p-4">
-                      <div className="p-3.5 rounded-full bg-black/40 backdrop-blur-xs text-white border border-white/30 shadow-lg scale-90 group-hover:scale-100 opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out">
-                        <Maximize2 className="h-6 w-6 text-white" />
+                      <div className="p-3 rounded-full bg-black/45 text-white border border-white/20 shadow-sm scale-95 group-hover:scale-100 transition-transform duration-300 ease-out backdrop-blur-xs motion-reduce:transition-none">
+                        <Maximize2 className="h-5 w-5 text-white" />
                       </div>
                     </div>
 
-                    {/* Bottom Category & Title Label */}
-                    <div className="absolute bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-black/80 via-black/40 to-transparent translate-y-2 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out flex flex-col justify-end space-y-1">
-                      <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-[#E6DFD5] block">
+                    {/* Soft Natural Bottom Gradient for Readability */}
+                    <div className="absolute bottom-0 left-0 right-0 p-5 pt-12 bg-gradient-to-t from-black/60 via-black/20 to-transparent flex flex-col justify-end space-y-0.5">
+                      <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-widest text-white/90 block">
                         {item.category}
                       </span>
-                      <h3 className="font-heading text-base sm:text-lg font-bold text-white leading-snug line-clamp-1 drop-shadow-xs">
+                      <h3 className="font-heading text-base sm:text-lg font-bold text-white leading-snug line-clamp-1">
                         {item.title}
                       </h3>
                     </div>
@@ -118,8 +122,6 @@ export default function GalleryPage() {
           </div>
         </section>
 
-        {/* 3. WHY CHOOSE MOTIMAHAL SECTION */}
-        <WhyChooseSection />
 
         {/* 4. BOOKING ENQUIRY CTA SECTION */}
         <section className="py-20 sm:py-24 bg-[#FAF7F2] text-[#2D2B2A] text-center border-t border-[#E6DFD5]">
@@ -135,7 +137,7 @@ export default function GalleryPage() {
             </p>
             <div className="pt-2">
               <button
-                onClick={() => setBookingModalOpen(true)}
+                // onClick={() => setBookingModalOpen(true)}
                 className="bg-[#1F3A2B] hover:bg-[#162B20] border border-[#2D4D3B] text-white font-semibold text-sm sm:text-base py-4 px-9 rounded-md transition-all cursor-pointer tracking-wider uppercase shadow-xs"
                 style={{
                   backgroundImage: "linear-gradient(rgba(31, 58, 43, 0.88), rgba(31, 58, 43, 0.88)), url('/backs.png')",
@@ -207,29 +209,22 @@ export default function GalleryPage() {
               />
             </div>
 
-            {/* Caption & Counter Card - High Contrast Pure White Text */}
-            <div className="text-center text-white space-y-2 bg-black/90 border border-white/20 px-6 py-4.5 rounded-xl backdrop-blur-md max-w-2xl w-full shadow-2xl">
-              <span className="text-xs font-bold text-amber-300 uppercase tracking-widest block drop-shadow-xs">
-                {activeItem.category} • Image {lightboxIndex + 1} of {GALLERY_DATA.length}
+            {/* Caption & Counter Bar */}
+            <div className="text-center text-white space-y-1.5 bg-black/80 px-6 sm:px-8 py-3.5 rounded-2xl border border-white/15 backdrop-blur-md max-w-2xl shadow-xl">
+              <span className="text-[11px] font-semibold text-white/90 uppercase tracking-widest block">
+                {activeItem.category} • ({lightboxIndex + 1} of {GALLERY_DATA.length})
               </span>
-              <h3 className="text-xl sm:text-2xl font-bold text-white drop-shadow-sm leading-snug">
+              <h3 className="font-heading text-lg sm:text-xl font-bold !text-white leading-snug">
                 {activeItem.title}
               </h3>
-              {activeItem.caption && (
-                <p className="text-white/95 text-sm sm:text-base font-normal leading-relaxed max-w-xl mx-auto pt-0.5 drop-shadow-xs">
-                  {activeItem.caption}
-                </p>
-              )}
+              <p className="text-xs sm:text-sm !text-stone-200 font-normal leading-relaxed">
+                {activeItem.caption}
+              </p>
             </div>
           </div>
 
         </div>
       )}
-
-      <BookingModal
-        isOpen={bookingModalOpen}
-        onClose={() => setBookingModalOpen(false)}
-      />
     </div>
   );
 }

@@ -19,17 +19,12 @@ export default function Hero() {
 
       {/* Centered Main Title */}
       <div className="relative z-20 mx-auto max-w-5xl px-6 text-center text-white space-y-6">
-        <span className="text-white/95 text-sm sm:text-base font-semibold uppercase tracking-[0.25em] block">
-          Bharatpur-10, Chitwan, Nepal
-        </span>
 
         <h1 className="font-heading text-4xl sm:text-6xl lg:text-7xl font-extrabold uppercase tracking-tight text-white drop-shadow-md leading-tight">
           MOTIMAHAL LODGE & RESTAURANT
         </h1>
 
-        <p className="text-stone-100 text-lg sm:text-xl lg:text-2xl max-w-3xl mx-auto font-light leading-relaxed tracking-wide">
-          A family-owned sanctuary in Chitwan offering clean AC lodging, 24/7 hot showers, and authentic clay-oven tandoori dining.
-        </p>
+       
       </div>
 
       {/* Scroll Down Indicator */}

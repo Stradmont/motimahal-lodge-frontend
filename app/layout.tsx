@@ -22,6 +22,9 @@ export const metadata: Metadata = {
     'Experience lodge accommodations, authentic Chitwan hospitality, and mouthwatering tandoori cuisine near the Narayani River and Chitwan National Park.',
 };
 
+import WhatsAppButton from '@/components/WhatsAppButton';
+import ScrollToTop from '@/components/ScrollToTop';
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -34,6 +37,8 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-background text-[#333333] font-sans">
         {children}
+        <ScrollToTop />
+        <WhatsAppButton />
       </body>
     </html>
   );

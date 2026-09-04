@@ -33,7 +33,13 @@ export default function EnquiryPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FAF7F2] text-[#2D2B2A]">
+    <div
+      className="min-h-screen flex flex-col text-[#2D2B2A]"
+      style={{
+        backgroundImage: "url('/backs.png')",
+        backgroundRepeat: 'repeat',
+      }}
+    >
       <Navbar />
 
       <main className="flex-1">
@@ -46,7 +52,7 @@ export default function EnquiryPage() {
         <section className="py-16 sm:py-24">
           <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
             <div className="bg-white p-6 sm:p-10 rounded-lg border border-[#E6DFD5] shadow-xs">
-              
+
               {confirmed ? (
                 <div className="text-center space-y-4 py-8">
                   <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-emerald-100 text-emerald-800">

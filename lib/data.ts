@@ -1,14 +1,22 @@
 export interface Room {
   id: string;
+  slug: string;
   name: string;
   category: string;
   priceNpr: number;
   capacity: string;
   bedType: string;
+  sizeSqFt?: number;
+  bathroomInfo?: string;
+  view?: string;
   image: string;
+  galleryImages: string[];
   amenities: string[];
   description: string;
+  fullDescription?: string[];
+  features?: string[];
   featured?: boolean;
+  maxUnits?: number;
 }
 
 export interface MenuItem {
@@ -42,13 +50,17 @@ export interface Attraction {
 
 export interface BlogPost {
   id: string;
+  slug: string;
   title: string;
   category: string;
   date: string;
   author: string;
+  readTime: string;
   excerpt: string;
   content: string[];
   image: string;
+  tags?: string[];
+  featured?: boolean;
 }
 
 export interface GalleryItem {
@@ -73,51 +85,213 @@ export interface Testimonial {
 export const ROOMS_DATA: Room[] = [
   {
     id: 'deluxe-ac-cottage',
+    slug: 'deluxe-room',
     name: 'Deluxe AC Garden Room',
     category: 'Deluxe',
     priceNpr: 3500,
     capacity: '2 Adults, 1 Child',
     bedType: 'King Size Bed',
-    image: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&q=80&w=800',
-    amenities: ['Air Conditioning', 'Free Wi-Fi', 'Ensuite Bathroom', 'Hot Shower', 'LED TV'],
+    sizeSqFt: 340,
+    bathroomInfo: 'Ensuite Bathroom with 24/7 Solar Hot Shower',
+    view: 'Lodge Courtyard & Garden View',
+    image: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&q=80&w=1200',
+    galleryImages: [
+      'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&q=80&w=1200',
+      'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&q=80&w=1200',
+      'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&q=80&w=1200',
+      'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&q=80&w=1200',
+      'https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&q=80&w=1200',
+    ],
+    amenities: [
+      'Air Conditioning',
+      'Free Wi-Fi',
+      'Ensuite Bathroom',
+      'Hot Shower',
+      'LED TV',
+      'Room Service',
+      'Breakfast Available',
+      'Garden Access',
+      'Bottled Water',
+      'Daily Housekeeping',
+    ],
     description: 'Spacious air-conditioned room surrounded by garden greenery in Bharatpur. Perfect for couples and safari visitors seeking quiet comfort.',
+    fullDescription: [
+      'Our Deluxe AC Garden Room provides a peaceful retreat inside Motimahal Lodge. Designed with warm Nepalese wooden touches, neutral earth tones, and a large plush King Size bed, this room ensures a restful night after long travel days or wildlife excursions in Chitwan.',
+      'Enjoy direct views of our lush inner courtyard garden, high-speed Wi-Fi, individually controlled quiet air conditioning, and a private ensuite bathroom equipped with round-the-clock solar-powered hot shower water.',
+    ],
+    features: [
+      'Plush King Bed with fresh laundered cotton linens',
+      'Individual silent split Air Conditioner',
+      'Ensuite bathroom with 24-hour solar hot water',
+      'Flat-screen LED TV with satellite channels',
+      'Seating corner with coffee table and garden view window',
+      'Complimentary high-speed Wi-Fi access',
+      'Daily housekeeping and fresh towel service',
+    ],
     featured: true,
+    maxUnits: 6,
   },
   {
     id: 'family-executive-suite',
+    slug: 'family-executive-suite',
     name: 'Family Executive Suite',
     category: 'Suite',
     priceNpr: 5200,
     capacity: '4 Adults',
     bedType: '2 Queen Beds',
-    image: 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&q=80&w=800',
-    amenities: ['Air Conditioning', 'Free Wi-Fi', 'Private Balcony', 'Mini Fridge', 'Ensuite Bath'],
+    sizeSqFt: 480,
+    bathroomInfo: 'Spacious Private Bathroom with Solar Hot Water & Vanity',
+    view: 'Garden & Mountain Horizon View',
+    image: 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&q=80&w=1200',
+    galleryImages: [
+      'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&q=80&w=1200',
+      'https://images.unsplash.com/photo-1591088398332-8a7791972843?auto=format&fit=crop&q=80&w=1200',
+      'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&q=80&w=1200',
+      'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&q=80&w=1200',
+      'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&q=80&w=1200',
+    ],
+    amenities: [
+      'Air Conditioning',
+      'Free Wi-Fi',
+      'Private Balcony',
+      'Mini Fridge',
+      'Ensuite Bath',
+      'Hot Shower',
+      'LED TV',
+      'Room Service',
+      'Breakfast Available',
+      'Parking Included',
+    ],
     description: 'Generous suite featuring dual queen beds, sitting corner, and view of the Chitwan landscape for family stays.',
+    fullDescription: [
+      'Designed specifically for families and group travelers, the Family Executive Suite offers abundant space with two comfortable Queen Beds, a dedicated lounge area, and expansive windows welcoming natural sunlight.',
+      'Step out onto your private balcony to enjoy morning Nepalese tea while taking in views of the lodge grounds. Complete with a mini fridge for refreshments, silent air conditioning, and prompt room service delivery from our tandoori kitchen.',
+    ],
+    features: [
+      'Two comfortable Queen Size Beds for up to 4 guests',
+      'Private balcony seating overlooking garden & courtyard',
+      'Compact mini fridge for personal beverages',
+      'Living area with sofa set & tea table',
+      'Large ensuite bathroom with solar hot shower',
+      'High-speed Wi-Fi & LED TV',
+      'Dedicated family wardrobe & storage space',
+    ],
     featured: true,
+    maxUnits: 4,
   },
   {
     id: 'standard-double-room',
+    slug: 'standard-room',
     name: 'Standard AC Double Room',
     category: 'Standard',
     priceNpr: 2800,
     capacity: '2 Adults',
     bedType: 'Double Bed',
-    image: 'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&q=80&w=800',
-    amenities: ['Air Conditioning', 'Free Wi-Fi', 'Ensuite Bathroom', 'Hot Shower'],
+    sizeSqFt: 260,
+    bathroomInfo: 'Attached Bathroom with Hot Shower',
+    view: 'Courtyard View',
+    image: 'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&q=80&w=1200',
+    galleryImages: [
+      'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&q=80&w=1200',
+      'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80&w=1200',
+      'https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&q=80&w=1200',
+      'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&q=80&w=1200',
+    ],
+    amenities: [
+      'Air Conditioning',
+      'Free Wi-Fi',
+      'Ensuite Bathroom',
+      'Hot Shower',
+      'Room Service',
+      'Daily Housekeeping',
+      'Bottled Water',
+    ],
     description: 'Clean, well-maintained double room with air conditioning and 24/7 solar hot water for highway stopovers.',
+    fullDescription: [
+      'The Standard AC Double Room is a cozy, dependable accommodation option for road travelers, safari tourists, and business visitors seeking clean and affordable lodging in Bharatpur.',
+      'Features a comfortable double bed, clean cotton bedding, attached private bathroom with solar hot shower, and split air conditioning for year-round climate control.',
+    ],
+    features: [
+      'Comfortable Double Bed with clean fresh linens',
+      'Split Air Conditioner for quick cooling',
+      'Attached bathroom with 24/7 solar hot shower',
+      'Work desk and chair',
+      'Free Wi-Fi access throughout stay',
+      'Room service available from on-site kitchen',
+    ],
+    maxUnits: 8,
   },
   {
     id: 'twin-bedroom',
+    slug: 'normal-room',
     name: 'Standard Twin AC Room',
     category: 'Standard',
     priceNpr: 2800,
     capacity: '2 Adults',
     bedType: '2 Single Beds',
-    image: 'https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&q=80&w=800',
-    amenities: ['Air Conditioning', 'Free Wi-Fi', 'Attached Bathroom', 'Hot Water'],
+    sizeSqFt: 270,
+    bathroomInfo: 'Attached Bathroom with Hot Shower',
+    view: 'Courtyard View',
+    image: 'https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&q=80&w=1200',
+    galleryImages: [
+      'https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&q=80&w=1200',
+      'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&q=80&w=1200',
+      'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80&w=1200',
+      'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&q=80&w=1200',
+    ],
+    amenities: [
+      'Air Conditioning',
+      'Free Wi-Fi',
+      'Attached Bathroom',
+      'Hot Water',
+      'Room Service',
+      'Daily Housekeeping',
+      'Bottled Water',
+    ],
     description: 'Comfortable twin bedroom ideal for friends or travel colleagues visiting Chitwan.',
+    fullDescription: [
+      'Our Standard Twin AC Room offers two separate single beds in a immaculate environment. Ideal for travel companions, safari buddies, or colleagues staying in Chitwan.',
+      'Equipped with split air conditioning, attached bathroom with continuous hot water, and complimentary high-speed Wi-Fi.',
+    ],
+    features: [
+      'Two separate single beds with clean comfortable bedding',
+      'Air conditioning for cool comfort',
+      'Attached private bathroom with solar hot shower',
+      'Free high-speed Wi-Fi',
+      'On-site restaurant ordering and room service',
+    ],
+    maxUnits: 6,
   },
 ];
+
+export function getRoomBySlug(slug: string): Room | undefined {
+  const normalized = slug.toLowerCase().trim();
+  // 1. Direct match by slug
+  let found = ROOMS_DATA.find((r) => r.slug === normalized);
+  if (found) return found;
+
+  // 2. Direct match by id
+  found = ROOMS_DATA.find((r) => r.id === normalized);
+  if (found) return found;
+
+  // 3. Fallback fuzzy matching for expected routes
+  if (normalized.includes('deluxe')) {
+    return ROOMS_DATA.find((r) => r.slug === 'deluxe-room') || ROOMS_DATA[0];
+  }
+  if (normalized.includes('suite') || normalized.includes('family')) {
+    return ROOMS_DATA.find((r) => r.slug === 'family-executive-suite') || ROOMS_DATA[1];
+  }
+  if (normalized.includes('normal') || normalized.includes('twin')) {
+    return ROOMS_DATA.find((r) => r.slug === 'normal-room') || ROOMS_DATA[3];
+  }
+  if (normalized.includes('standard')) {
+    return ROOMS_DATA.find((r) => r.slug === 'standard-room') || ROOMS_DATA[2];
+  }
+
+  // 4. Default fallback to first room
+  return ROOMS_DATA[0];
+}
+
 
 export const FOOD_MENU_DATA: MenuItem[] = [
   {
@@ -177,30 +351,95 @@ export const ATTRACTIONS_DATA: Attraction[] = [
 export const BLOG_DATA: BlogPost[] = [
   {
     id: 'guide-to-chitwan-safari',
+    slug: 'guide-to-chitwan-safari',
     title: 'Essential Guide for First-Time Chitwan Safari Visitors',
     category: 'Travel Advice',
     date: 'February 12, 2026',
     author: 'Motimahal Family Desk',
-    excerpt: 'What to pack, best months for rhino spotting, and how to combine river canoeing with jeep safaris.',
+    readTime: '5 min read',
+    excerpt: 'What to pack, best months for rhino spotting, and how to combine river canoeing with jeep safaris in Chitwan National Park.',
     content: [
-      'Chitwan National Park is one of Asia’s best-preserved wildlife sanctuaries...',
-      'Best time to visit is October to March when temperatures are pleasant and grass height allows high visibility for wildlife.',
+      'Chitwan National Park is Nepal’s premier wildlife destination and one of Asia’s best-preserved natural sanctuaries. Home to the endangered One-Horned Rhinoceros, Royal Bengal Tiger, and over 500 species of tropical birds, planning your first safari requires a bit of practical preparation.',
+      'The optimal window to visit Chitwan is between October and March when dry weather keeps the jungle trails accessible and natural waterholes attract animals during early morning hours. During these months, temperatures remain pleasant for outdoor jeep excursions and canoe rides along the Rapti River.',
+      'When preparing for your safari day, we recommend wearing muted earth-tone clothing (greens, khakis, and browns), bringing sturdy walking shoes, a broad sun hat, high SPF sunblock, and insect repellent. Binoculars and a zoom camera lens will greatly enhance your wildlife viewing experience.',
+      'Our family front desk at Motimahal Lodge assists guests daily with booking licensed local jungle guides, open-top 4x4 jeep safaris, and traditional dugout canoe trips along the riverbanks.',
     ],
-    image: 'https://images.unsplash.com/photo-1547970810-dc9223d49122?auto=format&fit=crop&q=80&w=800',
+    image: 'https://images.unsplash.com/photo-1547970810-dc9223d49122?auto=format&fit=crop&q=80&w=1200',
+    tags: ['Chitwan National Park', 'Jeep Safari', 'Rhino Spotting', 'Travel Tips'],
+    featured: true,
   },
   {
     id: 'secret-to-tandoori-grill',
+    slug: 'secret-to-tandoori-grill',
     title: 'The Secret Behind Clay-Oven Charcoal Tandoori Grills',
     category: 'Culinary Story',
     date: 'January 28, 2026',
     author: 'Head Chef Sapkota',
-    excerpt: 'Why high-temperature clay oven roasting seals in juices and creates unmatched aromatic flavor.',
+    readTime: '4 min read',
+    excerpt: 'Why high-temperature clay oven roasting seals in authentic juices and creates unmatched smoky aroma in our kitchen.',
     content: [
-      'Our family kitchen marinates chicken in mustard oil and ground spices for 12 hours before roasting in high-heat clay ovens.',
+      'At Motimahal Lodge & Tandoori Kitchen, cooking is rooted in time-tested culinary traditions. Our signature tandoori dishes owe their unique flavor and tender texture to our handmade clay tandoor oven fueled by natural wood charcoal.',
+      'Every morning, our kitchen staff prepares fresh marinades using locally sourced yogurt, mustard oil, fresh ginger-garlic paste, and traditional Nepalese spices. Meats are marinated for a full 12 hours to allow complex aromatics to deeply penetrate before roasting.',
+      'When placed inside the 400°C clay tandoor, radiant heat instantly sears the exterior, locking in natural juices while imparting a smoky charcoal aroma that cannot be replicated on modern gas stovetops.',
+      'Whether you are staying with us as a guest or stopping by for dinner during highway travel through Bharatpur, enjoying hot tandoori naan and fresh grilled chicken in our open garden is an essential Chitwan dining experience.',
     ],
-    image: 'https://images.unsplash.com/photo-1625220194771-7ebedd0b70b9?auto=format&fit=crop&q=80&w=800',
+    image: 'https://images.unsplash.com/photo-1625220194771-7ebedd0b70b9?auto=format&fit=crop&q=80&w=1200',
+    tags: ['Tandoori Kitchen', 'Clay Oven', 'Local Cuisine', 'Food & Dining'],
+    featured: true,
+  },
+  {
+    id: 'narayani-river-sunset-walks',
+    slug: 'narayani-river-sunset-walks',
+    title: 'Evening Strolls & Sunset Views Along the Narayani River',
+    category: 'Local Attractions',
+    date: 'January 14, 2026',
+    author: 'Motimahal Family Desk',
+    readTime: '3 min read',
+    excerpt: 'Located just 5 minutes from Motimahal Lodge, discover why the Narayani Riverfront is Chitwan’s favorite evening destination.',
+    content: [
+      'The Narayani River is one of Nepal’s major riverways, flowing peacefully alongside Bharatpur and creating a picturesque promenade popular with locals and visitors alike.',
+      'Just a short 5-minute drive or leisurely walk from Motimahal Lodge brings you to the riverfront embankment. As afternoon turns to evening, golden sunlight reflects off the water while gentle river breezes offer welcome cooling.',
+      'Local vendors along the promenade serve fresh fried river fish, spiced tea (chia), and local snacks. Small wooden riverboats offer short sightseeing rides across the water, providing panoramic views of the riverbank sunset.',
+      'After enjoying the sunset walk, returning to Motimahal Lodge for a hot solar shower and dinner in our courtyard garden makes for a perfect Chitwan evening.',
+    ],
+    image: '/narayani-river-gallery.jpg',
+    tags: ['Narayani River', 'Sunset Spot', 'Bharatpur Sightseeing', 'Evening Stroll'],
+  },
+  {
+    id: 'highway-travel-stopover-guide-bharatpur',
+    slug: 'highway-travel-stopover-guide-bharatpur',
+    title: 'Why Bharatpur is the Ideal Highway Rest & Stopover Point',
+    category: 'Travel Advice',
+    date: 'December 20, 2025',
+    author: 'Motimahal Host Family',
+    readTime: '4 min read',
+    excerpt: 'Connecting Kathmandu, Pokhara, and Chitwan, see why breaking your journey at Motimahal Lodge ensures peaceful rest.',
+    content: [
+      'Bharatpur sits at the strategic crossroads of Nepal’s major transport corridors—connecting the Prithvi Highway, Mahendra Highway, and routes heading toward the Indian border.',
+      'Long overland travel across winding hill roads can be exhausting. Taking a overnight break in Bharatpur-10 allows drivers and families to rest in clean air-conditioned rooms with reliable solar hot water and secure gated parking.',
+      'At Motimahal Lodge, our front desk operates 24/7 to welcome late-arriving travelers with warm hospitality, hot tea, and prompt room service.',
+    ],
+    image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80&w=1200',
+    tags: ['Bharatpur Highway', 'Stopover', 'Road Travel', 'Motimahal Hospitality'],
   },
 ];
+
+export function getBlogPostBySlug(slug: string): BlogPost | undefined {
+  const normalized = slug.toLowerCase().trim();
+  let found = BLOG_DATA.find((b) => (b.slug || b.id) === normalized);
+  if (found) return found;
+
+  found = BLOG_DATA.find((b) => b.id === normalized);
+  if (found) return found;
+
+  return BLOG_DATA.find((b) => normalized.includes(b.id) || b.id.includes(normalized)) || BLOG_DATA[0];
+}
+
+export function getRelatedBlogPosts(currentSlug: string, count: number = 3): BlogPost[] {
+  const normalized = currentSlug.toLowerCase().trim();
+  const filtered = BLOG_DATA.filter((b) => (b.slug || b.id) !== normalized);
+  return filtered.slice(0, count);
+}
 
 export const GALLERY_DATA: GalleryItem[] = [
   {
@@ -274,32 +513,5 @@ export const GALLERY_DATA: GalleryItem[] = [
     image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80&w=800',
     caption: 'Clean, comfortable room with ensuite hot shower and air conditioning.',
     aspect: 'aspect-square',
-  },
-];
-
-export const TESTIMONIALS_DATA: Testimonial[] = [
-  {
-    id: 't1',
-    name: 'Saugat & Family',
-    location: 'Kathmandu, Nepal',
-    rating: 5,
-    comment: 'Motimahal Lodge is our fixed stop whenever traveling through Bharatpur. Clean rooms, strong hot shower, and the tandoori chicken is unbelievable!',
-    date: 'January 2026',
-  },
-  {
-    id: 't2',
-    name: 'Mark & Sarah',
-    location: 'Melbourne, Australia',
-    rating: 5,
-    comment: 'The family hosts helped us book our Chitwan safari jeep within 10 minutes of arriving. Extremely hospitable and great food.',
-    date: 'December 2025',
-  },
-  {
-    id: 't3',
-    name: 'Prashant Sapkota',
-    location: 'Pokhara, Nepal',
-    rating: 5,
-    comment: 'Highly recommended for anyone looking for authentic Nepalese family hospitality, spacious AC rooms, and peaceful location in Bharatpur.',
-    date: 'November 2025',
   },
 ];

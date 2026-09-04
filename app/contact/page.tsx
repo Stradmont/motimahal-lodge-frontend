@@ -20,11 +20,37 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FAF7F2] text-[#2D2B2A]">
+    <div
+      className="min-h-screen flex flex-col text-[#2D2B2A]"
+      style={{
+        backgroundImage: "url('/backs.png')",
+        backgroundRepeat: 'repeat',
+      }}
+    >
       <Navbar />
 
-      <main className="flex-1 pt-24 sm:pt-28">
-        
+      <main className="flex-1">
+
+        {/* 1. HERO SECTION WITH BACKGROUND IMAGE */}
+        <section className="relative w-full h-[55vh] min-h-[380px] flex items-center justify-center overflow-hidden bg-stone-900">
+          <div
+            className="absolute inset-0 z-0 bg-cover bg-center"
+            style={{
+              backgroundImage: "url('/contact-hero.jpg')",
+            }}
+          />
+          <div className="absolute inset-0 z-10 bg-black/55 backdrop-blur-xs" />
+
+          <div className="relative z-20 mx-auto max-w-4xl px-6 text-center text-white space-y-4">
+            <span className="text-white/90 text-xs sm:text-sm font-semibold uppercase tracking-[0.25em] block">
+              REACH OUT TO US
+            </span>
+            <h1 className="font-heading text-4xl sm:text-6xl lg:text-7xl font-extrabold uppercase tracking-tight text-white drop-shadow-md">
+              CONTACT US
+            </h1>
+          </div>
+        </section>
+
         {/* GET IN TOUCH SECTION WITH backs.png BACKGROUND TEXTURE */}
         <section
           className="py-20 sm:py-28 border-b border-[#E6DFD5] relative text-[#2D2B2A]"
@@ -35,7 +61,7 @@ export default function ContactPage() {
         >
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-              
+
               {/* Left Column: Form (7 cols) */}
               <div className="lg:col-span-7 space-y-6">
                 <h1 className="font-heading text-3xl sm:text-4xl font-bold text-[#2D2B2A]">
@@ -54,7 +80,7 @@ export default function ContactPage() {
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-4">
-                    
+
                     {/* Row 1: First Name & Last Name */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
@@ -144,7 +170,7 @@ export default function ContactPage() {
               {/* Right Column: Address, Email, Telephone Card (5 cols) */}
               <div className="lg:col-span-5">
                 <div className="bg-white p-8 sm:p-10 rounded-lg border border-[#E6DFD5] shadow-xs space-y-8">
-                  
+
                   {/* Address */}
                   <div className="space-y-2">
                     <div className="w-10 h-10 rounded-full flex items-center justify-center text-[#C88A3B]">
