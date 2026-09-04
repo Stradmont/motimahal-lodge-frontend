@@ -8,6 +8,7 @@ interface CustomVideoPlayerProps {
   poster?: string;
   className?: string;
   autoPlay?: boolean;
+  muted?: boolean;
 }
 
 export default function CustomVideoPlayer({
@@ -15,12 +16,13 @@ export default function CustomVideoPlayer({
   poster,
   className = '',
   autoPlay = true,
+  muted = false,
 }: CustomVideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [isPlaying, setIsPlaying] = useState(autoPlay);
-  const [isMuted, setIsMuted] = useState(true);
+  const [isMuted, setIsMuted] = useState(muted);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);

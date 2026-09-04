@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Room, ROOMS_DATA } from '@/lib/data';
-import { Phone, Mail, Minus, Plus, CheckCircle2, MessageSquare, AlertCircle } from 'lucide-react';
+import { Phone, Mail, Minus, Plus, CheckCircle2, MessageSquare, AlertCircle, ChevronDown, Check } from 'lucide-react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -53,6 +53,18 @@ export default function RoomEnquirySection({
 }: RoomEnquirySectionProps) {
   const [submitted, setSubmitted] = useState(false);
   const [submittedData, setSubmittedData] = useState<{ name: string; whatsapp: string }>({ name: '', whatsapp: '' });
+  const [roomDropdownOpen, setRoomDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setRoomDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const {
     register,
@@ -282,20 +294,98 @@ export default function RoomEnquirySection({
                   </div>
                 </div>
 
-                {/* Room Select Dropdown */}
-                <div>
-                  <label className="block text-sm font-semibold text-stone-800 mb-1.5">Select Room</label>
-                  <select
-                    value={selectedRoomId}
-                    onChange={(e) => setSelectedRoomId(e.target.value)}
-                    className="w-full bg-brand-surface border border-brand-border rounded-lg px-4 py-3 text-base text-stone-900 focus:outline-none focus:border-brand-green"
+                {/* Custom Smooth Room Select Dropdown */}
+                <div className="relative" ref={dropdownRef}>
+                  <label className="block text-sm font-semibold text-stone-800 mb-1.5">
+                    Select Room
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => setRoomDropdownOpen(!roomDropdownOpen)}
+                    className="w-full bg-brand-surface border border-brand-border hover:border-brand-green rounded-xl px-4 py-3 text-left shadow-2xs transition-all duration-200 flex items-center justify-between group focus:outline-none focus:ring-2 focus:ring-brand-green/20 cursor-pointer"
+                    aria-haspopup="listbox"
+                    aria-expanded={roomDropdownOpen}
                   >
-                    {ROOMS_DATA.map((r) => (
-                      <option key={r.id} value={r.id}>
-                        {r.name} — NPR {r.priceNpr.toLocaleString()} / night
-                      </option>
-                    ))}
-                  </select>
+                    <div className="flex items-center gap-3 truncate">
+                      <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 border border-brand-border/60 bg-stone-100">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={activeBookingRoom.image}
+                          alt={activeBookingRoom.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div className="truncate">
+                        <div className="flex items-center gap-2">
+                          <span className="font-heading text-base sm:text-lg font-bold text-brand-charcoal truncate">
+                            {activeBookingRoom.name}
+                          </span>
+                          <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded bg-white border border-brand-border text-brand-green">
+                            {activeBookingRoom.category}
+                          </span>
+                        </div>
+                        <span className="text-xs text-stone-500 font-medium block">
+                          NPR {activeBookingRoom.priceNpr.toLocaleString()} / night
+                        </span>
+                      </div>
+                    </div>
+                    <ChevronDown
+                      className={`h-5 w-5 text-stone-500 group-hover:text-brand-green transition-transform duration-200 shrink-0 ${
+                        roomDropdownOpen ? 'rotate-180 text-brand-green' : ''
+                      }`}
+                    />
+                  </button>
+
+                  {/* Dropdown Options Floating Menu */}
+                  {roomDropdownOpen && (
+                    <div className="absolute top-full left-0 right-0 z-40 mt-2 bg-white rounded-xl border border-brand-border shadow-2xl overflow-hidden py-1.5 animate-in fade-in slide-in-from-top-2 duration-200">
+                      {ROOMS_DATA.map((r) => {
+                        const isSelected = r.id === selectedRoomId;
+                        return (
+                          <button
+                            key={r.id}
+                            type="button"
+                            onClick={() => {
+                              setSelectedRoomId(r.id);
+                              setRoomDropdownOpen(false);
+                            }}
+                            className={`w-full px-4 py-3 flex items-center justify-between text-left transition-colors cursor-pointer ${
+                              isSelected
+                                ? 'bg-brand-surface text-brand-green font-medium'
+                                : 'hover:bg-stone-50 text-stone-800'
+                            }`}
+                          >
+                            <div className="flex items-center gap-3.5 truncate">
+                              <div className="w-12 h-10 rounded-lg overflow-hidden shrink-0 border border-brand-border/60 bg-stone-100">
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img
+                                  src={r.image}
+                                  alt={r.name}
+                                  className="w-full h-full object-cover"
+                                />
+                              </div>
+                              <div className="truncate">
+                                <div className="font-heading text-base font-bold text-brand-charcoal">
+                                  {r.name}
+                                </div>
+                                <div className="text-xs text-stone-500 flex items-center gap-2">
+                                  <span>NPR {r.priceNpr.toLocaleString()} / night</span>
+                                  <span>•</span>
+                                  <span>{r.bedType}</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            {isSelected && (
+                              <div className="w-6 h-6 rounded-full bg-brand-green text-white flex items-center justify-center shrink-0 shadow-2xs">
+                                <Check className="w-3.5 h-3.5" />
+                              </div>
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
 
                 {/* Adults / Childs Counters */}
