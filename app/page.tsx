@@ -6,7 +6,8 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Hero from '@/components/Hero';
 import WhyChooseSection from '@/components/WhyChooseSection';
-import AboutCarousel from '@/components/AboutCarousel';
+import AboutSection from '@/components/AboutSection';
+import VideoSection from '@/components/VideoSection';
 import { ROOMS_DATA } from '@/lib/data';
 import { Check, ArrowRight, QrCode } from 'lucide-react';
 
@@ -31,45 +32,13 @@ export default function HomePage() {
         <Hero />
 
         {/* 2. ABOUT US SECTION */}
-        <section
-          id="about"
-          className="py-20 sm:py-28 border-b border-[#E6DFD5] relative text-[#2D2B2A] overflow-hidden"
-          style={{
-            backgroundImage: "url('/backs.png')",
-            backgroundRepeat: 'repeat',
-          }}
-        >
-          {/* Narrative Text Container (Aligned to Global Container Grid) */}
-          <div className="mx-auto max-w-5xl px-6 text-center space-y-6 mb-14 sm:mb-18">
-            <span className="text-[#1F3A2B] text-xs sm:text-sm font-semibold uppercase tracking-[0.2em] block">
-              About Us
-            </span>
-
-            <h2 className="font-heading text-3xl sm:text-5xl lg:text-6xl font-bold text-[#2D2B2A] leading-tight">
-              Experience the Heart of Chitwan
-            </h2>
-
-            <div className="space-y-5 text-stone-700 text-base sm:text-lg lg:text-xl leading-relaxed font-normal max-w-4xl mx-auto">
-              <p>
-                Welcome to Motimahal Lodge and Restaurant, a family-owned establishment located in Bharatpur-10, Chitwan. Established three decades ago by our family, our lodge stands as a testament to our unwavering passion for hospitality, fresh local food, and quiet rest.
-              </p>
-              <p>
-                Located just 5 minutes from the Narayani Riverfront promenade and 30 minutes drive from Chitwan National Park, guests enjoy easy access to river sunsets and wildlife safaris.
-              </p>
-              <p>
-                At night, gather around our outdoor garden or restaurant tables to enjoy fresh tandoori grills prepared in our charcoal clay oven, continuous hot showers, and warm conversation with our family hosts.
-              </p>
-            </div>
-          </div>
-
-          {/* Full Viewport Width (Edge-to-Edge) Interactive Image Carousel */}
-          <div className="w-full">
-            <AboutCarousel />
-          </div>
-        </section>
+        <AboutSection />
 
         {/* 3. WHY CHOOSE MOTIMAHAL SECTION */}
         <WhyChooseSection />
+
+        {/* 4. VIDEO GALLERY SECTION */}
+        <VideoSection />
 
         {/* 4. FULL-WIDTH BACKGROUND IMAGE — SECTION 1 */}
         <section className="relative w-full h-[55vh] min-h-[400px] flex items-center justify-center overflow-hidden bg-stone-900 border-y border-[#E6DFD5]">

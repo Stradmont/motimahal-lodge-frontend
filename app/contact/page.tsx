@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { MapPin, Mail, Phone, CheckCircle2 } from 'lucide-react';
+import { FacebookIcon, InstagramIcon } from '@/components/SocialIcons';
+import { SOCIAL_LINKS } from '@/lib/data';
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
@@ -216,6 +218,32 @@ export default function ContactPage() {
                     </a>
                   </div>
 
+                  {/* Social Media */}
+                  <div className="space-y-3 pt-4 border-t border-[#E6DFD5]">
+                    <h2 className="font-heading text-lg font-bold text-[#2D2B2A] tracking-wide">
+                      Follow Us
+                    </h2>
+                    <div className="flex items-center gap-3">
+                      <a
+                        href={SOCIAL_LINKS.facebook}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#1877F2] hover:bg-[#166fe5] text-white rounded-md font-semibold text-xs sm:text-sm shadow-xs transition-colors"
+                      >
+                        <FacebookIcon className="w-4 h-4" />
+                        <span>Facebook</span>
+                      </a>
+                      <a
+                        href={SOCIAL_LINKS.instagram}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] hover:opacity-95 text-white rounded-md font-semibold text-xs sm:text-sm shadow-xs transition-colors"
+                      >
+                        <InstagramIcon className="w-4 h-4" />
+                        <span>Instagram</span>
+                      </a>
+                    </div>
+                  </div>
                 </div>
               </div>
 

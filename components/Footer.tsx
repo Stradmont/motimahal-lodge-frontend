@@ -3,6 +3,8 @@
 import React from 'react';
 import Link from 'next/link';
 import { MapPin, Phone, Mail } from 'lucide-react';
+import { FacebookIcon, InstagramIcon } from '@/components/SocialIcons';
+import { SOCIAL_LINKS } from '@/lib/data';
 
 export default function Footer() {
   return (
@@ -51,6 +53,28 @@ export default function Footer() {
             <p className="text-stone-300 text-sm sm:text-base leading-relaxed max-w-sm font-normal">
               A family-owned lodge in Bharatpur-10, Chitwan offering clean AC rooms, 24/7 hot solar showers, fresh tandoori grills, and warm Nepalese hospitality.
             </p>
+
+            {/* Social Media Links */}
+            <div className="pt-2 flex items-center gap-3">
+              <a
+                href={SOCIAL_LINKS.facebook}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Motimahal Lodge Facebook Page"
+                className="w-10 h-10 rounded-full bg-[#1877F2] hover:opacity-90 text-white flex items-center justify-center transition-opacity shadow-sm"
+              >
+                <FacebookIcon className="w-5 h-5" />
+              </a>
+              <a
+                href={SOCIAL_LINKS.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Motimahal Lodge Instagram Page"
+                className="w-10 h-10 rounded-full bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] hover:opacity-90 text-white flex items-center justify-center transition-opacity shadow-sm"
+              >
+                <InstagramIcon className="w-5 h-5" />
+              </a>
+            </div>
           </div>
 
           {/* Navigation Column (2 cols) */}
@@ -135,9 +159,17 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-stone-400 text-xs sm:text-sm gap-2">
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-stone-400 text-xs sm:text-sm gap-4">
           <span>© {new Date().getFullYear()} Motimahal Lodge & Restaurant. All rights reserved.</span>
-          <span>Bharatpur, Chitwan, Nepal</span>
+          <div className="flex items-center gap-4">
+            <Link href="/privacy" className="hover:text-stone-200 transition-colors">
+              Privacy Policy
+            </Link>
+            <span>•</span>
+            <Link href="/terms" className="hover:text-stone-200 transition-colors">
+              Terms of Service
+            </Link>
+          </div>
         </div>
       </div>
     </footer>

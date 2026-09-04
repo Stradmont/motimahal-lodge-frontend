@@ -515,3 +515,9 @@ export const GALLERY_DATA: GalleryItem[] = [
     aspect: 'aspect-square',
   },
 ];
+
+export const SOCIAL_LINKS = {
+  instagram: 'https://www.instagram.com/moti_mahal_restaurant_lodge/',
+  facebook: 'https://www.facebook.com/people/Moti-Mahal-Restaurant-Lodge/61592017018419/',
+};
+

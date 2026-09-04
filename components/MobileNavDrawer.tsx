@@ -5,6 +5,8 @@ import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { X, MapPin, Phone } from 'lucide-react';
+import { FacebookIcon, InstagramIcon } from '@/components/SocialIcons';
+import { SOCIAL_LINKS } from '@/lib/data';
 
 export interface NavItem {
   label: string;
@@ -144,13 +146,26 @@ export default function MobileNavDrawer({
               <MapPin className="h-3.5 w-3.5 text-[#C88A3B] shrink-0" />
               <span>Bharatpur, Chitwan</span>
             </div>
-            <a
-              href="tel:+9779855012345"
-              className="flex items-center gap-1.5 hover:text-[#162B20] font-medium transition-colors"
-            >
-              <Phone className="h-3.5 w-3.5 text-[#C88A3B] shrink-0" />
-              <span>+977 98550 12345</span>
-            </a>
+            <div className="flex items-center gap-2">
+              <a
+                href={SOCIAL_LINKS.facebook}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Facebook"
+                className="w-7 h-7 rounded-full bg-[#1877F2] text-white flex items-center justify-center hover:opacity-90 transition-opacity"
+              >
+                <FacebookIcon className="w-3.5 h-3.5" />
+              </a>
+              <a
+                href={SOCIAL_LINKS.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+                className="w-7 h-7 rounded-full bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] text-white flex items-center justify-center hover:opacity-90 transition-opacity"
+              >
+                <InstagramIcon className="w-3.5 h-3.5" />
+              </a>
+            </div>
           </div>
 
           <Link

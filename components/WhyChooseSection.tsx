@@ -47,37 +47,37 @@ export default function WhyChooseSection() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-10">
 
         {/* Section Heading */}
-        <div className="text-center max-w-2xl mx-auto space-y-2">
-          <h2 className="font-heading text-2xl sm:text-3xl font-bold text-[#2D2B2A]">
+        <div className="text-center max-w-3xl mx-auto space-y-4">
+          <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-[#2D2B2A]">
             Why stay at Motimahal Lodge
           </h2>
-          <p className="text-stone-600 text-sm sm:text-base leading-relaxed font-normal">
+          <p className="text-stone-700 text-base sm:text-lg lg:text-xl leading-relaxed font-normal">
             A welcoming family lodge providing clean rooms, authentic dining, and safari assistance in Bharatpur, Chitwan.
           </p>
         </div>
 
         {/* 6-Grid Feature Presentation */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-10 text-center">
           {WHY_CHOOSE_ITEMS.map((item, index) => (
-            <div key={index} className="space-y-2.5 max-w-sm mx-auto p-4 bg-white/60 rounded-lg border border-[#E6DFD5]/70 shadow-2xs">
+            <div key={index} className="space-y-3.5 max-w-sm mx-auto p-6 sm:p-8 bg-white/70 rounded-xl border border-[#E6DFD5] shadow-sm hover:shadow-md transition-shadow">
 
               {/* SVG Icon */}
-              <div className="h-14 flex items-center justify-center">
+              <div className="h-16 flex items-center justify-center">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={item.icon}
                   alt={item.title}
-                  className="h-12 w-auto object-contain"
+                  className="h-14 w-auto object-contain"
                 />
               </div>
 
               {/* Title */}
-              <h3 className="font-heading text-lg font-bold text-[#2D2B2A]">
+              <h3 className="font-heading text-xl sm:text-2xl font-bold text-[#2D2B2A]">
                 {item.title}
               </h3>
 
               {/* Description */}
-              <p className="text-stone-600 text-xs sm:text-sm leading-relaxed font-normal">
+              <p className="text-stone-700 text-sm sm:text-base leading-relaxed font-normal">
                 {item.description}
               </p>
 
