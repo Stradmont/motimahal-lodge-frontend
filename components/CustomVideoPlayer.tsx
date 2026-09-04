@@ -33,7 +33,43 @@ export default function CustomVideoPlayer({
     if (!video) return;
 
     if (autoPlay) {
-      video.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false));
+      // Attempt unmuted play first
+      video.muted = false;
+      setIsMuted(false);
+
+      video
+        .play()
+        .then(() => {
+          setIsPlaying(true);
+        })
+        .catch(() => {
+          // If browser blocks unmuted autoplay, fallback to muted autoplay
+          video.muted = true;
+          setIsMuted(true);
+          video
+            .play()
+            .then(() => {
+              setIsPlaying(true);
+            })
+            .catch(() => {
+              setIsPlaying(false);
+            });
+
+          // Automatically unmute audio on first user interaction anywhere on the page
+          const enableAudioOnUserInteraction = () => {
+            if (videoRef.current) {
+              videoRef.current.muted = false;
+              setIsMuted(false);
+            }
+            window.removeEventListener('click', enableAudioOnUserInteraction);
+            window.removeEventListener('keydown', enableAudioOnUserInteraction);
+            window.removeEventListener('touchstart', enableAudioOnUserInteraction);
+          };
+
+          window.addEventListener('click', enableAudioOnUserInteraction, { once: true });
+          window.addEventListener('keydown', enableAudioOnUserInteraction, { once: true });
+          window.addEventListener('touchstart', enableAudioOnUserInteraction, { once: true });
+        });
     }
   }, [autoPlay]);
 
