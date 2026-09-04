@@ -6,7 +6,7 @@ import Footer from '@/components/Footer';
 import WhyChooseSection from '@/components/WhyChooseSection';
 import BookingModal from '@/components/BookingModal';
 import { GALLERY_DATA } from '@/lib/data';
-import { Maximize2, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Maximize2, Eye, X, ChevronLeft, ChevronRight } from 'lucide-react';
 
 export default function GalleryPage() {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
@@ -81,32 +81,35 @@ export default function GalleryPage() {
                 <div
                   key={item.id}
                   onClick={() => setLightboxIndex(idx)}
-                  className={`bg-white rounded-lg border border-[#E6DFD5] overflow-hidden shadow-xs hover:shadow-md transition-all cursor-pointer group relative ${item.aspect || 'aspect-16/10'}`}
+                  className={`bg-white rounded-lg border border-[#E6DFD5] overflow-hidden shadow-xs hover:shadow-md transition-all duration-300 cursor-pointer group relative ${item.aspect || 'aspect-16/10'}`}
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={item.image}
                     alt={item.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                   />
 
-                  {/* Hover Overlay with Expand Icon */}
-                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-between p-6 text-white">
-                    <div className="self-end bg-black/60 p-2.5 rounded-full backdrop-blur-xs shadow">
-                      <Maximize2 className="h-5 w-5 text-white" />
+                  {/* Subtle Dark Backdrop Overlay */}
+                  <div className="absolute inset-0 bg-black/45 backdrop-blur-[1px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">
+                    
+                    {/* Centered Expand Icon Button */}
+                    <div className="absolute inset-0 flex items-center justify-center p-4">
+                      <div className="p-3.5 rounded-full bg-black/40 backdrop-blur-xs text-white border border-white/30 shadow-lg scale-90 group-hover:scale-100 opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out">
+                        <Maximize2 className="h-6 w-6 text-white" />
+                      </div>
                     </div>
 
-                    <div className="space-y-1">
-                      <span className="text-[11px] font-bold uppercase tracking-widest text-white/80 block">
+                    {/* Bottom Category & Title Label */}
+                    <div className="absolute bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-black/80 via-black/40 to-transparent translate-y-2 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out flex flex-col justify-end space-y-1">
+                      <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-[#E6DFD5] block">
                         {item.category}
                       </span>
-                      <h3 className="font-heading text-xl font-bold text-white leading-snug">
+                      <h3 className="font-heading text-base sm:text-lg font-bold text-white leading-snug line-clamp-1 drop-shadow-xs">
                         {item.title}
                       </h3>
-                      <p className="text-xs text-white/90 line-clamp-1">
-                        {item.caption}
-                      </p>
                     </div>
+
                   </div>
                 </div>
               ))}
@@ -133,7 +136,7 @@ export default function GalleryPage() {
             <div className="pt-2">
               <button
                 onClick={() => setBookingModalOpen(true)}
-                className="bg-[#1F3A2B] hover:bg-[#162B20] border border-[#2D4D3B] text-white font-semibold text-sm sm:text-base py-4 px-9 rounded-full transition-all cursor-pointer tracking-wider uppercase shadow-xs"
+                className="bg-[#1F3A2B] hover:bg-[#162B20] border border-[#2D4D3B] text-white font-semibold text-sm sm:text-base py-4 px-9 rounded-md transition-all cursor-pointer tracking-wider uppercase shadow-xs"
                 style={{
                   backgroundImage: "linear-gradient(rgba(31, 58, 43, 0.88), rgba(31, 58, 43, 0.88)), url('/backs.png')",
                   backgroundRepeat: 'repeat',

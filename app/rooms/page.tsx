@@ -22,9 +22,29 @@ export default function RoomsPage() {
     <div className="min-h-screen flex flex-col bg-[#FAF7F2] text-[#2D2B2A]">
       <Navbar />
 
-      <main className="flex-1 pt-24 sm:pt-28">
+      <main className="flex-1">
         
-        {/* 1. ROOMS LISTING SECTION WITH backs.png BACKGROUND TEXTURE */}
+        {/* 1. HERO SECTION */}
+        <section className="relative w-full h-[60vh] min-h-[440px] flex items-center justify-center overflow-hidden bg-stone-900">
+          <div
+            className="absolute inset-0 z-0 bg-cover bg-center"
+            style={{
+              backgroundImage: `url('https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&q=80&w=2000')`,
+            }}
+          />
+          <div className="absolute inset-0 z-10 bg-black/50" />
+
+          <div className="relative z-20 mx-auto max-w-5xl px-6 text-center text-white space-y-4">
+            <span className="text-white/95 text-sm sm:text-base font-semibold uppercase tracking-[0.25em] block">
+              STAY WITH US
+            </span>
+            <h1 className="font-heading text-4xl sm:text-6xl lg:text-7xl font-extrabold uppercase tracking-tight text-white drop-shadow-md">
+              ROOMS & ACCOMMODATION
+            </h1>
+          </div>
+        </section>
+
+        {/* 2. ROOMS LISTING SECTION WITH backs.png BACKGROUND TEXTURE */}
         <section
           className="py-16 sm:py-24 border-b border-[#E6DFD5] relative text-[#2D2B2A]"
           style={{
@@ -34,14 +54,11 @@ export default function RoomsPage() {
         >
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-16">
             
-            {/* Section Header */}
+            {/* Section Sub-Header */}
             <div className="text-center max-w-3xl mx-auto space-y-3">
-              <span className="text-[#1F3A2B] text-xs sm:text-sm font-semibold uppercase tracking-[0.2em] block">
-                Stay With Us
-              </span>
-              <h1 className="font-heading text-4xl sm:text-6xl font-bold text-[#2D2B2A] tracking-wider uppercase">
-                ROOMS & ACCOMMODATION
-              </h1>
+              <h2 className="font-heading text-3xl sm:text-4xl font-bold text-[#2D2B2A] tracking-wider uppercase">
+                OUR ACCOMMODATIONS
+              </h2>
               <p className="text-stone-600 text-base sm:text-lg lg:text-xl leading-relaxed font-normal">
                 Every room is maintained with fresh linens, quiet air conditioning, attached ensuite bathroom, and friendly family service.
               </p>
@@ -117,7 +134,7 @@ export default function RoomsPage() {
                       <div className="pt-4 flex items-center gap-4 flex-wrap">
                         <button
                           onClick={() => handleOpenBooking(room.id)}
-                          className="bg-[#1F3A2B] hover:bg-[#162B20] border border-[#2D4D3B] text-white text-xs sm:text-sm font-semibold px-7 py-3.5 rounded-full transition-all cursor-pointer tracking-wider uppercase shadow-xs flex items-center gap-2"
+                          className="bg-[#1F3A2B] hover:bg-[#162B20] border border-[#2D4D3B] text-white text-xs sm:text-sm font-semibold px-7 py-3.5 rounded-md transition-all cursor-pointer tracking-wider uppercase shadow-xs flex items-center gap-2"
                           style={{
                             backgroundImage: "linear-gradient(rgba(31, 58, 43, 0.88), rgba(31, 58, 43, 0.88)), url('/backs.png')",
                             backgroundRepeat: 'repeat',
@@ -129,7 +146,7 @@ export default function RoomsPage() {
 
                         <Link
                           href={`/rooms/${room.id}`}
-                          className="bg-[#FAF7F2] hover:bg-[#F2ECE4] text-[#1F3A2B] border border-[#E6DFD5] text-xs sm:text-sm font-bold px-6 py-3.5 rounded-full transition-colors inline-flex items-center gap-2"
+                          className="bg-[#FAF7F2] hover:bg-[#F2ECE4] text-[#1F3A2B] border border-[#E6DFD5] text-xs sm:text-sm font-bold px-6 py-3.5 rounded-md transition-colors inline-flex items-center gap-2"
                         >
                           <span>View Details</span>
                           <ArrowRight className="h-4 w-4" />
@@ -225,7 +242,7 @@ export default function RoomsPage() {
             <div className="pt-2">
               <button
                 onClick={() => handleOpenBooking()}
-                className="bg-[#1F3A2B] hover:bg-[#162B20] border border-[#2D4D3B] text-white font-semibold text-sm sm:text-base py-4 px-9 rounded-full transition-all cursor-pointer tracking-wider uppercase shadow-xs"
+                className="bg-[#1F3A2B] hover:bg-[#162B20] border border-[#2D4D3B] text-white font-semibold text-sm sm:text-base py-4 px-9 rounded-md transition-all cursor-pointer tracking-wider uppercase shadow-xs"
                 style={{
                   backgroundImage: "linear-gradient(rgba(31, 58, 43, 0.88), rgba(31, 58, 43, 0.88)), url('/backs.png')",
                   backgroundRepeat: 'repeat',

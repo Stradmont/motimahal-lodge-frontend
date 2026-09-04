@@ -86,7 +86,7 @@ export default function Footer() {
             </p>
             <a
               href="tel:+9779855012345"
-              className="inline-block px-5 py-3 bg-[#1F3A2B] hover:bg-[#112319] border border-stone-600 text-white font-semibold rounded-full text-xs sm:text-sm transition-colors shadow-xs uppercase tracking-wider"
+              className="inline-block px-5 py-3 bg-[#1F3A2B] hover:bg-[#112319] border border-stone-600 text-white font-semibold rounded-md text-xs sm:text-sm transition-colors shadow-xs uppercase tracking-wider"
             >
               Call Front Desk: +977 98550 12345
             </a>

@@ -146,7 +146,7 @@ export default function ReviewsPage() {
 
                   <button
                     type="submit"
-                    className="w-full bg-[#1F3A2B] hover:bg-[#162B20] text-white font-semibold text-xs py-3 rounded transition-all cursor-pointer shadow"
+                    className="w-full bg-[#1F3A2B] hover:bg-[#162B20] text-white font-semibold text-xs uppercase tracking-wider py-3.5 rounded-md transition-all cursor-pointer shadow-xs"
                   >
                     Submit Review
                   </button>

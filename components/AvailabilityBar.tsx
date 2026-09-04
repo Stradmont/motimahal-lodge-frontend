@@ -91,7 +91,7 @@ export default function AvailabilityBar() {
           <div>
             <button
               type="submit"
-              className="w-full bg-[#9E4B27] hover:bg-[#853C1D] text-white font-semibold text-xs py-3 px-4 rounded transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md"
+              className="w-full bg-[#9E4B27] hover:bg-[#853C1D] text-white font-semibold text-xs uppercase tracking-wider py-3.5 px-4 rounded-md transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
             >
               <Search className="h-4 w-4" />
               <span>Check Availability</span>

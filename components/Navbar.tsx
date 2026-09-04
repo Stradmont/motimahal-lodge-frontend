@@ -3,23 +3,16 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X, Phone } from 'lucide-react';
+import { Menu, X, Phone, MapPin } from 'lucide-react';
 import BookingModal from './BookingModal';
-
-const HEADER_NAV_ITEMS = [
-  { label: 'Home', href: '/' },
-  { label: 'About Us', href: '/about' },
-  { label: 'Rooms', href: '/rooms' },
-  { label: 'Guest Reviews', href: '/reviews' },
-  { label: 'Gallery', href: '/gallery' },
-  { label: 'Stories', href: '/blog' },
-  { label: 'Contact', href: '/contact' },
-];
 
 const DRAWER_NAV_ITEMS = [
   { label: 'HOME', href: '/' },
   { label: 'ABOUT US', href: '/about' },
-  { label: 'GUEST REVIEWS AND TESTIMONIALS', href: '/reviews' },
+  { label: 'ROOMS & ACCOMMODATION', href: '/rooms' },
+  { label: 'GALLERY', href: '/gallery' },
+  { label: 'STORIES & BLOG', href: '/blog' },
+  { label: 'GUEST REVIEWS', href: '/reviews' },
   { label: 'CONTACT', href: '/contact' },
 ];
 
@@ -67,7 +60,7 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Sticky / Fixed Smart Navbar — Clean without dark gradient overlays */}
+      {/* Modern Boutique Hospitality Navbar */}
       <header
         className={`fixed top-0 left-0 right-0 z-40 w-full transition-all duration-300 ease-in-out ${
           isVisible ? 'translate-y-0' : '-translate-y-full'
@@ -79,44 +72,46 @@ export default function Navbar() {
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between">
 
-          {/* Brand Logo */}
-          <Link href="/" className="flex items-center gap-3 cursor-pointer group">
+          {/* LEFT: Brand Logo & Title Anchor */}
+          <Link href="/" className="flex items-center gap-3.5 cursor-pointer group">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/logo.png"
               alt="Motimahal Lodge Logo"
-              className="h-10 sm:h-12 w-auto object-contain brightness-0 invert"
+              className="h-11 sm:h-13 w-auto object-contain rounded-full shadow-xs"
             />
             <div className="flex flex-col justify-center">
-              <span className="font-heading text-xl sm:text-2xl font-bold text-white leading-tight drop-shadow-xs">
+              <span className="font-heading text-2xl sm:text-3xl font-extrabold text-white leading-tight drop-shadow-xs tracking-wide">
                 MOTIMAHAL
               </span>
-              <span className="text-xs text-white/90 font-medium tracking-wider uppercase drop-shadow-xs">
+              <span className="text-xs sm:text-sm text-white/95 font-semibold tracking-[0.18em] uppercase drop-shadow-xs">
                 Lodge & Restaurant
               </span>
             </div>
           </Link>
 
-          {/* Desktop Right Navigation */}
-          <div className="hidden lg:flex items-center gap-6">
-            <nav className="flex items-center gap-6 text-sm font-medium tracking-wide text-white/95">
-              {HEADER_NAV_ITEMS.slice(0, 5).map((item) => (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  className={`transition-colors hover:text-white drop-shadow-xs ${
-                    isActive(item.href) ? 'text-white border-b-2 border-white pb-0.5 font-bold' : 'text-white/90'
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </nav>
+          {/* RIGHT: Location + Phone + Book Now CTA + Hamburger Menu Toggle */}
+          <div className="flex items-center gap-4 sm:gap-6">
+            
+            {/* Location Indicator */}
+            <div className="hidden lg:flex items-center gap-1.5 text-xs sm:text-sm text-white/90 font-medium tracking-wide drop-shadow-xs">
+              <MapPin className="h-4 w-4 text-[#C88A3B] shrink-0" />
+              <span>Chitwan, Nepal</span>
+            </div>
 
-            {/* Book Now Button */}
+            {/* Phone Contact Option */}
+            <a
+              href="tel:+9779855012345"
+              className="hidden md:flex items-center gap-1.5 text-xs sm:text-sm font-medium text-white/95 hover:text-white transition-colors drop-shadow-xs"
+            >
+              <Phone className="h-4 w-4 text-[#C88A3B] shrink-0" />
+              <span>+977 98550 12345</span>
+            </a>
+
+            {/* Refined Book Now Button */}
             <button
               onClick={() => setBookingModalOpen(true)}
-              className="bg-[#1F3A2B] hover:bg-[#162B20] border border-[#2D4D3B] text-white font-semibold text-xs sm:text-sm px-6 py-2.5 rounded-full transition-all cursor-pointer tracking-wider shadow-sm"
+              className="bg-[#1F3A2B] hover:bg-[#162B20] border border-[#2D4D3B] text-white font-semibold text-xs sm:text-sm px-6 py-2.5 rounded-md transition-all cursor-pointer tracking-wider uppercase shadow-xs"
               style={{
                 backgroundImage: "linear-gradient(rgba(31, 58, 43, 0.88), rgba(31, 58, 43, 0.88)), url('/backs.png')",
                 backgroundRepeat: 'repeat',
@@ -125,34 +120,18 @@ export default function Navbar() {
               Book Now
             </button>
 
+            {/* Hamburger Menu Toggle (Positioned on the Right) */}
             <button
               onClick={() => setMobileMenuOpen(true)}
-              className="p-1.5 text-white hover:text-stone-200 transition-colors cursor-pointer"
-              aria-label="Toggle Menu Drawer"
+              className="flex items-center gap-2 text-white hover:text-stone-200 transition-colors cursor-pointer group border-l border-white/20 pl-3 sm:pl-5"
+              aria-label="Open Navigation Menu"
             >
-              <Menu className="h-7 w-7" />
+              <Menu className="h-6 w-6 sm:h-7 sm:w-7 text-white group-hover:scale-105 transition-transform" />
+              <span className="hidden sm:inline-block text-xs sm:text-sm font-bold uppercase tracking-widest text-white/95">
+                Menu
+              </span>
             </button>
-          </div>
 
-          {/* Mobile Right */}
-          <div className="flex lg:hidden items-center gap-3">
-            <button
-              onClick={() => setBookingModalOpen(true)}
-              className="bg-[#1F3A2B] hover:bg-[#162B20] border border-[#2D4D3B] text-white font-semibold text-xs px-4 py-2 rounded-full shadow-sm"
-              style={{
-                backgroundImage: "linear-gradient(rgba(31, 58, 43, 0.88), rgba(31, 58, 43, 0.88)), url('/backs.png')",
-                backgroundRepeat: 'repeat',
-              }}
-            >
-              Book Now
-            </button>
-            <button
-              onClick={() => setMobileMenuOpen(true)}
-              className="p-1.5 text-white"
-              aria-label="Toggle mobile menu"
-            >
-              <Menu className="h-7 w-7" />
-            </button>
           </div>
 
         </div>

@@ -131,7 +131,7 @@ export default function ContactPage() {
                     <div className="pt-2">
                       <button
                         type="submit"
-                        className="border-2 border-stone-900 text-stone-900 hover:bg-stone-900 hover:text-white px-8 py-2.5 rounded-full text-sm font-semibold transition-all cursor-pointer shadow-2xs"
+                        className="bg-[#1F3A2B] hover:bg-[#162B20] text-white px-8 py-3 rounded-md text-xs sm:text-sm font-semibold uppercase tracking-wider transition-all cursor-pointer shadow-xs"
                       >
                         Submit
                       </button>

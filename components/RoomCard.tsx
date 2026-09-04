@@ -75,7 +75,7 @@ export default function RoomCard({ room }: RoomCardProps) {
             <div className="grid grid-cols-2 gap-3 pt-1">
               <button
                 onClick={() => setBookingModalOpen(true)}
-                className="bg-[#1F3A2B] hover:bg-[#162B20] text-white text-xs sm:text-sm font-semibold py-3 px-4 rounded text-center transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-xs uppercase tracking-wider"
+                className="bg-[#1F3A2B] hover:bg-[#162B20] text-white text-xs sm:text-sm font-semibold py-3 px-4 rounded-md text-center transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-xs uppercase tracking-wider"
               >
                 <Calendar className="h-4 w-4" />
                 <span>Book Stay</span>
@@ -83,7 +83,7 @@ export default function RoomCard({ room }: RoomCardProps) {
 
               <Link
                 href={`/rooms/${room.id}`}
-                className="bg-[#FAF7F2] hover:bg-[#F2ECE4] text-[#1F3A2B] border border-[#E6DFD5] text-xs sm:text-sm font-semibold py-3 px-4 rounded text-center transition-colors flex items-center justify-center gap-1.5"
+                className="bg-[#FAF7F2] hover:bg-[#F2ECE4] text-[#1F3A2B] border border-[#E6DFD5] text-xs sm:text-sm font-semibold py-3 px-4 rounded-md text-center transition-colors flex items-center justify-center gap-1.5 uppercase tracking-wider"
               >
                 <span>Details</span>
                 <ArrowRight className="h-4 w-4" />

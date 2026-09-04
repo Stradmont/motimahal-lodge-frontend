@@ -166,20 +166,7 @@ export default function HomePage() {
                   ))}
                 </div>
 
-                <div className="pt-4 flex items-center gap-5">
-                  <button
-                    onClick={() => handleOpenBooking(deluxeRoom.id)}
-                    className="bg-[#1F3A2B] hover:bg-[#162B20] text-white text-xs sm:text-sm font-semibold px-7 py-3.5 rounded-full transition-colors cursor-pointer uppercase tracking-wider"
-                  >
-                    Book Now
-                  </button>
-                  <Link
-                    href={`/rooms/${deluxeRoom.id}`}
-                    className="text-xs sm:text-sm font-bold text-[#1F3A2B] hover:underline"
-                  >
-                    Details →
-                  </Link>
-                </div>
+              
               </div>
             </div>
 
@@ -216,7 +203,7 @@ export default function HomePage() {
                 <div className="pt-4 flex items-center gap-5">
                   <button
                     onClick={() => handleOpenBooking(suiteRoom.id)}
-                    className="bg-[#1F3A2B] hover:bg-[#162B20] text-white text-xs sm:text-sm font-semibold px-7 py-3.5 rounded-full transition-colors cursor-pointer uppercase tracking-wider"
+                    className="bg-[#1F3A2B] hover:bg-[#162B20] text-white text-xs sm:text-sm font-semibold px-7 py-3.5 rounded-md transition-colors cursor-pointer uppercase tracking-wider"
                   >
                     Book Now
                   </button>
@@ -263,7 +250,7 @@ export default function HomePage() {
                 <div className="pt-4 flex items-center gap-5">
                   <button
                     onClick={() => handleOpenBooking(standardRoom.id)}
-                    className="bg-[#1F3A2B] hover:bg-[#162B20] text-white text-xs sm:text-sm font-semibold px-7 py-3.5 rounded-full transition-colors cursor-pointer uppercase tracking-wider"
+                    className="bg-[#1F3A2B] hover:bg-[#162B20] text-white text-xs sm:text-sm font-semibold px-7 py-3.5 rounded-md transition-colors cursor-pointer uppercase tracking-wider"
                   >
                     Book Now
                   </button>
@@ -314,13 +301,13 @@ export default function HomePage() {
                 <div className="pt-3 flex flex-wrap items-center gap-4">
                   <Link
                     href="/food"
-                    className="bg-[#1F3A2B] hover:bg-[#162B20] text-white text-xs sm:text-sm font-semibold px-7 py-3.5 rounded-full transition-colors inline-flex items-center gap-2 uppercase tracking-wider"
+                    className="bg-[#1F3A2B] hover:bg-[#162B20] text-white text-xs sm:text-sm font-semibold px-7 py-3.5 rounded-md transition-colors inline-flex items-center gap-2 uppercase tracking-wider"
                   >
                     <span>View Menu & Pricing</span>
                     <ArrowRight className="h-4 w-4" />
                   </Link>
 
-                  <div className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-stone-700 bg-[#FAF7F2] px-5 py-3 rounded-full border border-[#E6DFD5]">
+                  <div className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-stone-700 bg-[#FAF7F2] px-5 py-3 rounded-md border border-[#E6DFD5]">
                     <QrCode className="h-4 w-4 text-[#1F3A2B]" />
                     <span>In-Room QR Order Supported</span>
                   </div>
@@ -331,52 +318,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* 7. CHITWAN SAFARI & EXPERIENCES SECTION */}
-        <section className="py-20 sm:py-28 bg-[#FAF7F2] border-b border-[#E6DFD5]">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12">
-            
-            <div className="text-center max-w-3xl mx-auto space-y-3">
-              <span className="text-[#1F3A2B] text-xs sm:text-sm font-semibold uppercase tracking-[0.2em] block">
-                Local Surroundings
-              </span>
-              <h2 className="font-heading text-3xl sm:text-5xl lg:text-6xl font-bold text-[#2D2B2A]">
-                CHITWAN EXPERIENCES
-              </h2>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center bg-white p-8 sm:p-12 rounded-lg border border-[#E6DFD5] shadow-xs">
-              <div className="lg:col-span-7 rounded-lg overflow-hidden border border-[#E6DFD5] h-80 sm:h-104">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="https://images.unsplash.com/photo-1547970810-dc9223d49122?auto=format&fit=crop&q=80&w=1200"
-                  alt="Chitwan Wildlife Safari"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-
-              <div className="lg:col-span-5 space-y-5">
-                <span className="text-xs sm:text-sm font-semibold text-stone-500 uppercase tracking-wider block">
-                  18 km (30 mins drive from lodge)
-                </span>
-                <h3 className="font-heading text-2xl sm:text-3xl font-bold text-[#2D2B2A]">
-                  Chitwan National Park Jungle Safari
-                </h3>
-                <p className="text-stone-700 text-base sm:text-lg leading-relaxed">
-                  Home to the endangered One-Horned Rhinoceros, Bengal Tigers, and wild elephants. Our family front desk assists guests in arranging jeep safaris, canoe trips, and guided walks.
-                </p>
-                <div className="pt-2">
-                  <Link
-                    href="/attractions"
-                    className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-[#1F3A2B] border-b-2 border-[#1F3A2B] pb-1 hover:underline"
-                  >
-                    <span>View All Local Attractions →</span>
-                  </Link>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </section>
+     
 
         {/* 8. FULL-WIDTH BACKGROUND IMAGE — SECTION 2 */}
         <section className="relative w-full h-[55vh] min-h-[400px] flex items-center justify-center overflow-hidden bg-stone-900 border-y border-[#E6DFD5]">
@@ -445,7 +387,7 @@ export default function HomePage() {
             <div className="pt-2">
               <button
                 onClick={() => handleOpenBooking()}
-                className="bg-[#1F3A2B] hover:bg-[#162B20] text-white font-semibold text-sm sm:text-base py-4 px-9 rounded-full transition-colors cursor-pointer tracking-wider uppercase shadow-xs"
+                className="bg-[#1F3A2B] hover:bg-[#162B20] text-white font-semibold text-sm sm:text-base py-4 px-9 rounded-md transition-colors cursor-pointer tracking-wider uppercase shadow-xs"
               >
                 Check Availability & Enquire
               </button>

@@ -228,7 +228,7 @@ export default function AboutPage() {
             <div className="pt-2">
               <button
                 onClick={() => setBookingModalOpen(true)}
-                className="bg-[#1F3A2B] hover:bg-[#162B20] text-white font-semibold text-sm sm:text-base py-4 px-9 rounded-full transition-colors cursor-pointer tracking-wider uppercase shadow-xs"
+                className="bg-[#1F3A2B] hover:bg-[#162B20] text-white font-semibold text-sm sm:text-base py-4 px-9 rounded-md transition-colors cursor-pointer tracking-wider uppercase shadow-xs"
               >
                 Check Availability
               </button>

@@ -70,7 +70,7 @@ export default function BookingModal({ isOpen, onClose, selectedRoomId }: Bookin
             <div className="pt-2">
               <button
                 onClick={handleReset}
-                className="bg-[#1F3A2B] text-white font-semibold text-xs sm:text-sm py-3 px-8 rounded hover:bg-[#162B20] transition-colors cursor-pointer uppercase tracking-wider"
+                className="bg-[#1F3A2B] text-white font-semibold text-xs sm:text-sm py-3 px-8 rounded-md hover:bg-[#162B20] transition-colors cursor-pointer uppercase tracking-wider"
               >
                 Close Window
               </button>
@@ -98,7 +98,7 @@ export default function BookingModal({ isOpen, onClose, selectedRoomId }: Bookin
                   <select
                     value={roomId}
                     onChange={(e) => setRoomId(e.target.value)}
-                    className="w-full bg-[#FAF7F2] border border-[#E6DFD5] rounded px-3 py-2.5 text-xs sm:text-sm text-stone-900 focus:outline-none focus:border-[#1F3A2B]"
+                    className="w-full bg-[#FAF7F2] border border-[#E6DFD5] rounded-md px-3 py-2.5 text-xs sm:text-sm text-stone-900 focus:outline-none focus:border-[#1F3A2B]"
                   >
                     {ROOMS_DATA.map((r) => (
                       <option key={r.id} value={r.id}>
@@ -116,7 +116,7 @@ export default function BookingModal({ isOpen, onClose, selectedRoomId }: Bookin
                       required
                       value={checkIn}
                       onChange={(e) => setCheckIn(e.target.value)}
-                      className="w-full bg-[#FAF7F2] border border-[#E6DFD5] rounded px-3 py-2.5 text-xs sm:text-sm focus:outline-none focus:border-[#1F3A2B]"
+                      className="w-full bg-[#FAF7F2] border border-[#E6DFD5] rounded-md px-3 py-2.5 text-xs sm:text-sm focus:outline-none focus:border-[#1F3A2B]"
                     />
                   </div>
                   <div>
@@ -126,7 +126,7 @@ export default function BookingModal({ isOpen, onClose, selectedRoomId }: Bookin
                       required
                       value={checkOut}
                       onChange={(e) => setCheckOut(e.target.value)}
-                      className="w-full bg-[#FAF7F2] border border-[#E6DFD5] rounded px-3 py-2.5 text-xs sm:text-sm focus:outline-none focus:border-[#1F3A2B]"
+                      className="w-full bg-[#FAF7F2] border border-[#E6DFD5] rounded-md px-3 py-2.5 text-xs sm:text-sm focus:outline-none focus:border-[#1F3A2B]"
                     />
                   </div>
                 </div>
@@ -136,7 +136,7 @@ export default function BookingModal({ isOpen, onClose, selectedRoomId }: Bookin
                   <select
                     value={guestsCount}
                     onChange={(e) => setGuestsCount(e.target.value)}
-                    className="w-full bg-[#FAF7F2] border border-[#E6DFD5] rounded px-3 py-2.5 text-xs sm:text-sm text-stone-900 focus:outline-none focus:border-[#1F3A2B]"
+                    className="w-full bg-[#FAF7F2] border border-[#E6DFD5] rounded-md px-3 py-2.5 text-xs sm:text-sm text-stone-900 focus:outline-none focus:border-[#1F3A2B]"
                   >
                     <option value="1 Guest">1 Guest</option>
                     <option value="2 Guests">2 Guests</option>
@@ -148,7 +148,7 @@ export default function BookingModal({ isOpen, onClose, selectedRoomId }: Bookin
                 <div className="pt-2">
                   <button
                     type="submit"
-                    className="w-full bg-[#1F3A2B] hover:bg-[#162B20] text-white font-semibold text-xs sm:text-sm py-3.5 rounded transition-colors cursor-pointer flex items-center justify-center gap-2 tracking-wider"
+                    className="w-full bg-[#1F3A2B] hover:bg-[#162B20] text-white font-semibold text-xs sm:text-sm py-3.5 rounded-md transition-colors cursor-pointer flex items-center justify-center gap-2 tracking-wider"
                   >
                     <span>Continue to Contact Details</span>
                     <ArrowRight className="h-4 w-4" />
@@ -165,7 +165,7 @@ export default function BookingModal({ isOpen, onClose, selectedRoomId }: Bookin
                     placeholder="e.g. Prashant Sapkota"
                     value={guestName}
                     onChange={(e) => setGuestName(e.target.value)}
-                    className="w-full bg-[#FAF7F2] border border-[#E6DFD5] rounded px-3 py-2.5 text-xs sm:text-sm focus:outline-none focus:border-[#1F3A2B]"
+                    className="w-full bg-[#FAF7F2] border border-[#E6DFD5] rounded-md px-3 py-2.5 text-xs sm:text-sm focus:outline-none focus:border-[#1F3A2B]"
                   />
                 </div>
 
@@ -178,7 +178,7 @@ export default function BookingModal({ isOpen, onClose, selectedRoomId }: Bookin
                       placeholder="+977 98XXXXXXX"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
-                      className="w-full bg-[#FAF7F2] border border-[#E6DFD5] rounded px-3 py-2.5 text-xs sm:text-sm focus:outline-none focus:border-[#1F3A2B]"
+                      className="w-full bg-[#FAF7F2] border border-[#E6DFD5] rounded-md px-3 py-2.5 text-xs sm:text-sm focus:outline-none focus:border-[#1F3A2B]"
                     />
                   </div>
                   <div>
@@ -188,7 +188,7 @@ export default function BookingModal({ isOpen, onClose, selectedRoomId }: Bookin
                       placeholder="your@email.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="w-full bg-[#FAF7F2] border border-[#E6DFD5] rounded px-3 py-2.5 text-xs sm:text-sm focus:outline-none focus:border-[#1F3A2B]"
+                      className="w-full bg-[#FAF7F2] border border-[#E6DFD5] rounded-md px-3 py-2.5 text-xs sm:text-sm focus:outline-none focus:border-[#1F3A2B]"
                     />
                   </div>
                 </div>
@@ -198,7 +198,7 @@ export default function BookingModal({ isOpen, onClose, selectedRoomId }: Bookin
                   <select
                     value={paymentMethod}
                     onChange={(e) => setPaymentMethod(e.target.value as any)}
-                    className="w-full bg-[#FAF7F2] border border-[#E6DFD5] rounded px-3 py-2.5 text-xs sm:text-sm text-stone-900 focus:outline-none focus:border-[#1F3A2B]"
+                    className="w-full bg-[#FAF7F2] border border-[#E6DFD5] rounded-md px-3 py-2.5 text-xs sm:text-sm text-stone-900 focus:outline-none focus:border-[#1F3A2B]"
                   >
                     <option value="esewa">Pay via eSewa</option>
                     <option value="bank">Bank Transfer</option>
@@ -213,7 +213,7 @@ export default function BookingModal({ isOpen, onClose, selectedRoomId }: Bookin
                     placeholder="Airport pickup, arrival time, or safari trip inquiry..."
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    className="w-full bg-[#FAF7F2] border border-[#E6DFD5] rounded p-2.5 text-xs sm:text-sm focus:outline-none focus:border-[#1F3A2B]"
+                    className="w-full bg-[#FAF7F2] border border-[#E6DFD5] rounded-md p-2.5 text-xs sm:text-sm focus:outline-none focus:border-[#1F3A2B]"
                   />
                 </div>
 
@@ -228,7 +228,7 @@ export default function BookingModal({ isOpen, onClose, selectedRoomId }: Bookin
 
                   <button
                     type="submit"
-                    className="bg-[#1F3A2B] hover:bg-[#162B20] text-white font-semibold text-xs sm:text-sm py-3 px-6 rounded transition-colors cursor-pointer uppercase tracking-wider"
+                    className="bg-[#1F3A2B] hover:bg-[#162B20] text-white font-semibold text-xs sm:text-sm py-3 px-6 rounded-md transition-colors cursor-pointer uppercase tracking-wider"
                   >
                     Send Stay Enquiry
                   </button>
