@@ -163,7 +163,7 @@ export default function EnquiryPage() {
                         <ArrowRight className="h-4 w-4" />
                       </button>
                     </form>
-                  ) : (
+                ) : (
                     <form onSubmit={handleSubmitEnquiry} className="space-y-5">
                       <div>
                         <h3 className="font-heading text-xl font-bold text-[#1F3A2B] mb-1">
