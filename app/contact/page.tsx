@@ -3,22 +3,42 @@
 import React, { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { MapPin, Mail, Phone, CheckCircle2 } from 'lucide-react';
+import { MapPin, Mail, Phone, CheckCircle2, AlertCircle } from 'lucide-react';
 import { FacebookIcon, InstagramIcon } from '@/components/SocialIcons';
 import { SOCIAL_LINKS } from '@/lib/data';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+const contactSchema = z.object({
+  firstName: z.string().trim().min(2, { message: 'First name must be at least 2 characters' }),
+  lastName: z.string().trim().min(2, { message: 'Last name must be at least 2 characters' }),
+  email: z.string().trim().email({ message: 'Please enter a valid email address' }),
+  telephone: z.string().trim().min(7, { message: 'Please enter a valid phone number (min 7 digits)' }),
+  subject: z.string().trim().min(3, { message: 'Subject must be at least 3 characters' }),
+  message: z.string().trim().min(10, { message: 'Message must be at least 10 characters' }),
+});
+
+type ContactFormData = z.infer<typeof contactSchema>;
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [telephone, setTelephone] = useState('');
-  const [subject, setSubject] = useState('');
-  const [message, setMessage] = useState('');
+  const [submittedName, setSubmittedName] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+  } = useForm<ContactFormData>({
+    resolver: zodResolver(contactSchema),
+    mode: 'onBlur',
+  });
+
+  const onSubmit = (data: ContactFormData) => {
+    setSubmittedName(data.firstName);
     setSubmitted(true);
+    reset();
   };
 
   return (
@@ -65,33 +85,54 @@ export default function ContactPage() {
                       Message Sent Successfully!
                     </h2>
                     <p className="text-stone-600 text-base leading-relaxed max-w-md mx-auto">
-                      Thank you, {firstName}! We have received your message and our front desk family will get back to you shortly.
+                      Thank you, {submittedName}! We have received your message and our front desk family will get back to you shortly.
                     </p>
+                    <div className="pt-2">
+                      <button
+                        onClick={() => setSubmitted(false)}
+                        className="text-xs font-bold text-brand-green hover:underline uppercase tracking-wider cursor-pointer"
+                      >
+                        ← Send another message
+                      </button>
+                    </div>
                   </div>
                 ) : (
-                  <form onSubmit={handleSubmit} className="space-y-4">
+                  <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
 
                     {/* Row 1: First Name & Last Name */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <input
                           type="text"
-                          required
                           placeholder="First Name"
-                          value={firstName}
-                          onChange={(e) => setFirstName(e.target.value)}
-                          className="w-full bg-white border border-brand-border rounded-md px-4 py-3 text-stone-800 placeholder:text-stone-400 text-sm focus:outline-none focus:border-stone-800 shadow-2xs"
+                          {...register('firstName')}
+                          className={`w-full bg-white border ${
+                            errors.firstName ? 'border-red-500 focus:border-red-600' : 'border-brand-border focus:border-stone-800'
+                          } rounded-md px-4 py-3 text-stone-800 placeholder:text-stone-400 text-sm focus:outline-none shadow-2xs`}
                         />
+                        {errors.firstName && (
+                          <p className="text-xs text-red-600 font-medium mt-1 flex items-center gap-1">
+                            <AlertCircle className="w-3.5 h-3.5" />
+                            {errors.firstName.message}
+                          </p>
+                        )}
                       </div>
+
                       <div>
                         <input
                           type="text"
-                          required
                           placeholder="Last Name"
-                          value={lastName}
-                          onChange={(e) => setLastName(e.target.value)}
-                          className="w-full bg-white border border-brand-border rounded-md px-4 py-3 text-stone-800 placeholder:text-stone-400 text-sm focus:outline-none focus:border-stone-800 shadow-2xs"
+                          {...register('lastName')}
+                          className={`w-full bg-white border ${
+                            errors.lastName ? 'border-red-500 focus:border-red-600' : 'border-brand-border focus:border-stone-800'
+                          } rounded-md px-4 py-3 text-stone-800 placeholder:text-stone-400 text-sm focus:outline-none shadow-2xs`}
                         />
+                        {errors.lastName && (
+                          <p className="text-xs text-red-600 font-medium mt-1 flex items-center gap-1">
+                            <AlertCircle className="w-3.5 h-3.5" />
+                            {errors.lastName.message}
+                          </p>
+                        )}
                       </div>
                     </div>
 
@@ -100,22 +141,35 @@ export default function ContactPage() {
                       <div>
                         <input
                           type="email"
-                          required
-                          placeholder="Email"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          className="w-full bg-white border border-brand-border rounded-md px-4 py-3 text-stone-800 placeholder:text-stone-400 text-sm focus:outline-none focus:border-stone-800 shadow-2xs"
+                          placeholder="Email Address"
+                          {...register('email')}
+                          className={`w-full bg-white border ${
+                            errors.email ? 'border-red-500 focus:border-red-600' : 'border-brand-border focus:border-stone-800'
+                          } rounded-md px-4 py-3 text-stone-800 placeholder:text-stone-400 text-sm focus:outline-none shadow-2xs`}
                         />
+                        {errors.email && (
+                          <p className="text-xs text-red-600 font-medium mt-1 flex items-center gap-1">
+                            <AlertCircle className="w-3.5 h-3.5" />
+                            {errors.email.message}
+                          </p>
+                        )}
                       </div>
+
                       <div>
                         <input
                           type="tel"
-                          required
-                          placeholder="Telephone"
-                          value={telephone}
-                          onChange={(e) => setTelephone(e.target.value)}
-                          className="w-full bg-white border border-brand-border rounded-md px-4 py-3 text-stone-800 placeholder:text-stone-400 text-sm focus:outline-none focus:border-stone-800 shadow-2xs"
+                          placeholder="Telephone / Phone"
+                          {...register('telephone')}
+                          className={`w-full bg-white border ${
+                            errors.telephone ? 'border-red-500 focus:border-red-600' : 'border-brand-border focus:border-stone-800'
+                          } rounded-md px-4 py-3 text-stone-800 placeholder:text-stone-400 text-sm focus:outline-none shadow-2xs`}
                         />
+                        {errors.telephone && (
+                          <p className="text-xs text-red-600 font-medium mt-1 flex items-center gap-1">
+                            <AlertCircle className="w-3.5 h-3.5" />
+                            {errors.telephone.message}
+                          </p>
+                        )}
                       </div>
                     </div>
 
@@ -123,33 +177,46 @@ export default function ContactPage() {
                     <div>
                       <input
                         type="text"
-                        required
                         placeholder="Subject"
-                        value={subject}
-                        onChange={(e) => setSubject(e.target.value)}
-                        className="w-full bg-white border border-brand-border rounded-md px-4 py-3 text-stone-800 placeholder:text-stone-400 text-sm focus:outline-none focus:border-stone-800 shadow-2xs"
+                        {...register('subject')}
+                        className={`w-full bg-white border ${
+                          errors.subject ? 'border-red-500 focus:border-red-600' : 'border-brand-border focus:border-stone-800'
+                        } rounded-md px-4 py-3 text-stone-800 placeholder:text-stone-400 text-sm focus:outline-none shadow-2xs`}
                       />
+                      {errors.subject && (
+                        <p className="text-xs text-red-600 font-medium mt-1 flex items-center gap-1">
+                          <AlertCircle className="w-3.5 h-3.5" />
+                          {errors.subject.message}
+                        </p>
+                      )}
                     </div>
 
                     {/* Row 4: Message */}
                     <div>
                       <textarea
-                        required
                         rows={6}
-                        placeholder="Message"
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}
-                        className="w-full bg-white border border-brand-border rounded-md p-4 text-stone-800 placeholder:text-stone-400 text-sm focus:outline-none focus:border-stone-800 shadow-2xs"
+                        placeholder="Your Message..."
+                        {...register('message')}
+                        className={`w-full bg-white border ${
+                          errors.message ? 'border-red-500 focus:border-red-600' : 'border-brand-border focus:border-stone-800'
+                        } rounded-md p-4 text-stone-800 placeholder:text-stone-400 text-sm focus:outline-none shadow-2xs`}
                       />
+                      {errors.message && (
+                        <p className="text-xs text-red-600 font-medium mt-1 flex items-center gap-1">
+                          <AlertCircle className="w-3.5 h-3.5" />
+                          {errors.message.message}
+                        </p>
+                      )}
                     </div>
 
                     {/* Submit Button */}
                     <div className="pt-2">
                       <button
                         type="submit"
-                        className="bg-brand-green hover:bg-brand-green-dark text-white px-8 py-3 rounded-md text-xs sm:text-sm font-semibold uppercase tracking-wider transition-all cursor-pointer shadow-xs"
+                        disabled={isSubmitting}
+                        className="bg-brand-green hover:bg-brand-green-dark text-white px-8 py-3 rounded-md text-xs sm:text-sm font-semibold uppercase tracking-wider transition-all cursor-pointer shadow-xs disabled:opacity-50"
                       >
-                        Submit
+                        {isSubmitting ? 'Sending...' : 'Submit'}
                       </button>
                     </div>
 
