@@ -20,6 +20,7 @@ import {
   TableRow,
   TableCell,
 } from '@/components/ui/table';
+import AdminPageHeader from '@/components/admin/layout/AdminPageHeader';
 
 export default function AdminDashboardOverview() {
   const cmsModules = [
@@ -54,32 +55,29 @@ export default function AdminDashboardOverview() {
   ];
 
   return (
-    <div className="space-y-6">
-      {/* 1. Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-zinc-200 dark:border-zinc-800">
-        <div>
-          <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-50 tracking-tight">
-            Moti Mahal Administration
-          </h2>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-0.5">
-            Centralized CMS for managing room inventories, contact submissions, gallery media, and promotional video content.
-          </p>
-        </div>
+    <div>
+      {/* Reusable Page Header */}
+      <AdminPageHeader
+        title="Moti Mahal Administration"
+        description="Centralized CMS for managing room inventories, contact submissions, gallery media, and promotional video content."
+        action={
+          <div className="flex items-center gap-2">
+            <Link href="/admin/contact">
+              <Button size="sm" className="h-9 text-sm">
+                Inquiries (3)
+              </Button>
+            </Link>
+            <Link href="/" target="_blank">
+              <Button variant="outline" size="sm" className="h-9 text-sm">
+                <ExternalLink className="w-4 h-4 mr-1.5" /> Public Site
+              </Button>
+            </Link>
+          </div>
+        }
+      />
 
-        <div className="flex items-center gap-2">
-          <Link href="/admin/contact">
-            <Button size="sm">View Messages (3)</Button>
-          </Link>
-          <Link href="/" target="_blank">
-            <Button variant="outline" size="sm">
-              <ExternalLink className="w-4 h-4 mr-1.5" /> Public Site
-            </Button>
-          </Link>
-        </div>
-      </div>
-
-      {/* 2. CMS Modules Grid */}
-      <div>
+      {/* CMS Modules Grid */}
+      <div className="mb-6">
         <h3 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">
           Content Modules
         </h3>
@@ -89,7 +87,7 @@ export default function AdminDashboardOverview() {
             const Icon = item.icon;
             return (
               <Link key={item.href} href={item.href}>
-                <div className="border border-zinc-200 dark:border-zinc-800 rounded-sm bg-white dark:bg-zinc-950 p-4 hover:border-zinc-400 dark:hover:border-zinc-600 transition-colors group cursor-pointer h-full flex flex-col justify-between space-y-3">
+                <div className="border border-zinc-200 dark:border-zinc-800 rounded-sm bg-white dark:bg-zinc-950 p-4 hover:border-zinc-400 dark:hover:border-zinc-600 transition-colors group cursor-pointer h-full flex flex-col justify-between space-y-3 font-sans">
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2.5">
@@ -119,9 +117,9 @@ export default function AdminDashboardOverview() {
         </div>
       </div>
 
-      {/* 3. Activity Table & System Summary */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pt-2">
-        <div className="lg:col-span-2 border border-zinc-200 dark:border-zinc-800 rounded-sm bg-white dark:bg-zinc-950 overflow-hidden">
+      {/* Activity Table & System Summary */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 border border-zinc-200 dark:border-zinc-800 rounded-sm bg-white dark:bg-zinc-950 overflow-hidden font-sans">
           <div className="p-4 border-b border-zinc-200 dark:border-zinc-800">
             <h4 className="font-semibold text-sm text-zinc-900 dark:text-zinc-50">
               Recent Activity Log
@@ -175,7 +173,7 @@ export default function AdminDashboardOverview() {
           </Table>
         </div>
 
-        <div className="border border-zinc-200 dark:border-zinc-800 rounded-sm bg-white dark:bg-zinc-950 p-4 space-y-4 flex flex-col justify-between">
+        <div className="border border-zinc-200 dark:border-zinc-800 rounded-sm bg-white dark:bg-zinc-950 p-4 space-y-4 flex flex-col justify-between font-sans">
           <div className="space-y-3">
             <h4 className="font-semibold text-sm text-zinc-900 dark:text-zinc-50 border-b border-zinc-200 dark:border-zinc-800 pb-2">
               System Environment
@@ -188,7 +186,7 @@ export default function AdminDashboardOverview() {
               </div>
               <div className="flex justify-between py-1 border-b border-zinc-100 dark:border-zinc-900">
                 <span className="text-zinc-500">CMS Engine:</span>
-                <span className="font-mono text-zinc-700 dark:text-zinc-300">Next.js App Router</span>
+                <span className="font-mono text-zinc-700 dark:text-zinc-300 text-xs">Next.js App Router</span>
               </div>
               <div className="flex justify-between py-1">
                 <span className="text-zinc-500">Status:</span>
@@ -198,7 +196,7 @@ export default function AdminDashboardOverview() {
           </div>
 
           <Link href="/admin/contact">
-            <Button className="w-full text-sm">Go to Inquiries</Button>
+            <Button className="w-full text-sm h-9">Go to Inquiries</Button>
           </Link>
         </div>
       </div>

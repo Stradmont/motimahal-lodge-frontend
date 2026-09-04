@@ -2,26 +2,43 @@
 
 @layer base {
   :root {
-    /* ── Brand Colors ── */
+    /* ── Brand Colors (Marketing Only) ── */
     --brand-green: #1F3A2B;
     --brand-green-dark: #162B20;
     --brand-charcoal: #2D2B2A;
     --brand-gold: #C88A3B;
 
-    /* ── Surface & Border Colors ── */
+    /* ── Surface & Border Colors (Marketing Only) ── */
     --brand-border: #E6DFD5;
     --brand-surface: #FAF7F2;
     --footer-bg: #14281E;
     --footer-overlay: #16291E;
     --footer-border: #2D4D3B;
 
-    /* ── Defaults ── */
+    /* ── Defaults (Marketing Public Site) ── */
     --background: #FFFFFF;
     --card-bg: #FFFFFF;
     --foreground: #2D2B2A;
     --muted: #666666;
     --muted-light: #F8FAFC;
     --border-color: #E6DFD5;
+
+    /* ── Dedicated Admin Tokens (Strictly Scoped & Isolated from Marketing) ── */
+    --admin-bg: #FFFFFF;
+    --admin-surface: #F9FAFB;
+    --admin-card: #FFFFFF;
+    --admin-foreground: #09090B;
+    --admin-muted: #71717A;
+    --admin-muted-light: #F4F4F5;
+    --admin-border: #E4E4E7;
+    --admin-primary: #09090B;
+    --admin-primary-hover: #18181B;
+    --admin-primary-foreground: #FAFAFA;
+    --admin-sidebar-bg: #09090B;
+    --admin-sidebar-border: #27272A;
+    --admin-sidebar-text: #A1A1AA;
+    --admin-sidebar-text-active: #FAFAFA;
+    --admin-radius: 0.25rem; /* 4px subtle rounded-sm radius */
   }
 }
 
@@ -46,6 +63,23 @@
   --color-muted: var(--muted);
   --color-muted-light: var(--muted-light);
   --color-border-color: var(--brand-border);
+
+  /* Admin Dedicated Theme Variables */
+  --color-admin-bg: var(--admin-bg);
+  --color-admin-surface: var(--admin-surface);
+  --color-admin-card: var(--admin-card);
+  --color-admin-foreground: var(--admin-foreground);
+  --color-admin-muted: var(--admin-muted);
+  --color-admin-muted-light: var(--admin-muted-light);
+  --color-admin-border: var(--admin-border);
+  --color-admin-primary: var(--admin-primary);
+  --color-admin-primary-hover: var(--admin-primary-hover);
+  --color-admin-primary-foreground: var(--admin-primary-foreground);
+  --color-admin-sidebar-bg: var(--admin-sidebar-bg);
+  --color-admin-sidebar-border: var(--admin-sidebar-border);
+  --color-admin-sidebar-text: var(--admin-sidebar-text);
+  --color-admin-sidebar-text-active: var(--admin-sidebar-text-active);
+  --radius-admin: var(--admin-radius);
 
   --font-heading: var(--font-heading), Mirza, cursive;
   --font-sans: var(--font-sans), Jost, Helvetica, sans-serif;

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Plus, Search, Trash2 } from 'lucide-react';
+import { Plus, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -14,6 +14,8 @@ import {
   TableCell,
 } from '@/components/ui/table';
 import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import AdminPageHeader from '@/components/admin/layout/AdminPageHeader';
+import AdminFilterBar from '@/components/admin/layout/AdminFilterBar';
 
 interface RoomItem {
   id: string;
@@ -88,6 +90,14 @@ export default function AdminRoomsPage() {
     return matchesType && matchesSearch;
   });
 
+  const filterOptions = [
+    { key: 'All', label: 'All' },
+    { key: 'Deluxe', label: 'Deluxe' },
+    { key: 'Suite', label: 'Suite' },
+    { key: 'Family', label: 'Family' },
+    { key: 'Standard', label: 'Standard' },
+  ];
+
   const handleToggleStatus = (id: string) => {
     setRooms(
       rooms.map((room) => {
@@ -140,7 +150,7 @@ export default function AdminRoomsPage() {
   };
 
   return (
-    <div className="space-y-5">
+    <div>
       {/* Toast */}
       {toast && (
         <div className="fixed bottom-5 right-5 z-50 bg-zinc-900 text-zinc-50 border border-zinc-700 px-4 py-2 rounded-sm text-sm font-medium shadow-md">
@@ -148,56 +158,33 @@ export default function AdminRoomsPage() {
         </div>
       )}
 
-      {/* 1. Header Row */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-zinc-200 dark:border-zinc-800">
-        <div>
-          <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-50 tracking-tight">
-            Rooms & Rates Inventory
-          </h2>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-0.5">
-            Manage lodge room categories, nightly rates, capacity, and availability status.
-          </p>
-        </div>
+      {/* Reusable Page Header */}
+      <AdminPageHeader
+        title="Rooms & Rates Inventory"
+        description="Manage lodge room categories, nightly rates, capacity, and availability status."
+        action={
+          <Button
+            size="sm"
+            onClick={() => setIsAddModalOpen(true)}
+            className="text-sm h-9"
+          >
+            <Plus className="w-4 h-4 mr-1.5" />
+            Add Room
+          </Button>
+        }
+      />
 
-        <Button
-          size="sm"
-          onClick={() => setIsAddModalOpen(true)}
-          className="shrink-0 text-sm h-9"
-        >
-          <Plus className="w-4 h-4 mr-1.5" />
-          Add Room
-        </Button>
-      </div>
+      {/* Reusable Control & Search Bar */}
+      <AdminFilterBar
+        filterOptions={filterOptions}
+        activeFilter={filterType}
+        onFilterChange={setFilterType}
+        searchValue={searchTerm}
+        onSearchChange={setSearchTerm}
+        searchPlaceholder="Filter room name..."
+      />
 
-      {/* 2. Search & Filter Bar */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 py-1">
-        <div className="flex items-center gap-1.5 w-full sm:w-auto overflow-x-auto">
-          {['All', 'Deluxe', 'Suite', 'Family', 'Standard'].map((t) => (
-            <Button
-              key={t}
-              variant={filterType === t ? 'default' : 'ghost'}
-              size="sm"
-              onClick={() => setFilterType(t)}
-              className="text-sm h-9"
-            >
-              {t}
-            </Button>
-          ))}
-        </div>
-
-        <div className="relative w-full sm:w-64">
-          <Search className="w-4 h-4 text-zinc-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
-          <Input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Filter room name..."
-            className="pl-8 h-9 text-sm bg-white dark:bg-zinc-950"
-          />
-        </div>
-      </div>
-
-      {/* 3. Main Data Table */}
+      {/* Main Data Table */}
       <div className="border border-zinc-200 dark:border-zinc-800 rounded-sm bg-white dark:bg-zinc-950 overflow-hidden">
         <Table>
           <TableHeader>
@@ -284,9 +271,9 @@ export default function AdminRoomsPage() {
         </Table>
       </div>
 
-      {/* 4. Add Room Modal Dialog */}
+      {/* Add Room Modal Dialog */}
       <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
-        <form onSubmit={handleAddRoom} className="space-y-4">
+        <form onSubmit={handleAddRoom} className="space-y-4 font-sans">
           <DialogHeader>
             <DialogTitle>Add Room Entry</DialogTitle>
             <DialogDescription>
@@ -316,7 +303,7 @@ export default function AdminRoomsPage() {
                 <select
                   value={type}
                   onChange={(e) => setType(e.target.value as RoomItem['type'])}
-                  className="w-full h-9 rounded-sm border border-zinc-300 bg-white px-3 py-1 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50 focus:outline-none"
+                  className="w-full h-9 rounded-sm border border-zinc-300 bg-white px-3 py-1 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50 focus:outline-none font-sans"
                 >
                   <option value="Deluxe">Deluxe</option>
                   <option value="Suite">Suite</option>

@@ -82,7 +82,7 @@ export default function AdminSidebar({
 
       <aside
         className={cn(
-          'fixed top-0 bottom-0 left-0 z-50 bg-zinc-950 text-zinc-300 border-r border-zinc-800 flex flex-col transition-all duration-200 ease-in-out',
+          'fixed top-0 bottom-0 left-0 z-50 bg-zinc-950 text-zinc-300 border-r border-zinc-800 flex flex-col transition-all duration-200 ease-in-out font-sans',
           isCollapsed ? 'lg:w-16' : 'lg:w-60',
           isMobileOpen
             ? 'translate-x-0 w-60'
@@ -96,7 +96,7 @@ export default function AdminSidebar({
               M
             </div>
             {!isCollapsed && (
-              <span className="font-bold text-sm text-zinc-100 tracking-tight whitespace-nowrap">
+              <span className="font-bold text-sm text-zinc-100 tracking-tight whitespace-nowrap font-sans">
                 Moti Mahal CMS
               </span>
             )}
@@ -180,7 +180,7 @@ export default function AdminSidebar({
           <Link
             href="/"
             target="_blank"
-            title={isCollapsed ? 'View Public Site' : undefined}
+            title={isCollapsed ? 'Public Website' : undefined}
             className={cn(
               'flex items-center gap-3 px-3 py-2 rounded-sm text-sm text-zinc-400 hover:bg-zinc-900 hover:text-zinc-100 transition-colors',
               isCollapsed && 'justify-center px-0'
@@ -206,7 +206,7 @@ export default function AdminSidebar({
           <button
             onClick={onToggleCollapse}
             className="hidden lg:flex w-full items-center justify-center py-2 rounded-sm text-zinc-400 hover:text-zinc-100 hover:bg-zinc-900 transition-colors cursor-pointer border-t border-zinc-800/60 mt-1"
-            title={isCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
+            title={isCollapsed ? 'Expand Navigation' : 'Collapse Navigation'}
           >
             {isCollapsed ? (
               <ChevronRight className="w-4 h-4" />

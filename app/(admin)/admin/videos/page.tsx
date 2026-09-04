@@ -1,11 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Plus, Search, Play, Trash2, Eye } from 'lucide-react';
+import { Plus, Play, Trash2, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import AdminPageHeader from '@/components/admin/layout/AdminPageHeader';
+import AdminFilterBar from '@/components/admin/layout/AdminFilterBar';
 
 interface VideoItem {
   id: string;
@@ -72,6 +74,14 @@ export default function AdminVideosPage() {
     return matchesCat && matchesSearch;
   });
 
+  const filterOptions = [
+    { key: 'All', label: 'All' },
+    { key: 'Resort Tour', label: 'Resort Tour' },
+    { key: 'Culinary', label: 'Culinary' },
+    { key: 'Riverfront', label: 'Riverfront' },
+    { key: 'Culture', label: 'Culture' },
+  ];
+
   const handleDelete = (id: string) => {
     setVideos(videos.filter((v) => v.id !== id));
     showToast('Video deleted');
@@ -112,7 +122,7 @@ export default function AdminVideosPage() {
   };
 
   return (
-    <div className="space-y-5">
+    <div>
       {/* Toast */}
       {toast && (
         <div className="fixed bottom-5 right-5 z-50 bg-zinc-900 text-zinc-50 border border-zinc-700 px-4 py-2 rounded-sm text-sm font-medium shadow-md">
@@ -120,56 +130,33 @@ export default function AdminVideosPage() {
         </div>
       )}
 
-      {/* 1. Header Row */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-zinc-200 dark:border-zinc-800">
-        <div>
-          <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-50 tracking-tight">
-            Videos & Virtual Tours
-          </h2>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-0.5">
-            Manage resort video links, YouTube embeds, and promotional showcases.
-          </p>
-        </div>
+      {/* Reusable Page Header */}
+      <AdminPageHeader
+        title="Videos & Virtual Tours"
+        description="Manage resort video links, YouTube embeds, and promotional showcases."
+        action={
+          <Button
+            size="sm"
+            onClick={() => setIsAddModalOpen(true)}
+            className="text-sm h-9"
+          >
+            <Plus className="w-4 h-4 mr-1.5" />
+            Add Video
+          </Button>
+        }
+      />
 
-        <Button
-          size="sm"
-          onClick={() => setIsAddModalOpen(true)}
-          className="shrink-0 text-sm h-9"
-        >
-          <Plus className="w-4 h-4 mr-1.5" />
-          Add Video
-        </Button>
-      </div>
+      {/* Reusable Control & Search Bar */}
+      <AdminFilterBar
+        filterOptions={filterOptions}
+        activeFilter={activeCategory}
+        onFilterChange={setActiveCategory}
+        searchValue={searchTerm}
+        onSearchChange={setSearchTerm}
+        searchPlaceholder="Search video titles..."
+      />
 
-      {/* 2. Control Bar */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 py-1">
-        <div className="flex items-center gap-1.5 w-full sm:w-auto overflow-x-auto">
-          {['All', 'Resort Tour', 'Culinary', 'Riverfront', 'Culture'].map((cat) => (
-            <Button
-              key={cat}
-              variant={activeCategory === cat ? 'default' : 'ghost'}
-              size="sm"
-              onClick={() => setActiveCategory(cat)}
-              className="text-sm h-9 whitespace-nowrap"
-            >
-              {cat}
-            </Button>
-          ))}
-        </div>
-
-        <div className="relative w-full sm:w-64">
-          <Search className="w-4 h-4 text-zinc-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
-          <Input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search video titles..."
-            className="pl-8 h-9 text-sm bg-white dark:bg-zinc-950"
-          />
-        </div>
-      </div>
-
-      {/* 3. Video Grid */}
+      {/* Video Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredVideos.map((video) => (
           <div
@@ -244,10 +231,10 @@ export default function AdminVideosPage() {
         ))}
       </div>
 
-      {/* 4. Video Player Dialog */}
+      {/* Video Player Dialog */}
       <Dialog open={!!playingVideo} onOpenChange={(open) => !open && setPlayingVideo(null)}>
         {playingVideo && (
-          <div className="space-y-3">
+          <div className="space-y-3 font-sans">
             <DialogHeader>
               <DialogTitle>{playingVideo.title}</DialogTitle>
               <DialogDescription>{playingVideo.category}</DialogDescription>
@@ -269,9 +256,9 @@ export default function AdminVideosPage() {
         )}
       </Dialog>
 
-      {/* 5. Add Video Dialog */}
+      {/* Add Video Dialog */}
       <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
-        <form onSubmit={handleAddVideo} className="space-y-4">
+        <form onSubmit={handleAddVideo} className="space-y-4 font-sans">
           <DialogHeader>
             <DialogTitle>Add Video Embed</DialogTitle>
             <DialogDescription>
@@ -300,7 +287,7 @@ export default function AdminVideosPage() {
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value as VideoItem['category'])}
-                className="w-full h-9 rounded-sm border border-zinc-300 bg-white px-3 py-1 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50 focus:outline-none"
+                className="w-full h-9 rounded-sm border border-zinc-300 bg-white px-3 py-1 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50 focus:outline-none font-sans"
               >
                 <option value="Resort Tour">Resort Tour</option>
                 <option value="Culinary">Culinary</option>

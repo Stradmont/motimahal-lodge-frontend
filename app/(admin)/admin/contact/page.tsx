@@ -1,9 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Search, Eye, Archive, Trash2 } from 'lucide-react';
+import { Eye, Archive, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import {
   Table,
@@ -14,6 +13,8 @@ import {
   TableCell,
 } from '@/components/ui/table';
 import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import AdminPageHeader from '@/components/admin/layout/AdminPageHeader';
+import AdminFilterBar from '@/components/admin/layout/AdminFilterBar';
 
 interface ContactSubmission {
   id: string;
@@ -107,7 +108,7 @@ const mockSubmissions: ContactSubmission[] = [
 export default function AdminContactPage() {
   const [submissions, setSubmissions] = useState<ContactSubmission[]>(mockSubmissions);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedFilter, setSelectedFilter] = useState<'all' | 'unread' | 'replied' | 'archived'>('all');
+  const [selectedFilter, setSelectedFilter] = useState<string>('all');
   const [activeMessage, setActiveMessage] = useState<ContactSubmission | null>(null);
   const [replyText, setReplyText] = useState('');
   const [isSendingReply, setIsSendingReply] = useState(false);
@@ -125,6 +126,13 @@ export default function AdminContactPage() {
   });
 
   const unreadCount = submissions.filter((s) => s.status === 'unread').length;
+
+  const filterOptions = [
+    { key: 'all', label: 'All' },
+    { key: 'unread', label: 'Unread', count: unreadCount },
+    { key: 'replied', label: 'Replied' },
+    { key: 'archived', label: 'Archived' },
+  ];
 
   const handleMarkStatus = (id: string, status: 'unread' | 'replied' | 'archived') => {
     setSubmissions((prev) =>
@@ -164,7 +172,7 @@ export default function AdminContactPage() {
   };
 
   return (
-    <div className="space-y-5">
+    <div>
       {/* Toast Alert */}
       {toastMessage && (
         <div className="fixed bottom-5 right-5 z-50 bg-zinc-900 text-zinc-50 border border-zinc-700 px-4 py-2 rounded-sm text-sm font-medium shadow-md">
@@ -172,52 +180,23 @@ export default function AdminContactPage() {
         </div>
       )}
 
-      {/* 1. Header & Actions */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-zinc-200 dark:border-zinc-800">
-        <div>
-          <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-50 tracking-tight">
-            Contact Inquiries
-          </h2>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-0.5">
-            Review guest messages, room reservation queries, and send email responses.
-          </p>
-        </div>
-      </div>
+      {/* Reusable Page Header */}
+      <AdminPageHeader
+        title="Contact Inquiries"
+        description="Review guest messages, room reservation queries, and send email responses."
+      />
 
-      {/* 2. Control Bar: Search & Status Filters */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 py-1">
-        {/* Status Filter Tabs */}
-        <div className="flex items-center gap-1.5 w-full sm:w-auto">
-          {(['all', 'unread', 'replied', 'archived'] as const).map((filter) => {
-            const isActive = selectedFilter === filter;
-            return (
-              <Button
-                key={filter}
-                variant={isActive ? 'default' : 'ghost'}
-                size="sm"
-                onClick={() => setSelectedFilter(filter)}
-                className="capitalize text-sm h-9"
-              >
-                {filter} {filter === 'unread' && unreadCount > 0 ? `(${unreadCount})` : ''}
-              </Button>
-            );
-          })}
-        </div>
+      {/* Reusable Control & Search Bar */}
+      <AdminFilterBar
+        filterOptions={filterOptions}
+        activeFilter={selectedFilter}
+        onFilterChange={setSelectedFilter}
+        searchValue={searchTerm}
+        onSearchChange={setSearchTerm}
+        searchPlaceholder="Search guest name, email, subject..."
+      />
 
-        {/* Search Input */}
-        <div className="relative w-full sm:w-72">
-          <Search className="w-4 h-4 text-zinc-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
-          <Input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search guest name, email, subject..."
-            className="pl-8 h-9 text-sm bg-white dark:bg-zinc-950"
-          />
-        </div>
-      </div>
-
-      {/* 3. Main Data Table */}
+      {/* Main Data Table */}
       <div className="border border-zinc-200 dark:border-zinc-800 rounded-sm bg-white dark:bg-zinc-950 overflow-hidden">
         <Table>
           <TableHeader>
@@ -243,7 +222,6 @@ export default function AdminContactPage() {
                   onClick={() => setActiveMessage(sub)}
                   className="cursor-pointer"
                 >
-                  {/* Guest Info */}
                   <TableCell>
                     <div className="flex items-center gap-2">
                       <span className="font-semibold text-zinc-900 dark:text-zinc-100 text-sm">
@@ -260,7 +238,6 @@ export default function AdminContactPage() {
                     </p>
                   </TableCell>
 
-                  {/* Subject & Category */}
                   <TableCell className="max-w-xs">
                     <span className="inline-block text-xs text-zinc-500 font-medium mb-0.5">
                       {sub.category}
@@ -270,12 +247,10 @@ export default function AdminContactPage() {
                     </p>
                   </TableCell>
 
-                  {/* Date */}
                   <TableCell className="text-sm text-zinc-500 whitespace-nowrap">
                     {sub.date}
                   </TableCell>
 
-                  {/* Status */}
                   <TableCell>
                     {sub.status === 'unread' && (
                       <Badge variant="default">New</Badge>
@@ -288,7 +263,6 @@ export default function AdminContactPage() {
                     )}
                   </TableCell>
 
-                  {/* Actions */}
                   <TableCell className="text-right whitespace-nowrap">
                     <div
                       className="flex items-center justify-end gap-1"
@@ -329,10 +303,10 @@ export default function AdminContactPage() {
         </Table>
       </div>
 
-      {/* 4. Detail / Reply Modal Dialog */}
+      {/* Detail / Reply Modal Dialog */}
       <Dialog open={!!activeMessage} onOpenChange={(open) => !open && setActiveMessage(null)}>
         {activeMessage && (
-          <div className="space-y-4">
+          <div className="space-y-4 font-sans">
             <DialogHeader>
               <div className="flex items-center justify-between">
                 <DialogTitle>{activeMessage.subject}</DialogTitle>
@@ -356,7 +330,7 @@ export default function AdminContactPage() {
                 value={replyText}
                 onChange={(e) => setReplyText(e.target.value)}
                 placeholder="Write response message..."
-                className="w-full rounded-sm border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-950 p-3 text-sm text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-1 focus:ring-zinc-950"
+                className="w-full rounded-sm border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-950 p-3 text-sm text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-1 focus:ring-zinc-950 font-sans"
               />
 
               <DialogFooter>
