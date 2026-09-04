@@ -53,7 +53,7 @@
 
 /* ── Global Reusable Utility Classes ── */
 .bg-texture {
-  background-image: url('/backs.png');
+  background-image: url('/textures/backs.png');
   background-repeat: repeat;
 }
 

@@ -6,7 +6,7 @@ export default function RiverfrontBreakSection() {
       <div
         className="absolute inset-0 z-0 bg-cover bg-center"
         style={{
-          backgroundImage: "url('/narayani-river-break.jpg')",
+          backgroundImage: "url('/gallery/narayani-river-break.jpg')",
         }}
       />
       <div className="absolute inset-0 z-10 bg-black/35" />

@@ -32,7 +32,7 @@ export default function ContactPage() {
           <div
             className="absolute inset-0 z-0 bg-cover bg-center"
             style={{
-              backgroundImage: "url('/contact-hero.jpg')",
+              backgroundImage: "url('/heroes/contact-hero.jpg')",
             }}
           />
           <div className="absolute inset-0 z-10 bg-black/55 backdrop-blur-xs" />

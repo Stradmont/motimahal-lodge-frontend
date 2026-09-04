@@ -63,7 +63,7 @@ export default function Navbar() {
           <Link href="/" className="flex items-center gap-3 cursor-pointer group">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/logo.png"
+              src="/branding/logo.png"
               alt="Motimahal Lodge Logo"
               className="h-11 sm:h-12 w-auto object-contain rounded-full shadow-xs"
             />

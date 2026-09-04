@@ -11,7 +11,7 @@ export default function RoomDetailHeader({ room }: RoomDetailHeaderProps) {
     <section
       className="py-14 sm:py-18 border-b border-brand-border text-brand-charcoal"
       style={{
-        backgroundImage: "url('/backs-2.png')",
+        backgroundImage: "url('/textures/backs-2.png')",
         backgroundRepeat: 'repeat',
       }}
     >

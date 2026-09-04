@@ -4,32 +4,32 @@ import React from 'react';
 
 const WHY_CHOOSE_ITEMS = [
   {
-    icon: '/namche.svg',
+    icon: '/icons/namche.svg',
     title: 'Narayani river views',
     description: 'Located in Bharatpur near the Narayani River, offering peaceful sunsets and views of surrounding Chitwan greenery.',
   },
   {
-    icon: '/blankets.svg',
+    icon: '/icons/blankets.svg',
     title: 'Exceptional service',
     description: 'Our friendly family hosts are dedicated to ensuring your stay is comfortable, restful, and memorable.',
   },
   {
-    icon: '/bedding.svg',
+    icon: '/icons/bedding.svg',
     title: 'Comfortable accommodation',
     description: 'Clean air-conditioned rooms with 24/7 solar hot showers and quiet garden surroundings for a true home away from home.',
   },
   {
-    icon: '/mountain.svg',
+    icon: '/icons/mountain.svg',
     title: 'Easy highway access',
     description: 'Conveniently located near Bharatpur Airport, Narayangarh bus station, and just 30 mins drive from Chitwan National Park.',
   },
   {
-    icon: '/cultural-immersion.svg',
+    icon: '/icons/cultural-immersion.svg',
     title: 'Cultural hospitality',
     description: 'Experience authentic Nepalese family hospitality, warm local tradition, and genuine community connection.',
   },
   {
-    icon: '/memorable-dining.svg',
+    icon: '/icons/memorable-dining.svg',
     title: 'On-site tandoori dining',
     description: 'Savor fresh clay-oven tandoori grills, authentic Nepalese Thakali thali sets, and local river fish at our restaurant.',
   },

@@ -47,7 +47,7 @@ export default function GalleryPage() {
           <div
             className="absolute inset-0 z-0 bg-cover bg-center"
             style={{
-              backgroundImage: "url('/narayani-river-gallery.jpg')",
+              backgroundImage: "url('/gallery/narayani-river-gallery.jpg')",
             }}
           />
           {/* Subtle Dark Overlay */}

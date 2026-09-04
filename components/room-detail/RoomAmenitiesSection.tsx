@@ -45,7 +45,7 @@ export default function RoomAmenitiesSection({ room }: RoomAmenitiesSectionProps
       <div
         className="p-7 sm:p-10 rounded-xl border border-brand-border space-y-5 shadow-2xs text-brand-charcoal"
         style={{
-          backgroundImage: "url('/backs-2.png')",
+          backgroundImage: "url('/textures/backs-2.png')",
           backgroundRepeat: 'repeat',
         }}
       >
@@ -83,7 +83,7 @@ export default function RoomAmenitiesSection({ room }: RoomAmenitiesSectionProps
       <div
         className="p-7 sm:p-10 rounded-xl border border-brand-border space-y-5 shadow-2xs text-brand-charcoal"
         style={{
-          backgroundImage: "url('/backs-2.png')",
+          backgroundImage: "url('/textures/backs-2.png')",
           backgroundRepeat: 'repeat',
         }}
       >

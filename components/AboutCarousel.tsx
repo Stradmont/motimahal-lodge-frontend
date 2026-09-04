@@ -20,7 +20,7 @@ const REAL_SLIDES: AboutSlide[] = [
   {
     id: 'narayani-river',
     title: 'Narayani Riverfront Promenade',
-    image: '/narayani-river-gallery.jpg',
+    image: '/gallery/narayani-river-gallery.jpg',
     caption: 'Stunning golden sunset views along the Narayani River, perfect for evening strolls just 5 minutes away.',
   },
   {

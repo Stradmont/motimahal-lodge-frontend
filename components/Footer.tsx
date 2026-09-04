@@ -16,7 +16,7 @@ export default function Footer() {
       <div className="absolute bottom-4 sm:bottom-8 left-0 right-0 w-full pointer-events-none overflow-hidden select-none z-0">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/footer-element.svg"
+          src="/elements/footer-element.svg"
           alt=""
           className="w-full h-32 sm:h-44 md:h-52 object-cover object-top pointer-events-none opacity-90 brightness-110"
         />
@@ -30,7 +30,7 @@ export default function Footer() {
             <Link href="/" className="flex items-center gap-3.5 group">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/logo.png"
+                src="/branding/logo.png"
                 alt="Motimahal Lodge Logo"
                 className="h-12 sm:h-14 w-auto object-contain rounded-full shadow-sm shrink-0"
               />

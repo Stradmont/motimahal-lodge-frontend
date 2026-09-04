@@ -93,7 +93,7 @@ export default function MobileNavDrawer({
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/logo.png"
+              src="/branding/logo.png"
               alt="Motimahal Lodge"
               className="h-9 w-auto object-contain rounded-full"
             />

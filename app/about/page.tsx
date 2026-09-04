@@ -15,7 +15,7 @@ export default function AboutPage() {
     <div className="min-h-screen flex flex-col text-brand-charcoal bg-texture">
       <Navbar />
 
-      <main className="flex-1">
+    <main className="flex-1">
 
         {/* 1. HERO SECTION */}
         <section className="relative w-full h-[60vh] min-h-[440px] flex items-center justify-center overflow-hidden bg-stone-900">
@@ -50,7 +50,7 @@ export default function AboutPage() {
               <div className="lg:col-span-5 rounded-lg overflow-hidden border border-brand-border shadow-xs">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&q=80&w=1000"
+                  src="/about/owner-image.png"
                   alt="Motimahal Lodge Grounds"
                   className="w-full h-120 sm:h-144 object-cover"
                 />
@@ -64,7 +64,7 @@ export default function AboutPage() {
                   <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-lg overflow-hidden shrink-0 border border-brand-border">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=400"
+                      src="/about/owner-side-image.png"
                       alt="Motimahal Family Hosts"
                       className="w-full h-full object-cover"
                     />

@@ -20,7 +20,7 @@ export default function BlogListingPage() {
           <div
             className="absolute inset-0 z-0 bg-cover bg-center"
             style={{
-              backgroundImage: "url('/blog-hero.jpg')",
+              backgroundImage: "url('/heroes/blog-hero.jpg')",
             }}
           />
           <div className="absolute inset-0 z-10 bg-black/60 backdrop-blur-xs" />

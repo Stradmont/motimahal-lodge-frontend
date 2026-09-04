@@ -36,7 +36,7 @@ export default function EnquiryPage() {
     <div
       className="min-h-screen flex flex-col text-[#2D2B2A]"
       style={{
-        backgroundImage: "url('/backs.png')",
+        backgroundImage: "url('/textures/backs.png')",
         backgroundRepeat: 'repeat',
       }}
     >

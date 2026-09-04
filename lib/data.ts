@@ -402,7 +402,7 @@ export const BLOG_DATA: BlogPost[] = [
       'Local vendors along the promenade serve fresh fried river fish, spiced tea (chia), and local snacks. Small wooden riverboats offer short sightseeing rides across the water, providing panoramic views of the riverbank sunset.',
       'After enjoying the sunset walk, returning to Motimahal Lodge for a hot solar shower and dinner in our courtyard garden makes for a perfect Chitwan evening.',
     ],
-    image: '/narayani-river-gallery.jpg',
+    image: '/gallery/narayani-river-gallery.jpg',
     tags: ['Narayani River', 'Sunset Spot', 'Bharatpur Sightseeing', 'Evening Stroll'],
   },
   {
@@ -446,7 +446,7 @@ export const GALLERY_DATA: GalleryItem[] = [
     id: 'narayani-sunset',
     title: 'Narayani River Sunset Promenade',
     category: 'Narayani & Chitwan',
-    image: '/narayani-river-gallery.jpg',
+    image: '/gallery/narayani-river-gallery.jpg',
     caption: 'Evening calm along Narayani River in Bharatpur, minutes from Motimahal Lodge.',
     aspect: 'aspect-16/10',
   },

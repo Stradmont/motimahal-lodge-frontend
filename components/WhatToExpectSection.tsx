@@ -4,27 +4,27 @@ import React from 'react';
 
 const WHAT_TO_EXPECT_ITEMS = [
   {
-    icon: '/mountain.svg',
+    icon: '/icons/mountain.svg',
     title: 'Narayani view',
     description: 'Enjoy peaceful river breezes and tranquil views of surrounding garden greenery in Bharatpur.',
   },
   {
-    icon: '/namche.svg',
+    icon: '/icons/namche.svg',
     title: 'Sunrise view',
     description: 'Wake up to soft morning light, fresh air, and quiet natural surroundings ideal for relaxation.',
   },
   {
-    icon: '/blankets.svg',
+    icon: '/icons/blankets.svg',
     title: 'Blankets',
     description: 'Thoroughly sanitized, warm blankets provided in every room for cozy rest during cool nights.',
   },
   {
-    icon: '/bedding.svg',
+    icon: '/icons/bedding.svg',
     title: 'Full bedding',
     description: 'Crisp laundered cotton bedsheets, plush pillows, and clean mattress setup for a restful sleep.',
   },
   {
-    icon: '/bathroom.svg',
+    icon: '/icons/bathroom.svg',
     title: 'Clean bathrooms',
     description: 'Attached ensuite bathroom with 24/7 solar hot shower water, clean towels, and essential amenities.',
   },
