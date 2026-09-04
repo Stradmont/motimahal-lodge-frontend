@@ -82,7 +82,7 @@ export default function VideoSection() {
             Watch Our Stories
           </span>
           <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-brand-charcoal uppercase tracking-wider">
-            FEATURED VIDEO REELS
+            FEATURED VIDEO 
           </h2>
         </div>
 

@@ -12,8 +12,8 @@ const FACILITIES_IMAGES: LightboxImage[] = [
     alt: 'Motimahal Lodge Main Building & Grounds',
   },
   {
-    src: '/gallery/narayani-river-gallery.jpg',
-    title: 'Narayani Riverfront Sunset Walkways',
+    src: '/about/room1.PNG',
+    title: 'Rooms',
     alt: 'Narayani Riverfront Sunset Walkways',
   },
 ];

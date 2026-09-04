@@ -5,6 +5,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import WhyChooseSection from '@/components/WhyChooseSection';
 import CtaSection from '@/components/CtaSection';
+import VideoSection from '@/components/VideoSection';
 import { GALLERY_DATA } from '@/lib/data';
 import { Maximize2, Eye, X, ChevronLeft, ChevronRight } from 'lucide-react';
 
@@ -66,7 +67,16 @@ export default function GalleryPage() {
 
         {/* 2. CLEAN GALLERY GRID SECTION WITH backs.png BACKGROUND TEXTURE */}
         <section className="py-16 sm:py-24 border-b border-brand-border relative text-brand-charcoal bg-texture">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-10">
+
+            <div className="text-center max-w-3xl mx-auto space-y-2">
+              <span className="text-brand-green text-xs sm:text-sm font-semibold uppercase tracking-[0.2em] block">
+                Photo Collection
+              </span>
+              <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-brand-charcoal uppercase tracking-wider">
+                LODGE & SURROUNDINGS
+              </h2>
+            </div>
 
             {/* Uniform 3-Column Gallery Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
@@ -110,6 +120,9 @@ export default function GalleryPage() {
 
           </div>
         </section>
+
+        {/* 3. INSTAGRAM REELS & VIDEO GALLERY SECTION */}
+        <VideoSection />
 
 
         {/* 4. BOOKING ENQUIRY CTA SECTION */}
