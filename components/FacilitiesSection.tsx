@@ -73,13 +73,13 @@ export default function FacilitiesSection() {
             <div className="rounded-xl overflow-hidden border border-brand-border shadow-md hover:shadow-lg transition-all duration-300 relative group aspect-16/10 bg-stone-100">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/about/outside-image.png"
-                alt="Motimahal Lodge Main Exterior & Courtyard"
+                src="/about/full-house-image.png"
+                alt="Motimahal Lodge Main Building & Grounds"
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
               <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 via-black/30 to-transparent">
                 <span className="text-white font-medium text-xs sm:text-sm drop-shadow-xs">
-                  Motimahal Lodge Main Entrance & Courtyard
+                  Motimahal Lodge Main Building & Grounds
                 </span>
               </div>
             </div>
