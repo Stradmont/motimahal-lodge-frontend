@@ -28,7 +28,7 @@ interface AdminSidebarProps {
 
 export const adminNavGroup = [
   {
-    title: 'Content Management',
+    title: '',
     items: [
       {
         title: 'Dashboard',

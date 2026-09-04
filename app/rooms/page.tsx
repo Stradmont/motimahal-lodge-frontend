@@ -1,16 +1,27 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import WhyChooseSection from '@/components/WhyChooseSection';
 import WhatToExpectSection from '@/components/WhatToExpectSection';
-import { ROOMS_DATA } from '@/lib/data';
-import { Check, Calendar, ArrowRight, ThermometerSun, ShowerHead, Wifi, Coffee } from 'lucide-react';
+import { ROOMS_DATA, Room } from '@/lib/data';
+import { Check, Maximize2 } from 'lucide-react';
 import CtaSection from '@/components/CtaSection';
+import ImageLightboxModal, { LightboxImage } from '@/components/ImageLightboxModal';
 
 export default function RoomsPage() {
+  const [lightboxImage, setLightboxImage] = useState<LightboxImage | null>(null);
+
+  const openFullscreen = (room: Room) => {
+    setLightboxImage({
+      src: room.image,
+      title: room.name,
+      caption: `${room.category} — NPR ${room.priceNpr.toLocaleString()} / night`,
+    });
+  };
+
   return (
     <div className="min-h-screen flex flex-col text-brand-charcoal bg-texture">
       <Navbar />
@@ -47,7 +58,7 @@ export default function RoomsPage() {
                 Our Standard & Deluxe Rooms
               </h2>
               <p className="text-stone-600 text-base sm:text-lg leading-relaxed font-normal">
-                Choose the perfect accommodation for your family, group, or solo travels.
+                Choose the perfect accommodation for your family, group, or solo travels. Click any image to view FullScreen.
               </p>
             </div>
 
@@ -58,17 +69,32 @@ export default function RoomsPage() {
                     key={room.id}
                     className="bg-white rounded-2xl border border-brand-border overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 flex flex-col group"
                   >
-                    {/* Room Image with Badge */}
-                    <div className="relative h-64 sm:h-72 w-full overflow-hidden bg-stone-100">
+                    {/* Room Image with Badge & Fullscreen Button */}
+                    <div
+                      className="relative h-64 sm:h-72 w-full overflow-hidden bg-stone-100 cursor-pointer group/img"
+                      onClick={() => openFullscreen(room)}
+                    >
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={room.image}
                         alt={room.name}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover/img:scale-105"
                       />
                       <div className="absolute top-4 left-4 bg-brand-green text-white text-xs font-semibold px-3 py-1 rounded-full shadow-xs uppercase tracking-wider">
                         {room.category}
                       </div>
+
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openFullscreen(room);
+                        }}
+                        className="absolute top-4 right-4 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full backdrop-blur-xs transition-all shadow-md cursor-pointer opacity-90 group-hover/img:opacity-100 flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium"
+                        title="Open FullScreen View"
+                      >
+                        <Maximize2 className="h-3.5 w-3.5" />
+                        <span className="hidden sm:inline">FullScreen</span>
+                      </button>
                     </div>
 
                     {/* Room Details */}
@@ -76,7 +102,7 @@ export default function RoomsPage() {
                       <div className="space-y-4">
                         <div className="flex items-baseline justify-between">
                           <h3 className="font-heading text-xl sm:text-2xl font-bold text-brand-charcoal">
-                            {room.name}
+                            <Link href={`/rooms/${room.slug}`}>{room.name}</Link>
                           </h3>
                           <span className="text-xs text-stone-500 font-medium">
                             Up to {room.capacity}
@@ -137,6 +163,12 @@ export default function RoomsPage() {
           bgTexture={true}
         />
       </main>
+
+      {/* Lightbox Modal */}
+      <ImageLightboxModal
+        image={lightboxImage}
+        onClose={() => setLightboxImage(null)}
+      />
 
       <Footer />
     </div>
