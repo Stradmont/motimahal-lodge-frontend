@@ -1,7 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Plus, Play, Trash2, Eye } from 'lucide-react';
+import { Plus, Play, Trash2, Eye, AlertCircle } from 'lucide-react';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -56,6 +59,22 @@ const mockVideos: VideoItem[] = [
   },
 ];
 
+const videoSchema = z.object({
+  title: z
+    .string()
+    .trim()
+    .min(1, { message: 'Video title is required' })
+    .min(2, { message: 'Video title must be at least 2 characters' }),
+  category: z.enum(['Resort Tour', 'Culinary', 'Riverfront', 'Culture']),
+  videoUrl: z
+    .string()
+    .trim()
+    .min(1, { message: 'Embed video URL is required' })
+    .url({ message: 'Please enter a valid URL (starting with http:// or https://)' }),
+});
+
+type VideoFormData = z.infer<typeof videoSchema>;
+
 export default function AdminVideosPage() {
   const [videos, setVideos] = useState<VideoItem[]>(mockVideos);
   const [searchTerm, setSearchTerm] = useState('');
@@ -64,9 +83,20 @@ export default function AdminVideosPage() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [toast, setToast] = useState('');
 
-  const [title, setTitle] = useState('');
-  const [category, setCategory] = useState<VideoItem['category']>('Resort Tour');
-  const [videoUrl, setVideoUrl] = useState('');
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<VideoFormData>({
+    resolver: zodResolver(videoSchema),
+    defaultValues: {
+      title: '',
+      category: 'Resort Tour',
+      videoUrl: '',
+    },
+    mode: 'onBlur',
+  });
 
   const filteredVideos = videos.filter((v) => {
     const matchesCat = activeCategory === 'All' || v.category === activeCategory;
@@ -94,15 +124,12 @@ export default function AdminVideosPage() {
     showToast('Featured status updated');
   };
 
-  const handleAddVideo = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!title || !videoUrl) return;
-
+  const onAddVideoSubmit = (data: VideoFormData) => {
     const newVideo: VideoItem = {
       id: `VID-0${videos.length + 1}`,
-      title,
-      category,
-      videoUrl,
+      title: data.title,
+      category: data.category,
+      videoUrl: data.videoUrl,
       thumbnailUrl:
         'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80',
       duration: '2:30',
@@ -111,9 +138,8 @@ export default function AdminVideosPage() {
 
     setVideos([newVideo, ...videos]);
     setIsAddModalOpen(false);
-    setTitle('');
-    setVideoUrl('');
-    showToast('Video entry created');
+    reset();
+    showToast('Video entry created successfully');
   };
 
   const showToast = (msg: string) => {
@@ -231,8 +257,8 @@ export default function AdminVideosPage() {
         ))}
       </div>
 
-      {/* Video Player Dialog */}
-      <Dialog open={!!playingVideo} onOpenChange={(open) => !open && setPlayingVideo(null)}>
+      {/* Video Player Dialog - Extra spacious size="4xl" */}
+      <Dialog open={!!playingVideo} onOpenChange={(open) => !open && setPlayingVideo(null)} size="4xl">
         {playingVideo && (
           <div className="space-y-3 font-sans">
             <DialogHeader>
@@ -256,9 +282,9 @@ export default function AdminVideosPage() {
         )}
       </Dialog>
 
-      {/* Add Video Dialog */}
-      <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
-        <form onSubmit={handleAddVideo} className="space-y-4 font-sans">
+      {/* Add Video Dialog - Spacious size="3xl" */}
+      <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen} size="3xl">
+        <form onSubmit={handleSubmit(onAddVideoSubmit)} noValidate className="space-y-4 font-sans">
           <DialogHeader>
             <DialogTitle>Add Video Embed</DialogTitle>
             <DialogDescription>
@@ -266,47 +292,64 @@ export default function AdminVideosPage() {
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-3">
+          <div className="space-y-4 py-2">
             <div>
               <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
-                Video Title
+                Video Title <span className="text-rose-500">*</span>
               </label>
               <Input
                 type="text"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
+                {...register('title')}
                 placeholder="e.g. Resort Sunset Aerial View"
-                required
+                className={errors.title ? 'border-rose-500 focus-visible:ring-rose-500' : ''}
               />
+              {errors.title && (
+                <p className="text-xs text-rose-600 dark:text-rose-400 font-medium mt-1 flex items-center gap-1">
+                  <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                  {errors.title.message}
+                </p>
+              )}
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
-                Category
-              </label>
-              <select
-                value={category}
-                onChange={(e) => setCategory(e.target.value as VideoItem['category'])}
-                className="w-full h-9 rounded-sm border border-zinc-300 bg-white px-3 py-1 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50 focus:outline-none font-sans"
-              >
-                <option value="Resort Tour">Resort Tour</option>
-                <option value="Culinary">Culinary</option>
-                <option value="Riverfront">Riverfront</option>
-                <option value="Culture">Culture</option>
-              </select>
-            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                  Category <span className="text-rose-500">*</span>
+                </label>
+                <select
+                  {...register('category')}
+                  className="w-full h-9 rounded-sm border border-zinc-300 bg-white px-3 py-1 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50 focus:outline-none font-sans"
+                >
+                  <option value="Resort Tour">Resort Tour</option>
+                  <option value="Culinary">Culinary</option>
+                  <option value="Riverfront">Riverfront</option>
+                  <option value="Culture">Culture</option>
+                </select>
+                {errors.category && (
+                  <p className="text-xs text-rose-600 dark:text-rose-400 font-medium mt-1 flex items-center gap-1">
+                    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                    {errors.category.message}
+                  </p>
+                )}
+              </div>
 
-            <div>
-              <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
-                Embed Video URL
-              </label>
-              <Input
-                type="url"
-                value={videoUrl}
-                onChange={(e) => setVideoUrl(e.target.value)}
-                placeholder="https://www.youtube.com/embed/..."
-                required
-              />
+              <div>
+                <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                  Embed Video URL <span className="text-rose-500">*</span>
+                </label>
+                <Input
+                  type="url"
+                  {...register('videoUrl')}
+                  placeholder="https://www.youtube.com/embed/..."
+                  className={errors.videoUrl ? 'border-rose-500 focus-visible:ring-rose-500' : ''}
+                />
+                {errors.videoUrl && (
+                  <p className="text-xs text-rose-600 dark:text-rose-400 font-medium mt-1 flex items-center gap-1">
+                    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                    {errors.videoUrl.message}
+                  </p>
+                )}
+              </div>
             </div>
           </div>
 

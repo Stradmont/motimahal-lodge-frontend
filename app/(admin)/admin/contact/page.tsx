@@ -1,7 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Eye, Archive, Trash2 } from 'lucide-react';
+import { Eye, Archive, Trash2, AlertCircle } from 'lucide-react';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -105,14 +108,36 @@ const mockSubmissions: ContactSubmission[] = [
   },
 ];
 
+const replySchema = z.object({
+  replyText: z
+    .string()
+    .trim()
+    .min(1, { message: 'Reply message text is required' })
+    .min(5, { message: 'Reply message must be at least 5 characters long' }),
+});
+
+type ReplyFormData = z.infer<typeof replySchema>;
+
 export default function AdminContactPage() {
   const [submissions, setSubmissions] = useState<ContactSubmission[]>(mockSubmissions);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedFilter, setSelectedFilter] = useState<string>('all');
   const [activeMessage, setActiveMessage] = useState<ContactSubmission | null>(null);
-  const [replyText, setReplyText] = useState('');
   const [isSendingReply, setIsSendingReply] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<ReplyFormData>({
+    resolver: zodResolver(replySchema),
+    defaultValues: {
+      replyText: '',
+    },
+    mode: 'onBlur',
+  });
 
   const filteredSubmissions = submissions.filter((sub) => {
     const matchesSearch =
@@ -152,15 +177,14 @@ export default function AdminContactPage() {
     showToast('Inquiry deleted');
   };
 
-  const handleSendReply = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!replyText.trim() || !activeMessage) return;
+  const onSendReplySubmit = (data: ReplyFormData) => {
+    if (!activeMessage) return;
 
     setIsSendingReply(true);
     setTimeout(() => {
       handleMarkStatus(activeMessage.id, 'replied');
       setIsSendingReply(false);
-      setReplyText('');
+      reset();
       setActiveMessage(null);
       showToast(`Reply sent to ${activeMessage.email}`);
     }, 500);
@@ -303,8 +327,8 @@ export default function AdminContactPage() {
         </Table>
       </div>
 
-      {/* Detail / Reply Modal Dialog */}
-      <Dialog open={!!activeMessage} onOpenChange={(open) => !open && setActiveMessage(null)}>
+      {/* Detail / Reply Modal Dialog - Spacious size="3xl" */}
+      <Dialog open={!!activeMessage} onOpenChange={(open) => !open && setActiveMessage(null)} size="3xl">
         {activeMessage && (
           <div className="space-y-4 font-sans">
             <DialogHeader>
@@ -321,17 +345,26 @@ export default function AdminContactPage() {
               {activeMessage.message}
             </div>
 
-            <form onSubmit={handleSendReply} className="space-y-3 pt-2">
-              <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                Send Reply Email to {activeMessage.email}
-              </label>
-              <textarea
-                rows={4}
-                value={replyText}
-                onChange={(e) => setReplyText(e.target.value)}
-                placeholder="Write response message..."
-                className="w-full rounded-sm border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-950 p-3 text-sm text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-1 focus:ring-zinc-950 font-sans"
-              />
+            <form onSubmit={handleSubmit(onSendReplySubmit)} noValidate className="space-y-3 pt-2 font-sans">
+              <div>
+                <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                  Send Reply Email to {activeMessage.email} <span className="text-rose-500">*</span>
+                </label>
+                <textarea
+                  rows={4}
+                  {...register('replyText')}
+                  placeholder="Write response message..."
+                  className={`w-full rounded-sm border ${
+                    errors.replyText ? 'border-rose-500 focus:ring-rose-500' : 'border-zinc-300 dark:border-zinc-700'
+                  } bg-white dark:bg-zinc-950 p-3 text-sm text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none font-sans`}
+                />
+                {errors.replyText && (
+                  <p className="text-xs text-rose-600 dark:text-rose-400 font-medium mt-1 flex items-center gap-1">
+                    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                    {errors.replyText.message}
+                  </p>
+                )}
+              </div>
 
               <DialogFooter>
                 <Button
@@ -345,7 +378,7 @@ export default function AdminContactPage() {
                 <Button
                   type="submit"
                   size="sm"
-                  disabled={!replyText.trim() || isSendingReply}
+                  disabled={isSendingReply}
                 >
                   {isSendingReply ? 'Sending...' : 'Send Reply Email'}
                 </Button>

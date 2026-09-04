@@ -1,7 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, AlertCircle } from 'lucide-react';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -66,6 +69,22 @@ const mockGallery: GalleryItem[] = [
   },
 ];
 
+const gallerySchema = z.object({
+  title: z
+    .string()
+    .trim()
+    .min(1, { message: 'Photo title is required' })
+    .min(2, { message: 'Photo title must be at least 2 characters' }),
+  category: z.enum(['Rooms', 'Restaurant', 'Riverfront', 'Amenities', 'Events']),
+  imageUrl: z
+    .string()
+    .trim()
+    .min(1, { message: 'Image URL is required' })
+    .url({ message: 'Please enter a valid image URL (starting with http:// or https://)' }),
+});
+
+type GalleryFormData = z.infer<typeof gallerySchema>;
+
 export default function AdminGalleryPage() {
   const [items, setItems] = useState<GalleryItem[]>(mockGallery);
   const [activeCategory, setActiveCategory] = useState<string>('All');
@@ -73,9 +92,20 @@ export default function AdminGalleryPage() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [toast, setToast] = useState('');
 
-  const [newTitle, setNewTitle] = useState('');
-  const [newCategory, setNewCategory] = useState<GalleryItem['category']>('Rooms');
-  const [newUrl, setNewUrl] = useState('');
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<GalleryFormData>({
+    resolver: zodResolver(gallerySchema),
+    defaultValues: {
+      title: '',
+      category: 'Rooms',
+      imageUrl: '',
+    },
+    mode: 'onBlur',
+  });
 
   const filteredItems = items.filter((item) => {
     const matchesCategory = activeCategory === 'All' || item.category === activeCategory;
@@ -92,24 +122,20 @@ export default function AdminGalleryPage() {
     { key: 'Events', label: 'Events' },
   ];
 
-  const handleAddPhoto = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newTitle || !newUrl) return;
-
+  const onAddPhotoSubmit = (data: GalleryFormData) => {
     const newItem: GalleryItem = {
       id: `GAL-0${items.length + 1}`,
-      title: newTitle,
-      category: newCategory,
-      imageUrl: newUrl,
+      title: data.title,
+      category: data.category,
+      imageUrl: data.imageUrl,
       uploadedDate: new Date().toISOString().split('T')[0],
       featured: false,
     };
 
     setItems([newItem, ...items]);
     setIsAddModalOpen(false);
-    setNewTitle('');
-    setNewUrl('');
-    showToast('Photo entry created');
+    reset();
+    showToast('Photo entry created successfully');
   };
 
   const handleDelete = (id: string) => {
@@ -224,60 +250,75 @@ export default function AdminGalleryPage() {
         ))}
       </div>
 
-      {/* Add Photo Modal Dialog */}
-      <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
-        <form onSubmit={handleAddPhoto} className="space-y-4 font-sans">
+      {/* Add Photo Modal Dialog - Spacious size="3xl" */}
+      <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen} size="3xl">
+        <form onSubmit={handleSubmit(onAddPhotoSubmit)} noValidate className="space-y-4 font-sans">
           <DialogHeader>
             <DialogTitle>Add Photo to Gallery</DialogTitle>
             <DialogDescription>
-              Enter image title, URL, and category tag.
+              Enter image title, category tag, and high-resolution image URL.
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-3">
+          <div className="space-y-4 py-2">
             <div>
               <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
-                Photo Title
+                Photo Title <span className="text-rose-500">*</span>
               </label>
               <Input
                 type="text"
-                value={newTitle}
-                onChange={(e) => setNewTitle(e.target.value)}
+                {...register('title')}
                 placeholder="e.g. Garden Lounge Seating"
-                required
+                className={errors.title ? 'border-rose-500 focus-visible:ring-rose-500' : ''}
               />
+              {errors.title && (
+                <p className="text-xs text-rose-600 dark:text-rose-400 font-medium mt-1 flex items-center gap-1">
+                  <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                  {errors.title.message}
+                </p>
+              )}
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
-                Category
-              </label>
-              <select
-                value={newCategory}
-                onChange={(e) =>
-                  setNewCategory(e.target.value as GalleryItem['category'])
-                }
-                className="w-full h-9 rounded-sm border border-zinc-300 bg-white px-3 py-1 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50 focus:outline-none font-sans"
-              >
-                <option value="Rooms">Rooms</option>
-                <option value="Restaurant">Restaurant</option>
-                <option value="Riverfront">Riverfront</option>
-                <option value="Amenities">Amenities</option>
-                <option value="Events">Events</option>
-              </select>
-            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                  Category <span className="text-rose-500">*</span>
+                </label>
+                <select
+                  {...register('category')}
+                  className="w-full h-9 rounded-sm border border-zinc-300 bg-white px-3 py-1 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50 focus:outline-none font-sans"
+                >
+                  <option value="Rooms">Rooms</option>
+                  <option value="Restaurant">Restaurant</option>
+                  <option value="Riverfront">Riverfront</option>
+                  <option value="Amenities">Amenities</option>
+                  <option value="Events">Events</option>
+                </select>
+                {errors.category && (
+                  <p className="text-xs text-rose-600 dark:text-rose-400 font-medium mt-1 flex items-center gap-1">
+                    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                    {errors.category.message}
+                  </p>
+                )}
+              </div>
 
-            <div>
-              <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
-                Image URL
-              </label>
-              <Input
-                type="url"
-                value={newUrl}
-                onChange={(e) => setNewUrl(e.target.value)}
-                placeholder="https://images.unsplash.com/..."
-                required
-              />
+              <div>
+                <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                  Image URL <span className="text-rose-500">*</span>
+                </label>
+                <Input
+                  type="url"
+                  {...register('imageUrl')}
+                  placeholder="https://images.unsplash.com/..."
+                  className={errors.imageUrl ? 'border-rose-500 focus-visible:ring-rose-500' : ''}
+                />
+                {errors.imageUrl && (
+                  <p className="text-xs text-rose-600 dark:text-rose-400 font-medium mt-1 flex items-center gap-1">
+                    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                    {errors.imageUrl.message}
+                  </p>
+                )}
+              </div>
             </div>
           </div>
 

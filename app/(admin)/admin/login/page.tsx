@@ -3,30 +3,53 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { AlertCircle } from 'lucide-react';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
+const loginSchema = z.object({
+  email: z
+    .string()
+    .trim()
+    .min(1, { message: 'Email address is required' })
+    .email({ message: 'Please enter a valid email address' }),
+  password: z
+    .string()
+    .trim()
+    .min(1, { message: 'Password is required' })
+    .min(4, { message: 'Password must be at least 4 characters long' }),
+});
+
+type LoginFormData = z.infer<typeof loginSchema>;
+
 export default function AdminLoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState('admin@motimahal.com');
-  const [password, setPassword] = useState('admin123');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: 'admin@motimahal.com',
+      password: 'admin123',
+    },
+    mode: 'onBlur',
+  });
+
+  const onLoginSubmit = (data: LoginFormData) => {
     setError('');
-
-    if (!email || !password) {
-      setError('Please enter your email address and password.');
-      return;
-    }
-
     setIsLoading(true);
 
     setTimeout(() => {
-      if (email === 'admin@motimahal.com' && password === 'admin123') {
+      if (data.email === 'admin@motimahal.com' && data.password === 'admin123') {
         localStorage.setItem('motimahal_admin_auth', 'true');
         setSuccess(true);
         setTimeout(() => {
@@ -64,8 +87,9 @@ export default function AdminLoginPage() {
         </div>
 
         {error && (
-          <div className="bg-rose-950/40 border border-rose-900/60 text-rose-300 rounded-sm p-3 text-xs">
-            {error}
+          <div className="bg-rose-950/40 border border-rose-900/60 text-rose-300 rounded-sm p-3 text-xs flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 shrink-0" />
+            <span>{error}</span>
           </div>
         )}
 
@@ -75,33 +99,45 @@ export default function AdminLoginPage() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit(onLoginSubmit)} noValidate className="space-y-4 font-sans">
           <div className="space-y-1.5">
             <label className="text-xs font-medium text-zinc-300">
-              Email Address
+              Email Address <span className="text-rose-500">*</span>
             </label>
             <Input
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              {...register('email')}
               placeholder="admin@motimahal.com"
-              required
-              className="bg-zinc-950 border-zinc-800 text-zinc-100 text-sm placeholder:text-zinc-500"
+              className={`bg-zinc-950 border-zinc-800 text-zinc-100 text-sm placeholder:text-zinc-500 ${
+                errors.email ? 'border-rose-500 focus-visible:ring-rose-500' : ''
+              }`}
             />
+            {errors.email && (
+              <p className="text-xs text-rose-400 font-medium flex items-center gap-1">
+                <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                {errors.email.message}
+              </p>
+            )}
           </div>
 
           <div className="space-y-1.5">
             <label className="text-xs font-medium text-zinc-300">
-              Password
+              Password <span className="text-rose-500">*</span>
             </label>
             <Input
               type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              {...register('password')}
               placeholder="••••••••"
-              required
-              className="bg-zinc-950 border-zinc-800 text-zinc-100 text-sm placeholder:text-zinc-500"
+              className={`bg-zinc-950 border-zinc-800 text-zinc-100 text-sm placeholder:text-zinc-500 ${
+                errors.password ? 'border-rose-500 focus-visible:ring-rose-500' : ''
+              }`}
             />
+            {errors.password && (
+              <p className="text-xs text-rose-400 font-medium flex items-center gap-1">
+                <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                {errors.password.message}
+              </p>
+            )}
           </div>
 
           <Button

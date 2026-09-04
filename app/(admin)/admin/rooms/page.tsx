@@ -1,7 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, AlertCircle } from 'lucide-react';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -71,6 +74,38 @@ const mockRooms: RoomItem[] = [
   },
 ];
 
+const roomSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(1, { message: 'Room title is required' })
+    .min(2, { message: 'Room title must be at least 2 characters' }),
+  type: z.enum(['Deluxe', 'Suite', 'Family', 'Standard']),
+  pricePerNight: z
+    .string()
+    .trim()
+    .min(1, { message: 'Rate per night is required' })
+    .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
+      message: 'Rate per night must be a valid positive number',
+    }),
+  capacity: z
+    .string()
+    .trim()
+    .min(1, { message: 'Guest capacity is required' })
+    .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
+      message: 'Capacity must be a valid positive number',
+    }),
+  imageUrl: z
+    .string()
+    .trim()
+    .optional()
+    .refine((val) => !val || z.string().url().safeParse(val).success, {
+      message: 'Please enter a valid URL (starting with http:// or https://)',
+    }),
+});
+
+type RoomFormData = z.infer<typeof roomSchema>;
+
 export default function AdminRoomsPage() {
   const [rooms, setRooms] = useState<RoomItem[]>(mockRooms);
   const [searchTerm, setSearchTerm] = useState('');
@@ -78,11 +113,22 @@ export default function AdminRoomsPage() {
   const [toast, setToast] = useState('');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
-  const [name, setName] = useState('');
-  const [type, setType] = useState<RoomItem['type']>('Deluxe');
-  const [price, setPrice] = useState('5000');
-  const [capacity, setCapacity] = useState('2');
-  const [imageUrl, setImageUrl] = useState('');
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<RoomFormData>({
+    resolver: zodResolver(roomSchema),
+    defaultValues: {
+      name: '',
+      type: 'Deluxe',
+      pricePerNight: '5000',
+      capacity: '2',
+      imageUrl: '',
+    },
+    mode: 'onBlur',
+  });
 
   const filteredRooms = rooms.filter((room) => {
     const matchesType = filterType === 'All' || room.type === filterType;
@@ -121,27 +167,24 @@ export default function AdminRoomsPage() {
     showToast('Room deleted from inventory');
   };
 
-  const handleAddRoom = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!name || !price) return;
-
+  const onAddRoomSubmit = (data: RoomFormData) => {
     const newRoom: RoomItem = {
       id: `RM-10${rooms.length + 1}`,
-      name,
-      type,
-      pricePerNight: parseInt(price),
-      capacity: parseInt(capacity),
+      name: data.name,
+      type: data.type,
+      pricePerNight: parseInt(data.pricePerNight),
+      capacity: parseInt(data.capacity),
       status: 'available',
       amenities: ['Free WiFi', 'AC', 'Breakfast Included'],
       imageUrl:
-        imageUrl ||
+        data.imageUrl ||
         'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80',
     };
 
     setRooms([newRoom, ...rooms]);
     setIsAddModalOpen(false);
-    setName('');
-    showToast('Room entry created');
+    reset();
+    showToast('Room entry created successfully');
   };
 
   const showToast = (msg: string) => {
@@ -271,9 +314,9 @@ export default function AdminRoomsPage() {
         </Table>
       </div>
 
-      {/* Add Room Modal Dialog */}
-      <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
-        <form onSubmit={handleAddRoom} className="space-y-4 font-sans">
+      {/* Add Room Modal Dialog - Spacious size="3xl" */}
+      <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen} size="3xl">
+        <form onSubmit={handleSubmit(onAddRoomSubmit)} noValidate className="space-y-4 font-sans">
           <DialogHeader>
             <DialogTitle>Add Room Entry</DialogTitle>
             <DialogDescription>
@@ -281,28 +324,32 @@ export default function AdminRoomsPage() {
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-3">
+          <div className="space-y-4 py-2">
             <div>
               <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
-                Room Title
+                Room Title <span className="text-rose-500">*</span>
               </label>
               <Input
                 type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                {...register('name')}
                 placeholder="e.g. Royal Riverside Villa"
-                required
+                className={errors.name ? 'border-rose-500 focus-visible:ring-rose-500' : ''}
               />
+              {errors.name && (
+                <p className="text-xs text-rose-600 dark:text-rose-400 font-medium mt-1 flex items-center gap-1">
+                  <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                  {errors.name.message}
+                </p>
+              )}
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
-                  Category
+                  Category <span className="text-rose-500">*</span>
                 </label>
                 <select
-                  value={type}
-                  onChange={(e) => setType(e.target.value as RoomItem['type'])}
+                  {...register('type')}
                   className="w-full h-9 rounded-sm border border-zinc-300 bg-white px-3 py-1 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50 focus:outline-none font-sans"
                 >
                   <option value="Deluxe">Deluxe</option>
@@ -310,31 +357,67 @@ export default function AdminRoomsPage() {
                   <option value="Family">Family</option>
                   <option value="Standard">Standard</option>
                 </select>
+                {errors.type && (
+                  <p className="text-xs text-rose-600 dark:text-rose-400 font-medium mt-1 flex items-center gap-1">
+                    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                    {errors.type.message}
+                  </p>
+                )}
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
-                  Rate per Night (NPR)
+                  Rate per Night (NPR) <span className="text-rose-500">*</span>
                 </label>
                 <Input
                   type="number"
-                  value={price}
-                  onChange={(e) => setPrice(e.target.value)}
-                  required
+                  {...register('pricePerNight')}
+                  placeholder="5000"
+                  className={errors.pricePerNight ? 'border-rose-500 focus-visible:ring-rose-500' : ''}
                 />
+                {errors.pricePerNight && (
+                  <p className="text-xs text-rose-600 dark:text-rose-400 font-medium mt-1 flex items-center gap-1">
+                    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                    {errors.pricePerNight.message}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                  Guest Capacity <span className="text-rose-500">*</span>
+                </label>
+                <Input
+                  type="number"
+                  {...register('capacity')}
+                  placeholder="2"
+                  className={errors.capacity ? 'border-rose-500 focus-visible:ring-rose-500' : ''}
+                />
+                {errors.capacity && (
+                  <p className="text-xs text-rose-600 dark:text-rose-400 font-medium mt-1 flex items-center gap-1">
+                    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                    {errors.capacity.message}
+                  </p>
+                )}
               </div>
             </div>
 
             <div>
               <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
-                Image URL
+                Image URL (Optional)
               </label>
               <Input
                 type="url"
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
+                {...register('imageUrl')}
                 placeholder="https://images.unsplash.com/..."
+                className={errors.imageUrl ? 'border-rose-500 focus-visible:ring-rose-500' : ''}
               />
+              {errors.imageUrl && (
+                <p className="text-xs text-rose-600 dark:text-rose-400 font-medium mt-1 flex items-center gap-1">
+                  <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                  {errors.imageUrl.message}
+                </p>
+              )}
             </div>
           </div>
 
