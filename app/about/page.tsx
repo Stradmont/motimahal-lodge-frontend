@@ -8,15 +8,11 @@ import WhyChooseSection from '@/components/WhyChooseSection';
 import AboutCarousel from '@/components/AboutCarousel';
 import { Bookmark } from 'lucide-react';
 
+import CtaSection from '@/components/CtaSection';
+
 export default function AboutPage() {
   return (
-    <div
-      className="min-h-screen flex flex-col text-[#2D2B2A]"
-      style={{
-        backgroundImage: "url('/backs.png')",
-        backgroundRepeat: 'repeat',
-      }}
-    >
+    <div className="min-h-screen flex flex-col text-brand-charcoal bg-texture">
       <Navbar />
 
       <main className="flex-1">
@@ -42,22 +38,16 @@ export default function AboutPage() {
         </section>
 
         {/* 2. ABOUT MOTIMAHAL SECTION WITH backs.png BACKGROUND TEXTURE */}
-        <section
-          className="py-20 sm:py-28 border-b border-[#E6DFD5] relative text-[#2D2B2A] overflow-hidden"
-          style={{
-            backgroundImage: "url('/backs.png')",
-            backgroundRepeat: 'repeat',
-          }}
-        >
+        <section className="py-20 sm:py-28 border-b border-brand-border relative text-brand-charcoal overflow-hidden bg-texture">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12 mb-16 sm:mb-20">
-            <h2 className="font-heading text-3xl sm:text-5xl lg:text-6xl font-bold text-[#2D2B2A] tracking-wider uppercase text-center lg:text-left">
+            <h2 className="font-heading text-3xl sm:text-5xl lg:text-6xl font-bold text-brand-charcoal tracking-wider uppercase text-center lg:text-left">
               ABOUT MOTIMAHAL
             </h2>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
 
               {/* Left Image: Large Lodge Photography */}
-              <div className="lg:col-span-5 rounded-lg overflow-hidden border border-[#E6DFD5] shadow-xs">
+              <div className="lg:col-span-5 rounded-lg overflow-hidden border border-brand-border shadow-xs">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&q=80&w=1000"
@@ -70,8 +60,8 @@ export default function AboutPage() {
               <div className="lg:col-span-7 space-y-8">
 
                 {/* Family Portrait Inset */}
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 bg-white p-6 sm:p-8 rounded-lg border border-[#E6DFD5] shadow-xs">
-                  <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-lg overflow-hidden shrink-0 border border-[#E6DFD5]">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 bg-white p-6 sm:p-8 rounded-lg border border-brand-border shadow-xs">
+                  <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-lg overflow-hidden shrink-0 border border-brand-border">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=400"
@@ -80,8 +70,8 @@ export default function AboutPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <span className="text-xs sm:text-sm font-bold text-[#1F3A2B] uppercase tracking-wider block">Family Hosts & Founders</span>
-                    <h4 className="font-heading text-xl sm:text-2xl font-bold text-[#2D2B2A]">The Sapkota Family</h4>
+                    <span className="text-xs sm:text-sm font-bold text-brand-green uppercase tracking-wider block">Family Hosts & Founders</span>
+                    <h4 className="font-heading text-xl sm:text-2xl font-bold text-brand-charcoal">The Sapkota Family</h4>
                     <p className="text-stone-600 text-sm sm:text-base leading-relaxed">
                       Greeting every traveler with genuine Nepalese hospitality in Bharatpur-10 for over 30 years.
                     </p>
@@ -116,15 +106,9 @@ export default function AboutPage() {
         </section>
 
         {/* 3. FACILITIES SECTION WITH backs-2.png BACKGROUND TEXTURE */}
-        <section
-          className="py-20 sm:py-28 border-b border-[#E6DFD5] relative"
-          style={{
-            backgroundImage: "url('/backs-2.png')",
-            backgroundRepeat: 'repeat',
-          }}
-        >
+        <section className="py-20 sm:py-28 border-b border-brand-border relative bg-texture">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12">
-            <h2 className="font-heading text-3xl sm:text-5xl lg:text-6xl font-bold text-[#2D2B2A] tracking-wider uppercase text-center lg:text-left">
+            <h2 className="font-heading text-3xl sm:text-5xl lg:text-6xl font-bold text-brand-charcoal tracking-wider uppercase text-center lg:text-left">
               FACILITIES
             </h2>
 
@@ -135,9 +119,9 @@ export default function AboutPage() {
 
                 {/* Facility 1: Restaurant & Dining */}
                 <div className="flex items-start gap-5">
-                  <Bookmark className="h-6 w-6 text-[#1F3A2B] shrink-0 mt-1" />
+                  <Bookmark className="h-6 w-6 text-brand-green shrink-0 mt-1" />
                   <div className="space-y-2">
-                    <h3 className="font-heading text-xl sm:text-2xl font-bold text-[#2D2B2A]">Restaurant & Dining</h3>
+                    <h3 className="font-heading text-xl sm:text-2xl font-bold text-brand-charcoal">Restaurant & Dining</h3>
                     <p className="text-stone-700 text-base sm:text-lg leading-relaxed font-normal">
                       Our on-site restaurant serves a delightful array of local and international cuisines. Savor the flavors of traditional Nepali dishes or indulge in familiar western delights. Our attentive staff caters to your dietary preferences and ensures a pleasant dining experience.
                     </p>
@@ -146,9 +130,9 @@ export default function AboutPage() {
 
                 {/* Facility 2: Common Areas */}
                 <div className="flex items-start gap-5">
-                  <Bookmark className="h-6 w-6 text-[#1F3A2B] shrink-0 mt-1" />
+                  <Bookmark className="h-6 w-6 text-brand-green shrink-0 mt-1" />
                   <div className="space-y-2">
-                    <h3 className="font-heading text-xl sm:text-2xl font-bold text-[#2D2B2A]">Common Areas</h3>
+                    <h3 className="font-heading text-xl sm:text-2xl font-bold text-brand-charcoal">Common Areas</h3>
                     <p className="text-stone-700 text-base sm:text-lg leading-relaxed font-normal">
                       Relax and unwind in our spacious common areas, where you can meet fellow travelers and share stories of your adventures. We provide a friendly atmosphere, encouraging a sense of community and camaraderie.
                     </p>
@@ -157,9 +141,9 @@ export default function AboutPage() {
 
                 {/* Facility 3: Hot Showers */}
                 <div className="flex items-start gap-5">
-                  <Bookmark className="h-6 w-6 text-[#1F3A2B] shrink-0 mt-1" />
+                  <Bookmark className="h-6 w-6 text-brand-green shrink-0 mt-1" />
                   <div className="space-y-2">
-                    <h3 className="font-heading text-xl sm:text-2xl font-bold text-[#2D2B2A]">Hot Showers</h3>
+                    <h3 className="font-heading text-xl sm:text-2xl font-bold text-brand-charcoal">Hot Showers</h3>
                     <p className="text-stone-700 text-base sm:text-lg leading-relaxed font-normal">
                       After a day of safari or travel, rejuvenate with a hot shower, a true luxury for travelers.
                     </p>
@@ -168,9 +152,9 @@ export default function AboutPage() {
 
                 {/* Facility 4: Free Wi-Fi */}
                 <div className="flex items-start gap-5">
-                  <Bookmark className="h-6 w-6 text-[#1F3A2B] shrink-0 mt-1" />
+                  <Bookmark className="h-6 w-6 text-brand-green shrink-0 mt-1" />
                   <div className="space-y-2">
-                    <h3 className="font-heading text-xl sm:text-2xl font-bold text-[#2D2B2A]">Free Wi-Fi</h3>
+                    <h3 className="font-heading text-xl sm:text-2xl font-bold text-brand-charcoal">Free Wi-Fi</h3>
                     <p className="text-stone-700 text-base sm:text-lg leading-relaxed font-normal">
                       Stay connected with loved ones back home and share your incredible moments with them using our complimentary Wi-Fi service.
                     </p>
@@ -181,7 +165,7 @@ export default function AboutPage() {
 
               {/* Right Column: Stacked Memory Photos */}
               <div className="lg:col-span-6 space-y-6">
-                <div className="rounded-lg overflow-hidden border border-[#E6DFD5] shadow-xs aspect-16/10">
+                <div className="rounded-lg overflow-hidden border border-brand-border shadow-xs aspect-16/10">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src="https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&q=80&w=1000"
@@ -189,7 +173,7 @@ export default function AboutPage() {
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <div className="rounded-lg overflow-hidden border border-[#E6DFD5] shadow-xs aspect-16/10">
+                <div className="rounded-lg overflow-hidden border border-brand-border shadow-xs aspect-16/10">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&q=80&w=1000"
@@ -204,7 +188,7 @@ export default function AboutPage() {
         </section>
 
         {/* 4. FULL-WIDTH BACKGROUND IMAGE */}
-        <section className="relative w-full h-[52vh] min-h-[380px] flex items-center justify-center overflow-hidden bg-stone-900 border-y border-[#E6DFD5]">
+        <section className="relative w-full h-[52vh] min-h-[380px] flex items-center justify-center overflow-hidden bg-stone-900 border-y border-brand-border">
           <div
             className="absolute inset-0 z-0 bg-cover bg-center"
             style={{
@@ -223,26 +207,14 @@ export default function AboutPage() {
           </div>
         </section>
 
-
         {/* 6. FINAL PLAN YOUR STAY CTA */}
-        <section className="py-24 bg-white text-[#2D2B2A] text-center">
-          <div className="mx-auto max-w-4xl px-6 space-y-6">
-            <h2 className="font-heading text-3xl sm:text-5xl font-bold text-[#2D2B2A]">
-              Plan Your Stay at Motimahal Lodge
-            </h2>
-            <p className="text-stone-600 text-base sm:text-lg lg:text-xl max-w-xl mx-auto leading-relaxed font-normal">
-              Have questions about room rates, airport pickup, or Chitwan safari excursions? Our family desk is at your service.
-            </p>
-            <div className="pt-2">
-              <Link
-                href="/enquiry"
-                className="inline-flex items-center justify-center bg-[#1F3A2B] hover:bg-[#162B20] text-white font-semibold text-sm sm:text-base py-4 px-9 rounded-md transition-colors cursor-pointer shadow-xs"
-              >
-                Check Availability
-              </Link>
-            </div>
-          </div>
-        </section>
+        <CtaSection
+          title="Plan Your Stay at Motimahal Lodge"
+          description="Have questions about room rates, airport pickup, or Chitwan safari excursions? Our family desk is at your service."
+          buttonText="Check Availability"
+          bgTexture={false}
+          className="bg-white"
+        />
 
       </main>
 

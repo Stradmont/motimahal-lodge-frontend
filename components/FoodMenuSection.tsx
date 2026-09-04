@@ -5,16 +5,16 @@ import Link from 'next/link';
 
 export default function FoodMenuSection() {
   return (
-    <section className="py-16 sm:py-24 bg-white border-b border-[#E6DFD5]">
+    <section className="py-16 sm:py-24 bg-white border-b border-brand-border">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
           {/* Left Narrative */}
           <div className="lg:col-span-6 space-y-5">
-            <span className="text-[#1F3A2B] text-xs font-semibold uppercase tracking-wider block">
+            <span className="text-brand-green text-xs font-semibold uppercase tracking-wider block">
               Motimahal Tandoori & Restaurant
             </span>
-            <h2 className="font-heading text-3xl sm:text-4xl font-bold text-[#1F3A2B] leading-tight">
+            <h2 className="font-heading text-3xl sm:text-4xl font-bold text-brand-green leading-tight">
               Fresh Clay-Oven Grills & Authentic Nepalese Thali
             </h2>
             
@@ -30,7 +30,7 @@ export default function FoodMenuSection() {
             <div className="pt-2">
               <Link
                 href="/food"
-                className="inline-flex items-center gap-2 text-xs font-bold text-[#1F3A2B] hover:text-[#162B20] transition-colors border-b border-[#1F3A2B] pb-0.5"
+                className="inline-flex items-center gap-2 text-xs font-bold text-brand-green hover:text-brand-green-dark transition-colors border-b border-brand-green pb-0.5"
               >
                 <span>View Full Menu & Pricing →</span>
               </Link>
@@ -38,7 +38,7 @@ export default function FoodMenuSection() {
           </div>
 
           {/* Right Photography */}
-          <div className="lg:col-span-6 rounded-lg overflow-hidden border border-[#E6DFD5]">
+          <div className="lg:col-span-6 rounded-lg overflow-hidden border border-brand-border">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="https://images.unsplash.com/photo-1625220194771-7ebedd0b70b9?auto=format&fit=crop&q=80&w=1000"

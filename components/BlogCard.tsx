@@ -11,7 +11,7 @@ interface BlogCardProps {
 
 export default function BlogCard({ story }: BlogCardProps) {
   return (
-    <div className="bg-white rounded-lg border border-[#E6DFD5] overflow-hidden shadow-xs hover:shadow-md transition-all flex flex-col sm:flex-row group">
+    <div className="bg-white rounded-lg border border-brand-border overflow-hidden shadow-xs hover:shadow-md transition-all flex flex-col sm:flex-row group">
 
       <div className="sm:w-2/5 relative aspect-4/3 sm:aspect-auto overflow-hidden bg-stone-100 shrink-0">
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -20,7 +20,7 @@ export default function BlogCard({ story }: BlogCardProps) {
           alt={story.title}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
-        <div className="absolute top-3 left-3 bg-[#1F3A2B] text-white text-xs font-bold px-3 py-1 rounded shadow">
+        <div className="absolute top-3 left-3 bg-brand-green text-white text-xs font-bold px-3 py-1 rounded shadow">
           {story.category}
         </div>
       </div>
@@ -29,16 +29,16 @@ export default function BlogCard({ story }: BlogCardProps) {
         <div className="space-y-3">
           <div className="flex items-center gap-4 text-xs sm:text-sm text-stone-500 font-medium">
             <span className="flex items-center gap-1.5">
-              <Calendar className="h-4 w-4 text-[#1F3A2B]" />
+              <Calendar className="h-4 w-4 text-brand-green" />
               {story.date}
             </span>
             <span className="flex items-center gap-1.5">
-              <User className="h-4 w-4 text-[#1F3A2B]" />
+              <User className="h-4 w-4 text-brand-green" />
               {story.author}
             </span>
           </div>
 
-          <h3 className="font-heading text-xl sm:text-2xl font-bold text-[#1F3A2B] group-hover:text-[#162B20] transition-colors leading-snug">
+          <h3 className="font-heading text-xl sm:text-2xl font-bold text-brand-green group-hover:text-brand-green-dark transition-colors leading-snug">
             {story.title}
           </h3>
 
@@ -47,10 +47,10 @@ export default function BlogCard({ story }: BlogCardProps) {
           </p>
         </div>
 
-        <div className="pt-3 border-t border-[#E6DFD5]">
+        <div className="pt-3 border-t border-brand-border">
           <Link
             href={`/blog/${story.id}`}
-            className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-[#1F3A2B] hover:text-[#162B20] transition-colors"
+            className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-brand-green hover:text-brand-green-dark transition-colors"
           >
             <span>Read Full Story</span>
             <ArrowRight className="h-4 w-4" />

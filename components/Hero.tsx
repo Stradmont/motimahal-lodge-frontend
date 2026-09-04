@@ -4,6 +4,14 @@ import React from 'react';
 import { ChevronDown } from 'lucide-react';
 
 export default function Hero() {
+  const handleScrollToAbout = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const target = document.getElementById('about');
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <section className="relative w-full h-screen min-h-[680px] flex items-center justify-center overflow-hidden bg-stone-900">
       {/* Full Screen Edge-to-Edge Photography Background */}
@@ -29,7 +37,12 @@ export default function Hero() {
 
       {/* Scroll Down Indicator */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 text-white/80 animate-bounce">
-        <a href="#about" aria-label="Scroll to About section" className="p-2 inline-block">
+        <a
+          href="#about"
+          onClick={handleScrollToAbout}
+          aria-label="Scroll to About section"
+          className="p-2 inline-block cursor-pointer"
+        >
           <ChevronDown className="h-8 w-8 text-white/90" />
         </a>
       </div>

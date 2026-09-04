@@ -64,18 +64,14 @@ export default function RoomEnquirySection({
   return (
     <section
       id="enquiry-section"
-      className="py-16 sm:py-24 border-t border-b border-[#E6DFD5] relative text-[#2D2B2A]"
-      style={{
-        backgroundImage: "url('/backs-2.png')",
-        backgroundRepeat: 'repeat',
-      }}
+      className="py-16 sm:py-24 border-t border-b border-brand-border relative text-brand-charcoal bg-texture scroll-mt-20 sm:scroll-mt-24"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* LEFT COLUMN: ENQUIRY CONTACT DETAILS */}
           <div className="lg:col-span-5 space-y-8">
             <div className="space-y-4">
-              <h2 className="font-heading text-4xl sm:text-5xl font-bold text-[#2D2B2A] leading-tight">
+              <h2 className="font-heading text-4xl sm:text-5xl font-bold text-brand-charcoal leading-tight">
                 Enquiry for room booking
               </h2>
               <p className="text-stone-800 text-base sm:text-lg leading-relaxed">
@@ -85,8 +81,8 @@ export default function RoomEnquirySection({
 
             {/* Phone Contact Block */}
             <div className="flex items-start gap-4">
-              <div className="w-14 h-14 rounded-full bg-[#1F3A2B]/10 border border-[#1F3A2B]/20 flex items-center justify-center text-[#1F3A2B] shrink-0">
-                <Phone className="h-7 w-7 text-[#1F3A2B]" />
+              <div className="w-14 h-14 rounded-full bg-brand-green/10 border border-brand-green/20 flex items-center justify-center text-brand-green shrink-0">
+                <Phone className="h-7 w-7 text-brand-green" />
               </div>
               <div className="space-y-1">
                 <span className="text-sm font-bold text-stone-600 block">
@@ -94,7 +90,7 @@ export default function RoomEnquirySection({
                 </span>
                 <a
                   href="tel:+9779855012345"
-                  className="font-heading text-2xl sm:text-3xl font-bold text-[#1F3A2B] hover:underline block"
+                  className="font-heading text-2xl sm:text-3xl font-bold text-brand-green hover:underline block"
                 >
                   +977 98550 12345
                 </a>
@@ -123,8 +119,8 @@ export default function RoomEnquirySection({
 
             {/* Email Contact Block */}
             <div className="flex items-start gap-4">
-              <div className="w-14 h-14 rounded-full bg-[#1F3A2B]/10 border border-[#1F3A2B]/20 flex items-center justify-center text-[#1F3A2B] shrink-0">
-                <Mail className="h-7 w-7 text-[#1F3A2B]" />
+              <div className="w-14 h-14 rounded-full bg-brand-green/10 border border-brand-green/20 flex items-center justify-center text-brand-green shrink-0">
+                <Mail className="h-7 w-7 text-brand-green" />
               </div>
               <div className="space-y-1">
                 <span className="text-sm font-bold text-stone-600 block">
@@ -132,7 +128,7 @@ export default function RoomEnquirySection({
                 </span>
                 <a
                   href="mailto:motimahallodge@gmail.com"
-                  className="font-heading text-xl sm:text-2xl font-bold text-[#1F3A2B] hover:underline block"
+                  className="font-heading text-xl sm:text-2xl font-bold text-brand-green hover:underline block"
                 >
                   motimahallodge@gmail.com
                 </a>
@@ -141,13 +137,13 @@ export default function RoomEnquirySection({
           </div>
 
           {/* RIGHT COLUMN: INTERACTIVE BOOKING WIDGET */}
-          <div className="lg:col-span-7 bg-white p-7 sm:p-10 rounded-2xl border border-[#E6DFD5] shadow-xl space-y-6">
+          <div className="lg:col-span-7 bg-white p-7 sm:p-10 rounded-2xl border border-brand-border shadow-xl space-y-6">
             {submitted ? (
-              <div className="py-8 px-6 text-center space-y-5 bg-[#FAF7F2] rounded-xl border border-[#E6DFD5]">
-                <div className="w-16 h-16 bg-[#1F3A2B]/10 text-[#1F3A2B] rounded-full flex items-center justify-center mx-auto">
-                  <CheckCircle2 className="h-10 w-10 text-[#1F3A2B]" />
+              <div className="py-8 px-6 text-center space-y-5 bg-brand-surface rounded-xl border border-brand-border">
+                <div className="w-16 h-16 bg-brand-green/10 text-brand-green rounded-full flex items-center justify-center mx-auto">
+                  <CheckCircle2 className="h-10 w-10 text-brand-green" />
                 </div>
-                <h3 className="font-heading text-2xl font-bold text-[#2D2B2A]">
+                <h3 className="font-heading text-2xl font-bold text-brand-charcoal">
                   Enquiry Submitted Successfully!
                 </h3>
                 <p className="text-stone-700 text-base max-w-md mx-auto leading-relaxed">
@@ -184,7 +180,7 @@ export default function RoomEnquirySection({
                       placeholder="e.g. Ram Bahadur Shrestha"
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
-                      className="w-full bg-[#FAF7F2] border border-[#E6DFD5] rounded-lg px-4 py-3 text-base text-stone-900 focus:outline-none focus:border-[#1F3A2B]"
+                      className="w-full bg-brand-surface border border-brand-border rounded-lg px-4 py-3 text-base text-stone-900 focus:outline-none focus:border-brand-green"
                       required
                     />
                   </div>
@@ -196,7 +192,7 @@ export default function RoomEnquirySection({
                       placeholder="e.g. +977 98550 12345"
                       value={whatsappNumber}
                       onChange={(e) => setWhatsappNumber(e.target.value)}
-                      className="w-full bg-[#FAF7F2] border border-[#E6DFD5] rounded-lg px-4 py-3 text-base text-stone-900 focus:outline-none focus:border-[#1F3A2B]"
+                      className="w-full bg-brand-surface border border-brand-border rounded-lg px-4 py-3 text-base text-stone-900 focus:outline-none focus:border-brand-green"
                       required
                     />
                   </div>
@@ -211,7 +207,7 @@ export default function RoomEnquirySection({
                       min={todayStr}
                       value={checkIn}
                       onChange={(e) => setCheckIn(e.target.value)}
-                      className="w-full bg-[#FAF7F2] border border-[#E6DFD5] rounded-lg px-4 py-3 text-base text-stone-900 focus:outline-none focus:border-[#1F3A2B]"
+                      className="w-full bg-brand-surface border border-brand-border rounded-lg px-4 py-3 text-base text-stone-900 focus:outline-none focus:border-brand-green"
                       required
                     />
                   </div>
@@ -223,7 +219,7 @@ export default function RoomEnquirySection({
                       min={checkIn || todayStr}
                       value={checkOut}
                       onChange={(e) => setCheckOut(e.target.value)}
-                      className="w-full bg-[#FAF7F2] border border-[#E6DFD5] rounded-lg px-4 py-3 text-base text-stone-900 focus:outline-none focus:border-[#1F3A2B]"
+                      className="w-full bg-brand-surface border border-brand-border rounded-lg px-4 py-3 text-base text-stone-900 focus:outline-none focus:border-brand-green"
                       required
                     />
                   </div>
@@ -235,7 +231,7 @@ export default function RoomEnquirySection({
                   <select
                     value={selectedRoomId}
                     onChange={(e) => setSelectedRoomId(e.target.value)}
-                    className="w-full bg-[#FAF7F2] border border-[#E6DFD5] rounded-lg px-4 py-3 text-base text-stone-900 focus:outline-none focus:border-[#1F3A2B]"
+                    className="w-full bg-brand-surface border border-brand-border rounded-lg px-4 py-3 text-base text-stone-900 focus:outline-none focus:border-brand-green"
                   >
                     {ROOMS_DATA.map((r) => (
                       <option key={r.id} value={r.id}>
@@ -249,11 +245,11 @@ export default function RoomEnquirySection({
                 <div className="grid grid-cols-2 gap-5">
                   <div>
                     <label className="block text-sm font-semibold text-stone-800 mb-1.5">Adults</label>
-                    <div className="flex items-center justify-between bg-[#FAF7F2] border border-[#E6DFD5] rounded-lg px-4 py-2.5">
+                    <div className="flex items-center justify-between bg-brand-surface border border-brand-border rounded-lg px-4 py-2.5">
                       <button
                         type="button"
                         onClick={() => setAdultsCount((prev) => Math.max(1, prev - 1))}
-                        className="p-1 hover:text-[#1F3A2B] cursor-pointer"
+                        className="p-1 hover:text-brand-green cursor-pointer"
                       >
                         <Minus className="h-5 w-5" />
                       </button>
@@ -261,7 +257,7 @@ export default function RoomEnquirySection({
                       <button
                         type="button"
                         onClick={() => setAdultsCount((prev) => prev + 1)}
-                        className="p-1 hover:text-[#1F3A2B] cursor-pointer"
+                        className="p-1 hover:text-brand-green cursor-pointer"
                       >
                         <Plus className="h-5 w-5" />
                       </button>
@@ -270,11 +266,11 @@ export default function RoomEnquirySection({
 
                   <div>
                     <label className="block text-sm font-semibold text-stone-800 mb-1.5">Childs</label>
-                    <div className="flex items-center justify-between bg-[#FAF7F2] border border-[#E6DFD5] rounded-lg px-4 py-2.5">
+                    <div className="flex items-center justify-between bg-brand-surface border border-brand-border rounded-lg px-4 py-2.5">
                       <button
                         type="button"
                         onClick={() => setChildrenCount((prev) => Math.max(0, prev - 1))}
-                        className="p-1 hover:text-[#1F3A2B] cursor-pointer"
+                        className="p-1 hover:text-brand-green cursor-pointer"
                       >
                         <Minus className="h-5 w-5" />
                       </button>
@@ -282,7 +278,7 @@ export default function RoomEnquirySection({
                       <button
                         type="button"
                         onClick={() => setChildrenCount((prev) => prev + 1)}
-                        className="p-1 hover:text-[#1F3A2B] cursor-pointer"
+                        className="p-1 hover:text-brand-green cursor-pointer"
                       >
                         <Plus className="h-5 w-5" />
                       </button>
@@ -291,7 +287,7 @@ export default function RoomEnquirySection({
                 </div>
 
                 {/* Estimated Price Summary */}
-                <div className="bg-[#FAF7F2] p-5 rounded-lg border border-[#E6DFD5] flex items-center justify-between">
+                <div className="bg-brand-surface p-5 rounded-lg border border-brand-border flex items-center justify-between">
                   <div className="space-y-1">
                     <span className="text-sm text-stone-700 font-semibold block">
                       {activeBookingRoom.name}
@@ -302,7 +298,7 @@ export default function RoomEnquirySection({
                   </div>
                   <div className="text-right">
                     <span className="text-xs text-stone-500 font-medium block">Total</span>
-                    <span className="font-heading text-2xl font-bold text-[#1F3A2B]">
+                    <span className="font-heading text-2xl font-bold text-brand-green">
                       NPR {estimatedTotal.toLocaleString()}
                     </span>
                   </div>
@@ -322,7 +318,7 @@ export default function RoomEnquirySection({
 
                   <button
                     type="submit"
-                    className="bg-white hover:bg-stone-100 text-[#2D2B2A] border-2 border-[#2D2B2A] font-semibold text-base py-3 px-8 rounded-lg shadow-sm transition-all cursor-pointer"
+                    className="bg-white hover:bg-stone-100 text-brand-charcoal border-2 border-brand-charcoal font-semibold text-base py-3 px-8 rounded-lg shadow-sm transition-all cursor-pointer"
                   >
                     Book Now
                   </button>

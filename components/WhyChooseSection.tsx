@@ -37,18 +37,12 @@ const WHY_CHOOSE_ITEMS = [
 
 export default function WhyChooseSection() {
   return (
-    <section
-      className="py-12 sm:py-16 border-b border-[#E6DFD5] relative text-[#2D2B2A]"
-      style={{
-        backgroundImage: "url('/backs.png')",
-        backgroundRepeat: 'repeat',
-      }}
-    >
+    <section className="py-12 sm:py-16 border-b border-brand-border relative text-brand-charcoal bg-texture">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-10">
 
         {/* Section Heading */}
         <div className="text-center max-w-3xl mx-auto space-y-4">
-          <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-[#2D2B2A]">
+          <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-brand-charcoal">
             Why stay at Motimahal Lodge
           </h2>
           <p className="text-stone-700 text-base sm:text-lg lg:text-xl leading-relaxed font-normal">
@@ -59,7 +53,7 @@ export default function WhyChooseSection() {
         {/* 6-Grid Feature Presentation */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-10 text-center">
           {WHY_CHOOSE_ITEMS.map((item, index) => (
-            <div key={index} className="space-y-3.5 max-w-sm mx-auto p-6 sm:p-8 bg-white/70 rounded-xl border border-[#E6DFD5] shadow-sm hover:shadow-md transition-shadow">
+            <div key={index} className="space-y-3.5 max-w-sm mx-auto p-6 sm:p-8 bg-white/70 rounded-xl border border-brand-border shadow-sm hover:shadow-md transition-shadow">
 
               {/* SVG Icon */}
               <div className="h-16 flex items-center justify-center">
@@ -72,7 +66,7 @@ export default function WhyChooseSection() {
               </div>
 
               {/* Title */}
-              <h3 className="font-heading text-xl sm:text-2xl font-bold text-[#2D2B2A]">
+              <h3 className="font-heading text-xl sm:text-2xl font-bold text-brand-charcoal">
                 {item.title}
               </h3>
 

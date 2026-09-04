@@ -7,19 +7,15 @@ export default function AboutSection() {
   return (
     <section
       id="about"
-      className="py-20 sm:py-28 border-b border-[#E6DFD5] relative text-[#2D2B2A] overflow-hidden"
-      style={{
-        backgroundImage: "url('/backs.png')",
-        backgroundRepeat: 'repeat',
-      }}
+      className="py-20 sm:py-28 border-b border-brand-border relative text-brand-charcoal overflow-hidden bg-texture scroll-mt-20 sm:scroll-mt-24"
     >
       {/* Narrative Text Container (Aligned to Global Container Grid) */}
       <div className="mx-auto max-w-5xl px-6 text-center space-y-6 mb-14 sm:mb-18">
-        <span className="text-[#1F3A2B] text-xs sm:text-sm font-semibold uppercase tracking-[0.2em] block">
+        <span className="text-brand-green text-xs sm:text-sm font-semibold uppercase tracking-[0.2em] block">
           About Us
         </span>
 
-        <h2 className="font-heading text-3xl sm:text-5xl lg:text-6xl font-bold text-[#2D2B2A] leading-tight">
+        <h2 className="font-heading text-3xl sm:text-5xl lg:text-6xl font-bold text-brand-charcoal leading-tight">
           Experience the Heart of Chitwan
         </h2>
 

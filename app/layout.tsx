@@ -35,7 +35,7 @@ export default function RootLayout({
       lang="en"
       className={`${mirza.variable} ${jost.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-background text-[#333333] font-sans">
+      <body className="min-h-full flex flex-col bg-background text-brand-charcoal font-sans">
         {children}
         <ScrollToTop />
         <WhatsAppButton />

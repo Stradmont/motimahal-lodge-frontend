@@ -125,11 +125,7 @@ export default function RoomSpotlightGallery({ room, allImages }: RoomSpotlightG
 
   return (
     <section
-      className="py-12 sm:py-16 border-b border-[#E6DFD5] relative overflow-hidden select-none"
-      style={{
-        backgroundImage: "url('/backs-2.png')",
-        backgroundRepeat: 'repeat',
-      }}
+      className="py-12 sm:py-16 border-b border-brand-border relative overflow-hidden select-none bg-texture"
     >
       <div className="w-full relative space-y-6">
         {/* Full-width edge-to-edge carousel viewport */}
@@ -175,7 +171,7 @@ export default function RoomSpotlightGallery({ room, allImages }: RoomSpotlightG
                   }}
                   className={`shrink-0 rounded-2xl overflow-hidden relative transition-all duration-700 ease-out border cursor-pointer ${
                     isActive
-                      ? 'scale-100 opacity-100 shadow-xl border-[#E6DFD5] z-20'
+                      ? 'scale-100 opacity-100 shadow-xl border-brand-border z-20'
                       : 'scale-[0.92] opacity-50 shadow-xs border-transparent z-10 hover:opacity-75'
                   }`}
                   style={{
@@ -209,7 +205,7 @@ export default function RoomSpotlightGallery({ room, allImages }: RoomSpotlightG
               prevSlide();
             }}
             aria-label="Previous Slide"
-            className="absolute left-3 sm:left-8 md:left-12 top-1/2 -translate-y-1/2 z-30 w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white/95 hover:bg-white text-[#2D2B2A] shadow-md border border-[#E6DFD5] flex items-center justify-center transition-transform hover:scale-105 active:scale-95 cursor-pointer"
+            className="absolute left-3 sm:left-8 md:left-12 top-1/2 -translate-y-1/2 z-30 w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white/95 hover:bg-white text-brand-charcoal shadow-md border border-brand-border flex items-center justify-center transition-transform hover:scale-105 active:scale-95 cursor-pointer"
           >
             <ChevronLeft className="w-6 h-6 sm:w-7 sm:h-7" />
           </button>
@@ -220,7 +216,7 @@ export default function RoomSpotlightGallery({ room, allImages }: RoomSpotlightG
               nextSlide();
             }}
             aria-label="Next Slide"
-            className="absolute right-3 sm:right-8 md:right-12 top-1/2 -translate-y-1/2 z-30 w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white/95 hover:bg-white text-[#2D2B2A] shadow-md border border-[#E6DFD5] flex items-center justify-center transition-transform hover:scale-105 active:scale-95 cursor-pointer"
+            className="absolute right-3 sm:right-8 md:right-12 top-1/2 -translate-y-1/2 z-30 w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white/95 hover:bg-white text-brand-charcoal shadow-md border border-brand-border flex items-center justify-center transition-transform hover:scale-105 active:scale-95 cursor-pointer"
           >
             <ChevronRight className="w-6 h-6 sm:w-7 sm:h-7" />
           </button>
@@ -231,9 +227,9 @@ export default function RoomSpotlightGallery({ room, allImages }: RoomSpotlightG
           {/* Centered FullScreen Button */}
           <button
             onClick={() => setLightboxOpen(true)}
-            className="bg-white hover:bg-stone-50 text-[#2D2B2A] border border-[#2D2B2A] font-semibold text-sm sm:text-base px-7 py-3 rounded-full shadow-xs transition-all cursor-pointer inline-flex items-center gap-2.5"
+            className="bg-white hover:bg-stone-50 text-brand-charcoal border border-brand-charcoal font-semibold text-sm sm:text-base px-7 py-3 rounded-full shadow-xs transition-all cursor-pointer inline-flex items-center gap-2.5"
           >
-            <Maximize2 className="h-4.5 w-4.5 text-[#1F3A2B]" />
+            <Maximize2 className="h-4.5 w-4.5 text-brand-green" />
             <span>FullScreen</span>
           </button>
 
@@ -245,7 +241,7 @@ export default function RoomSpotlightGallery({ room, allImages }: RoomSpotlightG
                 onClick={() => goToSlide(dotIdx)}
                 className={`transition-all rounded-full cursor-pointer ${
                   activeRealIndex === dotIdx
-                    ? 'w-7 h-2.5 bg-[#1F3A2B]'
+                    ? 'w-7 h-2.5 bg-brand-green'
                     : 'w-2.5 h-2.5 bg-stone-300 hover:bg-stone-400'
                 }`}
                 aria-label={`Go to slide ${dotIdx + 1}`}

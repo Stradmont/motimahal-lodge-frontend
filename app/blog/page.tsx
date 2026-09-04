@@ -5,18 +5,13 @@ import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import WhyChooseSection from '@/components/WhyChooseSection';
+import CtaSection from '@/components/CtaSection';
 import { BLOG_DATA } from '@/lib/data';
 import { ArrowRight, Clock, User, Calendar } from 'lucide-react';
 
 export default function BlogListingPage() {
   return (
-    <div
-      className="min-h-screen flex flex-col text-[#2D2B2A]"
-      style={{
-        backgroundImage: "url('/backs.png')",
-        backgroundRepeat: 'repeat',
-      }}
-    >
+    <div className="min-h-screen flex flex-col text-brand-charcoal bg-texture">
       <Navbar />
 
       <main className="flex-1">
@@ -44,7 +39,7 @@ export default function BlogListingPage() {
         <section className="py-16 sm:py-24 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="space-y-12">
             <div className="text-center max-w-3xl mx-auto space-y-3">
-              <h2 className="font-heading text-3xl sm:text-4xl font-bold text-[#2D2B2A]">
+              <h2 className="font-heading text-3xl sm:text-4xl font-bold text-brand-charcoal">
                 Latest Articles & Hospitality Stories
               </h2>
               <p className="text-stone-600 text-base sm:text-lg leading-relaxed font-normal">
@@ -56,7 +51,7 @@ export default function BlogListingPage() {
               {BLOG_DATA.map((post) => (
                 <article
                   key={post.id}
-                  className="bg-white rounded-2xl border border-[#E6DFD5] overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 flex flex-col group"
+                  className="bg-white rounded-2xl border border-brand-border overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 flex flex-col group"
                 >
                   {/* Image Header */}
                   <div className="relative h-64 sm:h-72 w-full overflow-hidden bg-stone-100">
@@ -66,12 +61,12 @@ export default function BlogListingPage() {
                       alt={post.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
-                    <div className="absolute top-4 left-4 bg-[#1F3A2B] text-white text-xs font-semibold px-3 py-1 rounded shadow-md">
+                    <div className="absolute top-4 left-4 bg-brand-green text-white text-xs font-semibold px-3 py-1 rounded shadow-md">
                       {post.category}
                     </div>
 
-                    <div className="absolute bottom-4 right-4 bg-white/95 backdrop-blur-xs px-3 py-1 rounded-md border border-[#E6DFD5] text-stone-600 text-xs font-medium shadow-md flex items-center gap-1.5">
-                      <Clock className="h-3.5 w-3.5 text-[#1F3A2B]" />
+                    <div className="absolute bottom-4 right-4 bg-white/95 backdrop-blur-xs px-3 py-1 rounded-md border border-brand-border text-stone-600 text-xs font-medium shadow-md flex items-center gap-1.5">
+                      <Clock className="h-3.5 w-3.5 text-brand-green" />
                       <span>{post.readTime}</span>
                     </div>
                   </div>
@@ -81,17 +76,17 @@ export default function BlogListingPage() {
                     <div className="space-y-3">
                       <div className="text-xs text-stone-500 font-medium flex items-center gap-3 flex-wrap">
                         <span className="flex items-center gap-1">
-                          <Calendar className="h-3.5 w-3.5 text-[#1F3A2B]" />
+                          <Calendar className="h-3.5 w-3.5 text-brand-green" />
                           {post.date}
                         </span>
                         <span>•</span>
                         <span className="flex items-center gap-1">
-                          <User className="h-3.5 w-3.5 text-[#1F3A2B]" />
+                          <User className="h-3.5 w-3.5 text-brand-green" />
                           {post.author}
                         </span>
                       </div>
 
-                      <h3 className="font-heading text-2xl sm:text-3xl font-bold text-[#2D2B2A] group-hover:text-[#1F3A2B] transition-colors leading-snug">
+                      <h3 className="font-heading text-2xl sm:text-3xl font-bold text-brand-charcoal group-hover:text-brand-green transition-colors leading-snug">
                         <Link href={`/blog/${post.slug || post.id}`}>
                           {post.title}
                         </Link>
@@ -106,7 +101,7 @@ export default function BlogListingPage() {
                           {post.tags.map((tag, tIdx) => (
                             <span
                               key={tIdx}
-                              className="bg-[#FAF7F2] text-stone-700 text-xs px-2.5 py-1 rounded border border-[#E6DFD5] font-medium"
+                              className="bg-brand-surface text-stone-700 text-xs px-2.5 py-1 rounded border border-brand-border font-medium"
                             >
                               #{tag}
                             </span>
@@ -119,12 +114,7 @@ export default function BlogListingPage() {
                     <div className="pt-2">
                       <Link
                         href={`/blog/${post.slug || post.id}`}
-                        className="bg-[#1F3A2B] hover:bg-[#162B20] border border-[#2D4D3B] text-white text-xs sm:text-sm font-medium px-6 py-2.5 rounded-md transition-all cursor-pointer shadow-xs inline-flex items-center gap-2"
-                        style={{
-                          backgroundImage:
-                            "linear-gradient(rgba(31, 58, 43, 0.88), rgba(31, 58, 43, 0.88)), url('/backs.png')",
-                          backgroundRepeat: 'repeat',
-                        }}
+                        className="bg-brand-green hover:bg-brand-green-dark border border-footer-border text-white text-xs sm:text-sm font-medium px-6 py-2.5 rounded-md transition-all cursor-pointer shadow-xs inline-flex items-center gap-2"
                       >
                         <span>Read full article</span>
                         <ArrowRight className="h-4 w-4" />
@@ -139,29 +129,13 @@ export default function BlogListingPage() {
 
 
         {/* 4. FINAL CTA SECTION */}
-        <section className="py-12 sm:py-16 text-[#2D2B2A] text-center border-t border-[#E6DFD5]" style={{ backgroundImage: "url('/backs.png')", backgroundRepeat: 'repeat' }}>
-          <div className="mx-auto max-w-3xl px-6 space-y-4">
-            <h2 className="font-heading text-2xl sm:text-3xl font-bold text-[#2D2B2A]">
-              Planning a stay at Motimahal Lodge?
-            </h2>
-            <p className="text-stone-600 text-sm sm:text-base max-w-lg mx-auto leading-relaxed font-normal">
-              Book your room directly for guaranteed rates, safari booking assistance, and authentic local food.
-            </p>
-            <div className="pt-2">
-              <Link
-                href="/enquiry"
-                className="inline-flex items-center gap-2 bg-[#1F3A2B] hover:bg-[#162B20] border border-[#2D4D3B] text-white font-medium text-sm py-3.5 px-8 rounded-md transition-all cursor-pointer shadow-xs"
-                style={{
-                  backgroundImage:
-                    "linear-gradient(rgba(31, 58, 43, 0.88), rgba(31, 58, 43, 0.88)), url('/backs.png')",
-                  backgroundRepeat: 'repeat',
-                }}
-              >
-                <span>Check room availability & enquiry</span>
-              </Link>
-            </div>
-          </div>
-        </section>
+        <CtaSection
+          title="Planning a stay at Motimahal Lodge?"
+          description="Book your room directly for guaranteed rates, safari booking assistance, and authentic local food."
+          buttonText="Check room availability & enquiry"
+          buttonHref="/enquiry"
+          bgTexture={true}
+        />
       </main>
 
       <Footer />

@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import WhyChooseSection from '@/components/WhyChooseSection';
+import CtaSection from '@/components/CtaSection';
 import { GALLERY_DATA } from '@/lib/data';
 import { Maximize2, Eye, X, ChevronLeft, ChevronRight } from 'lucide-react';
 
@@ -36,13 +37,7 @@ export default function GalleryPage() {
   }, [lightboxIndex, handlePrev, handleNext]);
 
   return (
-    <div
-      className="min-h-screen flex flex-col text-[#2D2B2A]"
-      style={{
-        backgroundImage: "url('/backs.png')",
-        backgroundRepeat: 'repeat',
-      }}
-    >
+    <div className="min-h-screen flex flex-col text-brand-charcoal bg-texture">
       <Navbar />
 
       <main className="flex-1">
@@ -70,13 +65,7 @@ export default function GalleryPage() {
         </section>
 
         {/* 2. CLEAN GALLERY GRID SECTION WITH backs.png BACKGROUND TEXTURE */}
-        <section
-          className="py-16 sm:py-24 border-b border-[#E6DFD5] relative text-[#2D2B2A]"
-          style={{
-            backgroundImage: "url('/backs.png')",
-            backgroundRepeat: 'repeat',
-          }}
-        >
+        <section className="py-16 sm:py-24 border-b border-brand-border relative text-brand-charcoal bg-texture">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
             {/* Uniform 3-Column Gallery Grid */}
@@ -85,7 +74,7 @@ export default function GalleryPage() {
                 <div
                   key={item.id}
                   onClick={() => setLightboxIndex(idx)}
-                  className="bg-white rounded-lg border border-[#E6DFD5] overflow-hidden shadow-xs hover:shadow-md transition-shadow duration-300 cursor-pointer group relative aspect-4/3 w-full"
+                  className="bg-white rounded-lg border border-brand-border overflow-hidden shadow-xs hover:shadow-md transition-shadow duration-300 cursor-pointer group relative aspect-4/3 w-full"
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
@@ -124,32 +113,14 @@ export default function GalleryPage() {
 
 
         {/* 4. BOOKING ENQUIRY CTA SECTION */}
-        <section className="py-20 sm:py-24 bg-[#FAF7F2] text-[#2D2B2A] text-center border-t border-[#E6DFD5]">
-          <div className="mx-auto max-w-4xl px-6 space-y-6">
-            <span className="text-[#1F3A2B] text-xs sm:text-sm font-semibold uppercase tracking-[0.2em] block">
-              Plan Your Visit
-            </span>
-            <h2 className="font-heading text-3xl sm:text-5xl font-bold text-[#2D2B2A]">
-              Experience Motimahal Lodge in Person
-            </h2>
-            <p className="text-stone-600 text-base sm:text-lg lg:text-xl max-w-xl mx-auto leading-relaxed font-normal">
-              Book your stay directly with our family for direct room rates and safari trip arrangements in Bharatpur.
-            </p>
-            <div className="pt-2">
-              <button
-                // onClick={() => setBookingModalOpen(true)}
-                className="bg-[#1F3A2B] hover:bg-[#162B20] border border-[#2D4D3B] text-white font-semibold text-sm sm:text-base py-4 px-9 rounded-md transition-all cursor-pointer tracking-wider uppercase shadow-xs"
-                style={{
-                  backgroundImage: "linear-gradient(rgba(31, 58, 43, 0.88), rgba(31, 58, 43, 0.88)), url('/backs.png')",
-                  backgroundRepeat: 'repeat',
-                }}
-              >
-                Check Room Availability & Enquire
-              </button>
-            </div>
-          </div>
-        </section>
-
+        <CtaSection
+          subtitle="Plan Your Visit"
+          title="Experience Motimahal Lodge in Person"
+          description="Book your stay directly with our family for direct room rates and safari trip arrangements in Bharatpur."
+          buttonText="Check Room Availability & Enquire"
+          buttonHref="/enquiry"
+          bgTexture={false}
+        />
       </main>
 
       <Footer />

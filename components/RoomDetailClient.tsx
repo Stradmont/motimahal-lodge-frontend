@@ -80,7 +80,7 @@ export default function RoomDetailClient({ room }: RoomDetailClientProps) {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FAF7F2] text-[#2D2B2A] selection:bg-[#1F3A2B] selection:text-white">
+    <div className="min-h-screen flex flex-col bg-brand-surface text-brand-charcoal selection:bg-brand-green selection:text-white">
       <Navbar />
 
       <main className="flex-1">
@@ -140,10 +140,10 @@ export default function RoomDetailClient({ room }: RoomDetailClientProps) {
 
         {/* 7. RELATED ROOMS */}
         {relatedRooms.length > 0 && (
-          <section className="py-12 sm:py-16 border-t border-[#E6DFD5] bg-white">
+          <section className="py-12 sm:py-16 border-t border-brand-border bg-white">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-8">
               <div className="text-center max-w-3xl mx-auto space-y-2">
-                <h2 className="font-heading text-2xl sm:text-3xl font-bold text-[#2D2B2A]">
+                <h2 className="font-heading text-2xl sm:text-3xl font-bold text-brand-charcoal">
                   You may also like
                 </h2>
                 <p className="text-stone-600 text-sm sm:text-base">

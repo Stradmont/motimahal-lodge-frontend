@@ -2,48 +2,70 @@
 
 @layer base {
   :root {
-    /* ── Exact Typography & Palette ── */
-    --primary: #0F4C3A;
-    /* Classic Deep Forest Green */
-    --primary-hover: #0A3629;
-    --primary-light: #F0FDF4;
-    --primary-accent: #D97706;
-    --gold: #EAB308;
+    /* ── Brand Colors ── */
+    --brand-green: #1F3A2B;
+    --brand-green-dark: #162B20;
+    --brand-charcoal: #2D2B2A;
+    --brand-gold: #C88A3B;
 
-    /* ── Surface & Text Colors ── */
+    /* ── Surface & Border Colors ── */
+    --brand-border: #E6DFD5;
+    --brand-surface: #FAF7F2;
+    --footer-bg: #14281E;
+    --footer-overlay: #16291E;
+    --footer-border: #2D4D3B;
+
+    /* ── Defaults ── */
     --background: #FFFFFF;
     --card-bg: #FFFFFF;
-    --foreground: #333333;
-    /* Exact #333333 text from design specs */
+    --foreground: #2D2B2A;
     --muted: #666666;
     --muted-light: #F8FAFC;
-    --border-color: #E2E8F0;
+    --border-color: #E6DFD5;
   }
 }
 
 @theme {
-  --color-primary: var(--primary);
-  --color-primary-hover: var(--primary-hover);
-  --color-primary-light: var(--primary-light);
-  --color-primary-accent: var(--primary-accent);
-  --color-gold: var(--gold);
+  --color-brand-green: var(--brand-green);
+  --color-brand-green-dark: var(--brand-green-dark);
+  --color-brand-charcoal: var(--brand-charcoal);
+  --color-brand-gold: var(--brand-gold);
+  --color-brand-border: var(--brand-border);
+  --color-brand-surface: var(--brand-surface);
+  --color-footer-bg: var(--footer-bg);
+  --color-footer-overlay: var(--footer-overlay);
+  --color-footer-border: var(--footer-border);
+
+  --color-primary: var(--brand-green);
+  --color-primary-hover: var(--brand-green-dark);
+  --color-primary-accent: var(--brand-gold);
+  --color-gold: var(--brand-gold);
   --color-background: var(--background);
   --color-card-bg: var(--card-bg);
   --color-foreground: var(--foreground);
   --color-muted: var(--muted);
   --color-muted-light: var(--muted-light);
-  --color-border-color: var(--border-color);
+  --color-border-color: var(--brand-border);
 
   --font-heading: var(--font-heading), Mirza, cursive;
   --font-sans: var(--font-sans), Jost, Helvetica, sans-serif;
 }
 
-/* ── Global Base Styles ── */
+/* ── Global Reusable Utility Classes ── */
+.bg-texture {
+  background-image: url('/backs.png');
+  background-repeat: repeat;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+}
+
 body {
   background-color: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
-  scroll-behavior: smooth;
 }
 
 h1,
@@ -51,10 +73,6 @@ h2,
 h3,
 h4,
 .font-heading {
-  font-family: var(--font-heading);
-}
-
-h3 {
   font-family: var(--font-heading);
 }
 

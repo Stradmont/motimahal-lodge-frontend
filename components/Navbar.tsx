@@ -54,7 +54,7 @@ export default function Navbar() {
       <header
         className={`fixed top-0 left-0 right-0 z-40 w-full transition-all duration-300 ease-in-out ${isVisible ? 'translate-y-0' : '-translate-y-full'
           } ${isScrolled
-            ? 'bg-[#162B20]/95 backdrop-blur-md border-b border-[#2D4D3B]/40 py-3.5 sm:py-4 px-4 sm:px-8 lg:px-12 shadow-sm text-white'
+            ? 'bg-brand-green-dark/95 backdrop-blur-md border-b border-footer-border/40 py-3.5 sm:py-4 px-4 sm:px-8 lg:px-12 shadow-sm text-white'
             : 'bg-transparent text-white py-5 sm:py-6 px-4 sm:px-8 lg:px-12'
           }`}
       >
@@ -81,7 +81,7 @@ export default function Navbar() {
           <div className="flex items-center gap-4 sm:gap-6">
             {/* Location Indicator */}
             <div className="hidden lg:flex items-center gap-1.5 text-xs sm:text-sm text-white/90 font-medium">
-              <MapPin className="h-4 w-4 text-[#C88A3B] shrink-0" />
+              <MapPin className="h-4 w-4 text-brand-gold shrink-0" />
               <span>Chitwan, Nepal</span>
             </div>
 
@@ -90,14 +90,14 @@ export default function Navbar() {
               href="tel:+9779855012345"
               className="hidden md:flex items-center gap-1.5 text-xs sm:text-sm font-medium text-white/95 hover:text-white transition-colors"
             >
-              <Phone className="h-4 w-4 text-[#C88A3B] shrink-0" />
+              <Phone className="h-4 w-4 text-brand-gold shrink-0" />
               <span>+977 98550 12345</span>
             </a>
 
             {/* Refined Book Stay Link */}
             <Link
               href="/enquiry"
-              className="bg-transparent hover:bg-[#162B20] border border-white text-white font-medium text-xs sm:text-sm px-5 py-2 rounded-md transition-all cursor-pointer shadow-xs"
+              className="bg-transparent hover:bg-brand-green-dark border border-white text-white font-medium text-xs sm:text-sm px-5 py-2 rounded-md transition-all cursor-pointer shadow-xs"
             >
               Book Stay
             </Link>

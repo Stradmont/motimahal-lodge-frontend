@@ -80,13 +80,9 @@ export default function MobileNavDrawer({
 
       {/* Side Drawer Panel */}
       <div
-        className={`relative z-10 h-full min-h-screen w-full max-w-[300px] text-[#162B20] flex flex-col justify-between shadow-2xl border-l border-stone-200/60 overflow-y-auto transform transition-transform duration-300 ease-out ${
+        className={`relative z-10 h-full min-h-screen w-full max-w-xs text-brand-green-dark flex flex-col justify-between shadow-2xl border-l border-stone-200/60 overflow-y-auto transform transition-transform duration-300 ease-out bg-texture ${
           visible ? 'translate-x-0' : 'translate-x-full'
         }`}
-        style={{
-          backgroundImage: "url('/backs.png')",
-          backgroundRepeat: 'repeat',
-        }}
       >
         {/* Clean Header */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-stone-200/60 shrink-0">
@@ -101,7 +97,7 @@ export default function MobileNavDrawer({
               alt="Motimahal Lodge"
               className="h-9 w-auto object-contain rounded-full"
             />
-            <span className="font-heading text-xl font-bold text-[#162B20]">
+            <span className="font-heading text-xl font-bold text-brand-green-dark">
               Motimahal
             </span>
           </Link>
@@ -126,13 +122,13 @@ export default function MobileNavDrawer({
                 onClick={onClose}
                 className={`flex items-center justify-between px-4 py-2.5 rounded-lg font-heading text-xl font-medium transition-colors ${
                   active
-                    ? 'text-[#C88A3B] bg-[#162B20]/5 font-semibold'
-                    : 'text-[#162B20] hover:text-[#C88A3B] hover:bg-stone-200/40'
+                    ? 'text-brand-gold bg-brand-green-dark/5 font-semibold'
+                    : 'text-brand-green-dark hover:text-brand-gold hover:bg-stone-200/40'
                 }`}
               >
                 <span>{item.label}</span>
                 {active && (
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#C88A3B]" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-brand-gold" />
                 )}
               </Link>
             );
@@ -143,7 +139,7 @@ export default function MobileNavDrawer({
         <div className="p-6 border-t border-stone-200/60 bg-stone-50/50 shrink-0 space-y-3.5 text-xs text-stone-600">
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-1.5">
-              <MapPin className="h-3.5 w-3.5 text-[#C88A3B] shrink-0" />
+              <MapPin className="h-3.5 w-3.5 text-brand-gold shrink-0" />
               <span>Bharatpur, Chitwan</span>
             </div>
             <div className="flex items-center gap-2">
@@ -171,7 +167,7 @@ export default function MobileNavDrawer({
           <Link
             href="/enquiry"
             onClick={onClose}
-            className="w-full bg-[#162B20] hover:bg-[#1F3A2B] text-white font-medium text-xs py-2.5 px-4 rounded-md transition-colors cursor-pointer shadow-xs flex items-center justify-center text-center"
+            className="w-full bg-brand-green-dark hover:bg-brand-green text-white font-medium text-xs py-2.5 px-4 rounded-md transition-colors cursor-pointer shadow-xs flex items-center justify-center text-center"
           >
             Book Stay
           </Link>

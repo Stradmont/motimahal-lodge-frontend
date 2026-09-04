@@ -48,16 +48,12 @@ export default function VideoSection() {
   return (
     <section
       id="video-gallery"
-      className="py-16 sm:py-24 border-b border-[#E6DFD5] relative text-[#2D2B2A]"
-      style={{
-        backgroundImage: "url('/backs.png')",
-        backgroundRepeat: 'repeat',
-      }}
+      className="py-16 sm:py-24 border-b border-brand-border relative text-brand-charcoal bg-texture scroll-mt-20 sm:scroll-mt-24"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-10 sm:space-y-12">
         {/* Section Heading */}
         <div className="text-center max-w-3xl mx-auto space-y-2">
-          <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-[#2D2B2A] uppercase tracking-wider">
+          <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-brand-charcoal uppercase tracking-wider">
             VIDEO
           </h2>
         </div>
@@ -78,7 +74,7 @@ export default function VideoSection() {
               }}
             >
               {/* Thumbnail Container (Clean, direct image click without play icon) */}
-              <div className="relative w-full aspect-4/3 rounded-xl overflow-hidden bg-stone-100 border border-[#E6DFD5] shadow-xs group-hover:shadow-md transition-all duration-300">
+              <div className="relative w-full aspect-4/3 rounded-xl overflow-hidden bg-stone-100 border border-brand-border shadow-xs group-hover:shadow-md transition-all duration-300">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={video.thumbnail}
@@ -88,7 +84,7 @@ export default function VideoSection() {
               </div>
 
               {/* Caption */}
-              <p className="font-medium text-stone-800 text-sm sm:text-base text-center leading-snug group-hover:text-[#1F3A2B] transition-colors">
+              <p className="font-medium text-stone-800 text-sm sm:text-base text-center leading-snug group-hover:text-brand-green transition-colors">
                 {video.title}
               </p>
             </div>
