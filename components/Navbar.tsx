@@ -96,7 +96,7 @@ export default function Navbar() {
 
             {/* Refined Book Stay Link */}
             <Link
-              href="/enquiry"
+              href="/contact"
               className="bg-transparent hover:bg-brand-green-dark border border-white text-white font-medium text-xs sm:text-sm px-5 py-2 rounded-md transition-all cursor-pointer shadow-xs"
             >
               Book Stay

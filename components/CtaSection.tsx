@@ -15,8 +15,8 @@ export default function CtaSection({
   subtitle,
   title = 'Planning Your Visit to Chitwan?',
   description = 'Tell us your stay dates or questions and our family front desk will assist you with direct room rates.',
-  buttonText = 'Check Availability & Enquire',
-  buttonHref = '/enquiry',
+  buttonText = 'Check Availability & Contact Us',
+  buttonHref = '/contact',
   bgTexture = true,
   className = '',
 }: CtaSectionProps) {

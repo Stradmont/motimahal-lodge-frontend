@@ -165,7 +165,7 @@ export default function MobileNavDrawer({
           </div>
 
           <Link
-            href="/enquiry"
+            href="/contact"
             onClick={onClose}
             className="w-full bg-brand-green-dark hover:bg-brand-green text-white font-medium text-xs py-2.5 px-4 rounded-md transition-colors cursor-pointer shadow-xs flex items-center justify-center text-center"
           >
