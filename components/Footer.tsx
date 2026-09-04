@@ -4,9 +4,11 @@ import React from 'react';
 import Link from 'next/link';
 import { MapPin, Phone, Mail } from 'lucide-react';
 import { FacebookIcon, InstagramIcon } from '@/components/SocialIcons';
-import { SOCIAL_LINKS } from '@/lib/data';
+import { useContactSettings } from '@/lib/contact-settings';
 
 export default function Footer() {
+  const contact = useContactSettings();
+
   return (
     <footer className="relative text-stone-200 py-16 sm:py-20 border-t border-footer-border bg-footer-bg bg-texture overflow-hidden">
       {/* Lighter, natural dark green overlay so background texture and silhouette are easy to notice */}
@@ -45,13 +47,13 @@ export default function Footer() {
             </Link>
 
             <p className="text-stone-300 text-sm sm:text-base leading-relaxed max-w-sm font-normal">
-              A family-owned lodge in Bharatpur-10, Chitwan offering clean AC rooms, 24/7 hot solar showers, fresh tandoori grills, and warm Nepalese hospitality.
+              A family-owned lodge in {contact.address}, Chitwan offering clean AC rooms, 24/7 hot solar showers, fresh tandoori grills, and warm Nepalese hospitality.
             </p>
 
             {/* Social Media Links */}
             <div className="pt-2 flex items-center gap-3">
               <a
-                href={SOCIAL_LINKS.facebook}
+                href={contact.facebookUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Motimahal Lodge Facebook Page"
@@ -60,7 +62,7 @@ export default function Footer() {
                 <FacebookIcon className="w-5 h-5" />
               </a>
               <a
-                href={SOCIAL_LINKS.instagram}
+                href={contact.instagramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Motimahal Lodge Instagram Page"
@@ -118,15 +120,15 @@ export default function Footer() {
             <ul className="space-y-3 text-stone-300 text-sm font-medium">
               <li className="flex items-start gap-2.5">
                 <MapPin className="h-4 w-4 text-brand-gold shrink-0 mt-1" />
-                <span>Bharatpur-10, Narayangarh, Chitwan, Nepal</span>
+                <span>{contact.address}, {contact.cityProvince}</span>
               </li>
               <li className="flex items-center gap-2.5">
                 <Phone className="h-4 w-4 text-brand-gold shrink-0" />
-                <span>+977 98550 12345</span>
+                <span>{contact.primaryPhone}</span>
               </li>
               <li className="flex items-center gap-2.5">
                 <Mail className="h-4 w-4 text-brand-gold shrink-0" />
-                <span>info@motimahallodge.com</span>
+                <span>{contact.email}</span>
               </li>
             </ul>
           </div>
@@ -137,15 +139,15 @@ export default function Footer() {
               Front Desk Support
             </h4>
             <p className="text-stone-300 text-sm leading-relaxed font-normal">
-              Our family front desk is available 24/7 for room inquiries, safari booking assistance, or travel directions.
+              Our family front desk is available {contact.openingHours.toLowerCase()} for room inquiries, safari booking assistance, or travel directions.
             </p>
             <div className="pt-1">
               <a
-                href="tel:+9779855012345"
+                href={`tel:${contact.primaryPhone.replace(/\s+/g, '')}`}
                 className="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-green hover:bg-brand-green-dark border border-footer-border text-white font-medium text-xs sm:text-sm rounded-md transition-colors shadow-xs"
               >
                 <Phone className="h-4 w-4 text-brand-gold" />
-                <span>Call +977 98550 12345</span>
+                <span>Call {contact.primaryPhone}</span>
               </a>
             </div>
           </div>

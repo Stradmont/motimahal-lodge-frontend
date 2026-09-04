@@ -9,6 +9,7 @@ import {
   Image as ImageIcon,
   Bed,
   Video,
+  Settings,
   LogOut,
   ExternalLink,
   ChevronLeft,
@@ -40,6 +41,11 @@ export const adminNavGroup = [
         href: '/admin/contact',
         icon: MessageSquare,
         badge: '3',
+      },
+      {
+        title: 'Contact & Location',
+        href: '/admin/settings',
+        icon: Settings,
       },
       {
         title: 'Gallery Media',

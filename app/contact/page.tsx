@@ -5,10 +5,10 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { MapPin, Mail, Phone, CheckCircle2, AlertCircle } from 'lucide-react';
 import { FacebookIcon, InstagramIcon } from '@/components/SocialIcons';
-import { SOCIAL_LINKS } from '@/lib/data';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useContactSettings } from '@/lib/contact-settings';
 
 const contactSchema = z.object({
   firstName: z
@@ -48,6 +48,7 @@ type ContactFormData = z.infer<typeof contactSchema>;
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
   const [submittedName, setSubmittedName] = useState('');
+  const contact = useContactSettings();
 
   const {
     register,
@@ -261,7 +262,7 @@ export default function ContactPage() {
                       Address
                     </h2>
                     <p className="text-stone-700 text-base leading-relaxed font-normal">
-                      Bharatpur-10, Narayangarh, Chitwan District, Bagmati Province, Nepal
+                      {contact.address}, {contact.cityProvince}
                     </p>
                   </div>
 
@@ -274,10 +275,10 @@ export default function ContactPage() {
                       Email address
                     </h2>
                     <a
-                      href="mailto:info@motimahallodge.com"
+                      href={`mailto:${contact.email}`}
                       className="text-brand-gold font-semibold text-base hover:underline block"
                     >
-                      info@motimahallodge.com
+                      {contact.email}
                     </a>
                   </div>
 
@@ -290,10 +291,10 @@ export default function ContactPage() {
                       Telephone
                     </h2>
                     <a
-                      href="tel:+9779855012345"
+                      href={`tel:${contact.primaryPhone.replace(/\s+/g, '')}`}
                       className="text-brand-gold font-bold text-xl hover:underline block"
                     >
-                      +977 98550 12345
+                      {contact.primaryPhone}
                     </a>
                   </div>
 
@@ -304,7 +305,7 @@ export default function ContactPage() {
                     </h2>
                     <div className="flex items-center gap-3">
                       <a
-                        href={SOCIAL_LINKS.facebook}
+                        href={contact.facebookUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#1877F2] hover:bg-[#166fe5] text-white rounded-md font-semibold text-xs sm:text-sm shadow-xs transition-colors"
@@ -313,7 +314,7 @@ export default function ContactPage() {
                         <span>Facebook</span>
                       </a>
                       <a
-                        href={SOCIAL_LINKS.instagram}
+                        href={contact.instagramUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] hover:opacity-95 text-white rounded-md font-semibold text-xs sm:text-sm shadow-xs transition-colors"
@@ -334,7 +335,7 @@ export default function ContactPage() {
         <section className="w-full h-112 bg-stone-200 border-b border-brand-border">
           <iframe
             title="Motimahal Lodge Location Map"
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3532.787687834571!2d84.428781!3d27.678951!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3994fb2193b2160d%3A0x6b4f74d0e68d0d0!2sBharatpur%2044200%2C%20Nepal!5e0!3m2!1sen!2snp!4v1700000000000!5m2!1sen!2snp"
+            src={contact.googleMapEmbedUrl}
             width="100%"
             height="100%"
             style={{ border: 0 }}

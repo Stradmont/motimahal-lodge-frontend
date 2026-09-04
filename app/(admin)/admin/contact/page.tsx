@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Eye, Archive, Trash2, AlertCircle } from 'lucide-react';
+import Link from 'next/link';
+import { Eye, Archive, Trash2, AlertCircle, Settings } from 'lucide-react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -208,6 +209,14 @@ export default function AdminContactPage() {
       <AdminPageHeader
         title="Contact Inquiries"
         description="Review guest messages, room reservation queries, and send email responses."
+        action={
+          <Link href="/admin/settings">
+            <Button size="sm" variant="outline" className="text-xs h-9">
+              <Settings className="w-3.5 h-3.5 mr-1.5" />
+              Manage Contact & Map Details
+            </Button>
+          </Link>
+        }
       />
 
       {/* Reusable Control & Search Bar */}

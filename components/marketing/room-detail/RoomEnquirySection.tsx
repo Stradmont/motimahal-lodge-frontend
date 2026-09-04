@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Room, ROOMS_DATA } from '@/lib/data';
+import { useContactSettings } from '@/lib/contact-settings';
 import { Phone, Mail, Minus, Plus, CheckCircle2, MessageSquare, AlertCircle, ChevronDown, Check } from 'lucide-react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -59,6 +60,7 @@ export default function RoomEnquirySection({
   activeBookingRoom,
   estimatedTotal,
 }: RoomEnquirySectionProps) {
+  const contact = useContactSettings();
   const [submitted, setSubmitted] = useState(false);
   const [submittedData, setSubmittedData] = useState<{ name: string; whatsapp: string }>({ name: '', whatsapp: '' });
   const [roomDropdownOpen, setRoomDropdownOpen] = useState(false);
@@ -78,7 +80,6 @@ export default function RoomEnquirySection({
     register,
     handleSubmit,
     formState: { errors },
-    setValue,
   } = useForm<EnquiryFormData>({
     resolver: zodResolver(enquirySchema),
     defaultValues: {
@@ -97,6 +98,8 @@ export default function RoomEnquirySection({
     setSubmitted(true);
   };
 
+  const whatsappCleanNumber = contact.whatsappNumber.replace(/[^0-9]/g, '');
+
   const whatsappMessage = encodeURIComponent(
     `Hello Motimahal Lodge,\nI would like to enquire about booking a stay:\n\n` +
     `• Name: ${submittedData.name || 'Guest'}\n` +
@@ -108,7 +111,7 @@ export default function RoomEnquirySection({
     `• Estimated Total: NPR ${estimatedTotal.toLocaleString()}`
   );
 
-  const whatsappUrl = `https://wa.me/9779855012345?text=${whatsappMessage}`;
+  const whatsappUrl = `https://wa.me/${whatsappCleanNumber}?text=${whatsappMessage}`;
 
   return (
     <section
@@ -138,10 +141,10 @@ export default function RoomEnquirySection({
                   Info & Bookings
                 </span>
                 <a
-                  href="tel:+9779855012345"
+                  href={`tel:${contact.primaryPhone.replace(/\s+/g, '')}`}
                   className="font-heading text-2xl sm:text-3xl font-bold text-brand-green hover:underline block"
                 >
-                  +977 98550 12345
+                  {contact.primaryPhone}
                 </a>
               </div>
             </div>
@@ -156,12 +159,12 @@ export default function RoomEnquirySection({
                   WhatsApp Instant Desk
                 </span>
                 <a
-                  href="https://wa.me/9779855012345"
+                  href={`https://wa.me/${whatsappCleanNumber}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="font-heading text-xl sm:text-2xl font-bold text-emerald-800 hover:underline block"
                 >
-                  +977 98550 12345
+                  {contact.whatsappNumber}
                 </a>
               </div>
             </div>
@@ -176,10 +179,10 @@ export default function RoomEnquirySection({
                   Info & Bookings Email
                 </span>
                 <a
-                  href="mailto:motimahallodge@gmail.com"
+                  href={`mailto:${contact.inquiryEmail || contact.email}`}
                   className="font-heading text-xl sm:text-2xl font-bold text-brand-green hover:underline block"
                 >
-                  motimahallodge@gmail.com
+                  {contact.inquiryEmail || contact.email}
                 </a>
               </div>
             </div>

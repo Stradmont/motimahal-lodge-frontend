@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Menu, Phone, MapPin } from 'lucide-react';
 import MobileNavDrawer, { NavItem } from './MobileNavDrawer';
+import { useContactSettings } from '@/lib/contact-settings';
 
 const DRAWER_NAV_ITEMS: NavItem[] = [
   { label: 'Home', href: '/' },
@@ -18,6 +19,7 @@ export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
+  const contact = useContactSettings();
 
   useEffect(() => {
     let lastScrollY = window.scrollY;
@@ -82,16 +84,16 @@ export default function Navbar() {
             {/* Location Indicator */}
             <div className="hidden lg:flex items-center gap-1.5 text-xs sm:text-sm text-white/90 font-medium">
               <MapPin className="h-4 w-4 text-brand-gold shrink-0" />
-              <span>Chitwan, Nepal</span>
+              <span>{contact.address.split(',')[0]}</span>
             </div>
 
             {/* Phone Contact Option */}
             <a
-              href="tel:+9779855012345"
+              href={`tel:${contact.primaryPhone.replace(/\s+/g, '')}`}
               className="hidden md:flex items-center gap-1.5 text-xs sm:text-sm font-medium text-white/95 hover:text-white transition-colors"
             >
               <Phone className="h-4 w-4 text-brand-gold shrink-0" />
-              <span>+977 98550 12345</span>
+              <span>{contact.primaryPhone}</span>
             </a>
 
             {/* Refined Book Stay Link */}
