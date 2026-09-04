@@ -47,9 +47,7 @@ export default function ExpandableImageCard({
           <span className="text-white font-medium text-xs sm:text-sm drop-shadow-xs truncate pr-2">
             {title || caption}
           </span>
-          <span className="text-[11px] text-stone-300 font-semibold uppercase tracking-wider hidden sm:inline-block opacity-0 group-hover:opacity-100 transition-opacity duration-300 shrink-0">
-            Click to view full screen
-          </span>
+       
         </div>
       )}
     </div>

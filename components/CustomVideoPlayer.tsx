@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { Play, Pause, Volume2, VolumeX, Maximize } from 'lucide-react';
 
 interface CustomVideoPlayerProps {
@@ -27,6 +27,17 @@ export default function CustomVideoPlayer({
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [showControls, setShowControls] = useState(false);
+
+  const enableAudio = useCallback(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    video.muted = false;
+    setIsMuted(false);
+    if (video.paused) {
+      video.play().then(() => setIsPlaying(true)).catch(() => {});
+    }
+  }, []);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -55,34 +66,37 @@ export default function CustomVideoPlayer({
               setIsPlaying(false);
             });
 
-          // Automatically unmute audio on first user interaction anywhere on the page
-          const enableAudioOnUserInteraction = () => {
+          // Enable audio on first user interaction anywhere on the page
+          const handleUserInteraction = () => {
             if (videoRef.current) {
               videoRef.current.muted = false;
               setIsMuted(false);
             }
-            window.removeEventListener('click', enableAudioOnUserInteraction);
-            window.removeEventListener('keydown', enableAudioOnUserInteraction);
-            window.removeEventListener('touchstart', enableAudioOnUserInteraction);
           };
 
-          window.addEventListener('click', enableAudioOnUserInteraction, { once: true });
-          window.addEventListener('keydown', enableAudioOnUserInteraction, { once: true });
-          window.addEventListener('touchstart', enableAudioOnUserInteraction, { once: true });
+          window.addEventListener('click', handleUserInteraction, { once: true });
+          window.addEventListener('touchstart', handleUserInteraction, { once: true });
+          window.addEventListener('keydown', handleUserInteraction, { once: true });
         });
     }
   }, [autoPlay]);
 
-  const togglePlay = () => {
+  const handleContainerClick = () => {
     const video = videoRef.current;
     if (!video) return;
 
-    if (video.paused) {
-      video.play();
-      setIsPlaying(true);
+    if (isMuted) {
+      // Unmute audio immediately on video container click instead of pausing
+      enableAudio();
     } else {
-      video.pause();
-      setIsPlaying(false);
+      // Toggle play/pause if audio is already active
+      if (video.paused) {
+        video.play();
+        setIsPlaying(true);
+      } else {
+        video.pause();
+        setIsPlaying(false);
+      }
     }
   };
 
@@ -91,8 +105,9 @@ export default function CustomVideoPlayer({
     const video = videoRef.current;
     if (!video) return;
 
-    video.muted = !video.muted;
-    setIsMuted(video.muted);
+    const newMutedState = !video.muted;
+    video.muted = newMutedState;
+    setIsMuted(newMutedState);
   };
 
   const handleTimeUpdate = () => {
@@ -151,7 +166,7 @@ export default function CustomVideoPlayer({
       className={`relative group overflow-hidden bg-black rounded-lg border border-brand-border ${className}`}
       onMouseEnter={() => setShowControls(true)}
       onMouseLeave={() => setShowControls(false)}
-      onClick={togglePlay}
+      onClick={handleContainerClick}
     >
       <video
         ref={videoRef}
@@ -165,6 +180,22 @@ export default function CustomVideoPlayer({
         className="w-full h-full object-cover cursor-pointer"
       />
 
+      {/* Prominent "Tap for sound" overlay badge when muted */}
+      {isMuted && (
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            enableAudio();
+          }}
+          aria-label="Tap to turn on sound"
+          className="absolute top-4 right-4 z-20 flex items-center gap-2 px-3.5 py-2 rounded-full bg-brand-gold text-brand-dark font-semibold text-xs sm:text-sm shadow-xl hover:bg-yellow-400 transition-all duration-300 transform hover:scale-105 active:scale-95 cursor-pointer animate-pulse"
+        >
+          <VolumeX className="h-4 w-4 sm:h-5 sm:w-5" />
+          <span>Tap for sound</span>
+        </button>
+      )}
+
       {/* Floating Centered Overlay Play/Pause Button */}
       <div
         className={`absolute inset-0 flex items-center justify-center pointer-events-none transition-opacity duration-300 ${
@@ -175,7 +206,19 @@ export default function CustomVideoPlayer({
           type="button"
           onClick={(e) => {
             e.stopPropagation();
-            togglePlay();
+            if (isMuted) {
+              enableAudio();
+            } else {
+              const video = videoRef.current;
+              if (!video) return;
+              if (video.paused) {
+                video.play();
+                setIsPlaying(true);
+              } else {
+                video.pause();
+                setIsPlaying(false);
+              }
+            }
           }}
           aria-label={isPlaying ? 'Pause video' : 'Play video'}
           className="pointer-events-auto p-4 sm:p-5 rounded-full bg-black/50 text-white hover:bg-brand-green border border-white/20 shadow-lg backdrop-blur-md transform transition-all duration-300 hover:scale-110 cursor-pointer"
@@ -211,7 +254,18 @@ export default function CustomVideoPlayer({
           <div className="flex items-center gap-3">
             <button
               type="button"
-              onClick={togglePlay}
+              onClick={(e) => {
+                e.stopPropagation();
+                const video = videoRef.current;
+                if (!video) return;
+                if (video.paused) {
+                  video.play();
+                  setIsPlaying(true);
+                } else {
+                  video.pause();
+                  setIsPlaying(false);
+                }
+              }}
               aria-label={isPlaying ? 'Pause' : 'Play'}
               className="hover:text-brand-gold transition-colors cursor-pointer"
             >
@@ -222,9 +276,16 @@ export default function CustomVideoPlayer({
               type="button"
               onClick={toggleMute}
               aria-label={isMuted ? 'Unmute' : 'Mute'}
-              className="hover:text-brand-gold transition-colors cursor-pointer"
+              className="hover:text-brand-gold transition-colors cursor-pointer flex items-center gap-1.5"
             >
-              {isMuted ? <VolumeX className="h-4 w-4 sm:h-5 sm:w-5" /> : <Volume2 className="h-4 w-4 sm:h-5 sm:w-5" />}
+              {isMuted ? (
+                <>
+                  <VolumeX className="h-4 w-4 sm:h-5 sm:w-5 text-brand-gold" />
+                  <span className="text-brand-gold font-medium text-xs hidden sm:inline">Unmute</span>
+                </>
+              ) : (
+                <Volume2 className="h-4 w-4 sm:h-5 sm:w-5" />
+              )}
             </button>
 
             <span className="font-mono text-[11px] sm:text-xs text-white/80">
@@ -247,3 +308,4 @@ export default function CustomVideoPlayer({
     </div>
   );
 }
+
