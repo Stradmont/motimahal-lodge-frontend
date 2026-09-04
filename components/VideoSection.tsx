@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { X, ExternalLink, Play } from 'lucide-react';
+import { X, ExternalLink } from 'lucide-react';
 import { InstagramIcon } from '@/components/SocialIcons';
 
 export interface VideoItem {
@@ -109,20 +109,6 @@ export default function VideoSection() {
                   alt={video.title}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
-
-                {/* Hover Play Button Badge */}
-                <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
-                  <div className="p-3.5 rounded-full bg-brand-green text-white border border-white/30 backdrop-blur-xs transform scale-90 group-hover:scale-100 transition-all duration-300 shadow-lg flex items-center gap-1.5 px-4">
-                    <Play className="h-4 w-4 fill-current" />
-                    <span className="text-xs font-semibold uppercase tracking-wider">Watch Reel</span>
-                  </div>
-                </div>
-
-                {/* Instagram Badge */}
-                <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-xs text-white text-[10px] sm:text-xs font-semibold px-2.5 py-1 rounded-full border border-white/20 flex items-center gap-1.5 shadow-xs">
-                  <InstagramIcon className="w-3 h-3" />
-                  <span>Instagram Reel</span>
-                </div>
               </div>
 
               {/* Caption */}
