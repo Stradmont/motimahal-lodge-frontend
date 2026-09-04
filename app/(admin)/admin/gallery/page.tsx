@@ -143,7 +143,7 @@ export default function AdminGalleryPage() {
         <Button
           size="sm"
           onClick={() => setIsAddModalOpen(true)}
-          className="shrink-0"
+          className="shrink-0 text-sm h-9"
         >
           <Plus className="w-4 h-4 mr-1.5" />
           Add Photo
@@ -152,14 +152,14 @@ export default function AdminGalleryPage() {
 
       {/* 2. Control Bar */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-3 py-1">
-        <div className="flex items-center gap-1 w-full sm:w-auto overflow-x-auto">
+        <div className="flex items-center gap-1.5 w-full sm:w-auto overflow-x-auto">
           {['All', 'Rooms', 'Restaurant', 'Riverfront', 'Amenities', 'Events'].map((cat) => (
             <Button
               key={cat}
               variant={activeCategory === cat ? 'default' : 'ghost'}
               size="sm"
               onClick={() => setActiveCategory(cat)}
-              className="text-xs h-8 whitespace-nowrap"
+              className="text-sm h-9 whitespace-nowrap"
             >
               {cat}
             </Button>
@@ -173,7 +173,7 @@ export default function AdminGalleryPage() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search photo titles..."
-            className="pl-8 h-8 text-sm bg-white dark:bg-zinc-950"
+            className="pl-8 h-9 text-sm bg-white dark:bg-zinc-950"
           />
         </div>
       </div>
@@ -248,7 +248,7 @@ export default function AdminGalleryPage() {
 
           <div className="space-y-3">
             <div>
-              <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">
+              <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                 Photo Title
               </label>
               <Input
@@ -261,7 +261,7 @@ export default function AdminGalleryPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">
+              <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                 Category
               </label>
               <select
@@ -280,7 +280,7 @@ export default function AdminGalleryPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">
+              <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                 Image URL
               </label>
               <Input

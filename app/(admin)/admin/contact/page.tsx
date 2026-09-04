@@ -187,7 +187,7 @@ export default function AdminContactPage() {
       {/* 2. Control Bar: Search & Status Filters */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-3 py-1">
         {/* Status Filter Tabs */}
-        <div className="flex items-center gap-1 w-full sm:w-auto">
+        <div className="flex items-center gap-1.5 w-full sm:w-auto">
           {(['all', 'unread', 'replied', 'archived'] as const).map((filter) => {
             const isActive = selectedFilter === filter;
             return (
@@ -196,7 +196,7 @@ export default function AdminContactPage() {
                 variant={isActive ? 'default' : 'ghost'}
                 size="sm"
                 onClick={() => setSelectedFilter(filter)}
-                className="capitalize text-xs h-8"
+                className="capitalize text-sm h-9"
               >
                 {filter} {filter === 'unread' && unreadCount > 0 ? `(${unreadCount})` : ''}
               </Button>
@@ -212,7 +212,7 @@ export default function AdminContactPage() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search guest name, email, subject..."
-            className="pl-8 h-8 text-sm bg-white dark:bg-zinc-950"
+            className="pl-8 h-9 text-sm bg-white dark:bg-zinc-950"
           />
         </div>
       </div>
@@ -250,12 +250,12 @@ export default function AdminContactPage() {
                         {sub.name}
                       </span>
                       {sub.isUrgent && (
-                        <Badge variant="destructive" className="text-[10px] px-1.5 py-0">
+                        <Badge variant="destructive" className="text-xs px-1.5 py-0">
                           Urgent
                         </Badge>
                       )}
                     </div>
-                    <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
+                    <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-0.5">
                       {sub.email} • {sub.phone}
                     </p>
                   </TableCell>
@@ -271,7 +271,7 @@ export default function AdminContactPage() {
                   </TableCell>
 
                   {/* Date */}
-                  <TableCell className="text-xs text-zinc-500 whitespace-nowrap">
+                  <TableCell className="text-sm text-zinc-500 whitespace-nowrap">
                     {sub.date}
                   </TableCell>
 
@@ -348,7 +348,7 @@ export default function AdminContactPage() {
             </div>
 
             <form onSubmit={handleSendReply} className="space-y-3 pt-2">
-              <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+              <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
                 Send Reply Email to {activeMessage.email}
               </label>
               <textarea

@@ -162,7 +162,7 @@ export default function AdminRoomsPage() {
         <Button
           size="sm"
           onClick={() => setIsAddModalOpen(true)}
-          className="shrink-0"
+          className="shrink-0 text-sm h-9"
         >
           <Plus className="w-4 h-4 mr-1.5" />
           Add Room
@@ -171,14 +171,14 @@ export default function AdminRoomsPage() {
 
       {/* 2. Search & Filter Bar */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-3 py-1">
-        <div className="flex items-center gap-1 w-full sm:w-auto overflow-x-auto">
+        <div className="flex items-center gap-1.5 w-full sm:w-auto overflow-x-auto">
           {['All', 'Deluxe', 'Suite', 'Family', 'Standard'].map((t) => (
             <Button
               key={t}
               variant={filterType === t ? 'default' : 'ghost'}
               size="sm"
               onClick={() => setFilterType(t)}
-              className="text-xs h-8"
+              className="text-sm h-9"
             >
               {t}
             </Button>
@@ -192,7 +192,7 @@ export default function AdminRoomsPage() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Filter room name..."
-            className="pl-8 h-8 text-sm bg-white dark:bg-zinc-950"
+            className="pl-8 h-9 text-sm bg-white dark:bg-zinc-950"
           />
         </div>
       </div>
@@ -296,7 +296,7 @@ export default function AdminRoomsPage() {
 
           <div className="space-y-3">
             <div>
-              <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">
+              <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                 Room Title
               </label>
               <Input
@@ -310,7 +310,7 @@ export default function AdminRoomsPage() {
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">
+                <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                   Category
                 </label>
                 <select
@@ -326,7 +326,7 @@ export default function AdminRoomsPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">
+                <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                   Rate per Night (NPR)
                 </label>
                 <Input
@@ -339,7 +339,7 @@ export default function AdminRoomsPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">
+              <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
                 Image URL
               </label>
               <Input
