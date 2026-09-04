@@ -1,9 +1,16 @@
 'use client';
 
 import React, { useState } from 'react';
+import { usePathname } from 'next/navigation';
 
 export default function WhatsAppButton() {
   const [isHovered, setIsHovered] = useState(false);
+  const pathname = usePathname();
+
+  // Hide WhatsApp button inside admin portal
+  if (pathname?.startsWith('/admin')) {
+    return null;
+  }
 
   // Motimahal Lodge WhatsApp direct contact URL
   const whatsappUrl =

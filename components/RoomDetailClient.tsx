@@ -8,12 +8,12 @@ import WhatToExpectSection from '@/components/WhatToExpectSection';
 import CtaSection from '@/components/CtaSection';
 import { Room, ROOMS_DATA } from '@/lib/data';
 
-import RoomDetailHero from './room-detail/RoomDetailHero';
-import RoomDetailHeader from './room-detail/RoomDetailHeader';
-import RoomSpotlightGallery from './room-detail/RoomSpotlightGallery';
-import RoomAmenitiesSection from './room-detail/RoomAmenitiesSection';
-import RoomEnquirySection from './room-detail/RoomEnquirySection';
-import RoomStickyBookingBar from './room-detail/RoomStickyBookingBar';
+import RoomDetailHero from './marketing/room-detail/RoomDetailHero';
+import RoomDetailHeader from './marketing/room-detail/RoomDetailHeader';
+import RoomSpotlightGallery from './marketing/room-detail/RoomSpotlightGallery';
+import RoomAmenitiesSection from './marketing/room-detail/RoomAmenitiesSection';
+import RoomEnquirySection from './marketing/room-detail/RoomEnquirySection';
+import RoomStickyBookingBar from './marketing/room-detail/RoomStickyBookingBar';
 
 interface RoomDetailClientProps {
   room: Room;
