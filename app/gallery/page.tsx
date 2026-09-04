@@ -42,7 +42,7 @@ export default function GalleryPage() {
       <Navbar />
 
       <main className="flex-1">
-        
+
         {/* 1. HERO SECTION WITH NARAYANI RIVER BACKGROUND IMAGE */}
         <section className="relative w-full h-[60vh] min-h-[440px] flex items-center justify-center overflow-hidden bg-stone-900">
           <div
@@ -74,7 +74,7 @@ export default function GalleryPage() {
           }}
         >
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            
+
             {/* Responsive Masonry-Style Grid Arrangement */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
               {GALLERY_DATA.map((item, idx) => (
@@ -92,7 +92,7 @@ export default function GalleryPage() {
 
                   {/* Subtle Dark Backdrop Overlay */}
                   <div className="absolute inset-0 bg-black/45 backdrop-blur-[1px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">
-                    
+
                     {/* Centered Expand Icon Button */}
                     <div className="absolute inset-0 flex items-center justify-center p-4">
                       <div className="p-3.5 rounded-full bg-black/40 backdrop-blur-xs text-white border border-white/30 shadow-lg scale-90 group-hover:scale-100 opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out">
@@ -102,10 +102,10 @@ export default function GalleryPage() {
 
                     {/* Bottom Category & Title Label */}
                     <div className="absolute bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-black/80 via-black/40 to-transparent translate-y-2 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out flex flex-col justify-end space-y-1">
-                      <span className="text-[10px] sm:text-[11px] font-sans font-bold uppercase tracking-widest text-[#E6DFD5] block">
+                      <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-[#E6DFD5] block">
                         {item.category}
                       </span>
-                      <h3 className="font-sans text-sm sm:text-base font-bold uppercase tracking-wider text-white leading-snug line-clamp-1 drop-shadow-xs">
+                      <h3 className="font-heading text-base sm:text-lg font-bold text-white leading-snug line-clamp-1 drop-shadow-xs">
                         {item.title}
                       </h3>
                     </div>
@@ -155,7 +155,7 @@ export default function GalleryPage() {
       {/* 5. FULLSCREEN LIGHTBOX MODAL */}
       {activeItem && lightboxIndex !== null && (
         <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 sm:p-8">
-          
+
           {/* Backdrop Click to Close */}
           <div
             className="absolute inset-0"
@@ -207,17 +207,19 @@ export default function GalleryPage() {
               />
             </div>
 
-            {/* Caption & Counter Bar */}
-            <div className="text-center text-white space-y-1 bg-black/60 px-6 py-3 rounded-full border border-white/10 backdrop-blur-xs max-w-2xl">
-              <span className="text-[11px] font-semibold text-[#A8BBA2] uppercase tracking-widest block">
-                {activeItem.category} • ({lightboxIndex + 1} of {GALLERY_DATA.length})
+            {/* Caption & Counter Card - High Contrast Pure White Text */}
+            <div className="text-center text-white space-y-2 bg-black/90 border border-white/20 px-6 py-4.5 rounded-xl backdrop-blur-md max-w-2xl w-full shadow-2xl">
+              <span className="text-xs font-bold text-amber-300 uppercase tracking-widest block drop-shadow-xs">
+                {activeItem.category} • Image {lightboxIndex + 1} of {GALLERY_DATA.length}
               </span>
-              <h3 className="font-heading text-xl font-bold text-white">
+              <h3 className="text-xl sm:text-2xl font-bold text-white drop-shadow-sm leading-snug">
                 {activeItem.title}
               </h3>
-              <p className="text-xs text-stone-300 font-normal">
-                {activeItem.caption}
-              </p>
+              {activeItem.caption && (
+                <p className="text-white/95 text-sm sm:text-base font-normal leading-relaxed max-w-xl mx-auto pt-0.5 drop-shadow-xs">
+                  {activeItem.caption}
+                </p>
+              )}
             </div>
           </div>
 

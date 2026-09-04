@@ -62,13 +62,11 @@ export default function Navbar() {
     <>
       {/* Modern Boutique Hospitality Navbar */}
       <header
-        className={`fixed top-0 left-0 right-0 z-40 w-full transition-all duration-300 ease-in-out ${
-          isVisible ? 'translate-y-0' : '-translate-y-full'
-        } ${
-          isScrolled
+        className={`fixed top-0 left-0 right-0 z-40 w-full transition-all duration-300 ease-in-out ${isVisible ? 'translate-y-0' : '-translate-y-full'
+          } ${isScrolled
             ? 'bg-[#162B20]/95 backdrop-blur-md border-b border-[#2D4D3B]/40 py-3.5 sm:py-4 px-4 sm:px-8 lg:px-12 shadow-sm text-white'
             : 'bg-transparent text-white py-5 sm:py-6 px-4 sm:px-8 lg:px-12'
-        }`}
+          }`}
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between">
 
@@ -92,7 +90,7 @@ export default function Navbar() {
 
           {/* RIGHT: Location + Phone + Book Now CTA + Hamburger Menu Toggle */}
           <div className="flex items-center gap-4 sm:gap-6">
-            
+
             {/* Location Indicator */}
             <div className="hidden lg:flex items-center gap-1.5 text-xs sm:text-sm text-white/90 font-medium tracking-wide drop-shadow-xs">
               <MapPin className="h-4 w-4 text-[#C88A3B] shrink-0" />
@@ -127,7 +125,7 @@ export default function Navbar() {
               aria-label="Open Navigation Menu"
             >
               <Menu className="h-6 w-6 sm:h-7 sm:w-7 text-white group-hover:scale-105 transition-transform" />
-             
+              w
             </button>
 
           </div>
@@ -138,7 +136,7 @@ export default function Navbar() {
       {/* Side Slide-Over Navigation Drawer */}
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-50 flex justify-end bg-black/50 backdrop-blur-xs transition-opacity duration-300">
-          
+
           {/* Backdrop Click to Close */}
           <div
             className="fixed inset-0"
@@ -154,7 +152,7 @@ export default function Navbar() {
               backgroundRepeat: 'repeat',
             }}
           >
-            
+
             {/* Drawer Header with Logo & Close Button */}
             <div className="p-6 sm:p-8 border-b border-[#E6DFD5] flex items-center justify-between">
               <Link
@@ -196,9 +194,8 @@ export default function Navbar() {
                     key={item.label}
                     href={item.href}
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`block font-heading text-base sm:text-lg font-bold uppercase tracking-wider transition-colors ${
-                      active ? 'text-[#1F3A2B]' : 'text-[#2D2B2A] hover:text-[#1F3A2B]'
-                    }`}
+                    className={`block font-heading text-base sm:text-lg font-bold uppercase tracking-wider transition-colors ${active ? 'text-[#1F3A2B]' : 'text-[#2D2B2A] hover:text-[#1F3A2B]'
+                      }`}
                   >
                     {item.label}
                   </Link>
