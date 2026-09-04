@@ -18,7 +18,7 @@ export default function AvailabilityBar() {
 
   return (
     <div className="w-full bg-brand-green-dark text-white p-4 sm:p-6 rounded-lg shadow-xl border border-footer-border">
-      <form onSubmit={handleSearch} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-end">
+      <form onSubmit={handleSearch} noValidate className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-end">
         {/* Check-In */}
         <div className="space-y-1">
           <label className="text-[11px] font-semibold text-amber-200/90 flex items-center gap-1.5">
@@ -30,7 +30,6 @@ export default function AvailabilityBar() {
             value={checkIn}
             onChange={(e) => setCheckIn(e.target.value)}
             className="w-full bg-brand-green border border-footer-border text-white text-xs px-3 py-2.5 rounded focus:outline-none focus:border-brand-gold"
-            required
           />
         </div>
 
@@ -45,7 +44,6 @@ export default function AvailabilityBar() {
             value={checkOut}
             onChange={(e) => setCheckOut(e.target.value)}
             className="w-full bg-brand-green border border-footer-border text-white text-xs px-3 py-2.5 rounded focus:outline-none focus:border-brand-gold"
-            required
           />
         </div>
 

@@ -2,7 +2,19 @@
 
 import React, { useState } from 'react';
 import { Room, ROOMS_DATA } from '@/lib/data';
-import { Phone, Mail, Minus, Plus, CheckCircle2, MessageSquare, Send } from 'lucide-react';
+import { Phone, Mail, Minus, Plus, CheckCircle2, MessageSquare, AlertCircle } from 'lucide-react';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+const enquirySchema = z.object({
+  fullName: z.string().trim().min(2, { message: 'Please enter your full name' }),
+  whatsappNumber: z.string().trim().min(7, { message: 'Please enter a valid phone or WhatsApp number' }),
+  checkIn: z.string().min(1, { message: 'Check-in date is required' }),
+  checkOut: z.string().min(1, { message: 'Check-out date is required' }),
+});
+
+type EnquiryFormData = z.infer<typeof enquirySchema>;
 
 interface RoomEnquirySectionProps {
   room: Room;
@@ -39,19 +51,36 @@ export default function RoomEnquirySection({
   activeBookingRoom,
   estimatedTotal,
 }: RoomEnquirySectionProps) {
-  const [fullName, setFullName] = useState('');
-  const [whatsappNumber, setWhatsappNumber] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [submittedData, setSubmittedData] = useState<{ name: string; whatsapp: string }>({ name: '', whatsapp: '' });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+  } = useForm<EnquiryFormData>({
+    resolver: zodResolver(enquirySchema),
+    defaultValues: {
+      fullName: '',
+      whatsappNumber: '',
+      checkIn: checkIn || todayStr,
+      checkOut: checkOut || todayStr,
+    },
+    mode: 'onBlur',
+  });
+
+  const onEnquirySubmit = (data: EnquiryFormData) => {
+    setSubmittedData({ name: data.fullName, whatsapp: data.whatsappNumber });
+    setCheckIn(data.checkIn);
+    setCheckOut(data.checkOut);
     setSubmitted(true);
   };
 
   const whatsappMessage = encodeURIComponent(
     `Hello Motimahal Lodge,\nI would like to enquire about booking a stay:\n\n` +
-    `• Name: ${fullName || 'Guest'}\n` +
-    `• WhatsApp / Phone: ${whatsappNumber || 'N/A'}\n` +
+    `• Name: ${submittedData.name || 'Guest'}\n` +
+    `• WhatsApp / Phone: ${submittedData.whatsapp || 'N/A'}\n` +
     `• Room Type: ${activeBookingRoom.name}\n` +
     `• Check-in Date: ${checkIn}\n` +
     `• Check-out Date: ${checkOut} (${nights} ${nights === 1 ? 'night' : 'nights'})\n` +
@@ -147,7 +176,7 @@ export default function RoomEnquirySection({
                   Enquiry Submitted Successfully!
                 </h3>
                 <p className="text-stone-700 text-base max-w-md mx-auto leading-relaxed">
-                  Thank you, <strong>{fullName}</strong>! We have received your booking enquiry for <strong>{activeBookingRoom.name}</strong> ({checkIn} to {checkOut}).
+                  Thank you, <strong>{submittedData.name}</strong>! We have received your booking enquiry for <strong>{activeBookingRoom.name}</strong> ({checkIn} to {checkOut}).
                 </p>
 
                 <div className="pt-3 flex flex-wrap items-center justify-center gap-3">
@@ -170,7 +199,7 @@ export default function RoomEnquirySection({
                 </div>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-5">
+              <form onSubmit={handleSubmit(onEnquirySubmit)} noValidate className="space-y-5">
                 {/* Full Name & WhatsApp Number Inputs */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div>
@@ -178,11 +207,17 @@ export default function RoomEnquirySection({
                     <input
                       type="text"
                       placeholder="e.g. Ram Bahadur Shrestha"
-                      value={fullName}
-                      onChange={(e) => setFullName(e.target.value)}
-                      className="w-full bg-brand-surface border border-brand-border rounded-lg px-4 py-3 text-base text-stone-900 focus:outline-none focus:border-brand-green"
-                      required
+                      {...register('fullName')}
+                      className={`w-full bg-brand-surface border ${
+                        errors.fullName ? 'border-red-500 focus:border-red-600' : 'border-brand-border focus:border-brand-green'
+                      } rounded-lg px-4 py-3 text-base text-stone-900 focus:outline-none`}
                     />
+                    {errors.fullName && (
+                      <p className="text-xs text-red-600 font-medium mt-1 flex items-center gap-1">
+                        <AlertCircle className="w-3.5 h-3.5" />
+                        {errors.fullName.message}
+                      </p>
+                    )}
                   </div>
 
                   <div>
@@ -190,11 +225,17 @@ export default function RoomEnquirySection({
                     <input
                       type="tel"
                       placeholder="e.g. +977 98550 12345"
-                      value={whatsappNumber}
-                      onChange={(e) => setWhatsappNumber(e.target.value)}
-                      className="w-full bg-brand-surface border border-brand-border rounded-lg px-4 py-3 text-base text-stone-900 focus:outline-none focus:border-brand-green"
-                      required
+                      {...register('whatsappNumber')}
+                      className={`w-full bg-brand-surface border ${
+                        errors.whatsappNumber ? 'border-red-500 focus:border-red-600' : 'border-brand-border focus:border-brand-green'
+                      } rounded-lg px-4 py-3 text-base text-stone-900 focus:outline-none`}
                     />
+                    {errors.whatsappNumber && (
+                      <p className="text-xs text-red-600 font-medium mt-1 flex items-center gap-1">
+                        <AlertCircle className="w-3.5 h-3.5" />
+                        {errors.whatsappNumber.message}
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -205,11 +246,19 @@ export default function RoomEnquirySection({
                     <input
                       type="date"
                       min={todayStr}
-                      value={checkIn}
-                      onChange={(e) => setCheckIn(e.target.value)}
-                      className="w-full bg-brand-surface border border-brand-border rounded-lg px-4 py-3 text-base text-stone-900 focus:outline-none focus:border-brand-green"
-                      required
+                      {...register('checkIn', {
+                        onChange: (e) => setCheckIn(e.target.value),
+                      })}
+                      className={`w-full bg-brand-surface border ${
+                        errors.checkIn ? 'border-red-500 focus:border-red-600' : 'border-brand-border focus:border-brand-green'
+                      } rounded-lg px-4 py-3 text-base text-stone-900 focus:outline-none`}
                     />
+                    {errors.checkIn && (
+                      <p className="text-xs text-red-600 font-medium mt-1 flex items-center gap-1">
+                        <AlertCircle className="w-3.5 h-3.5" />
+                        {errors.checkIn.message}
+                      </p>
+                    )}
                   </div>
 
                   <div>
@@ -217,11 +266,19 @@ export default function RoomEnquirySection({
                     <input
                       type="date"
                       min={checkIn || todayStr}
-                      value={checkOut}
-                      onChange={(e) => setCheckOut(e.target.value)}
-                      className="w-full bg-brand-surface border border-brand-border rounded-lg px-4 py-3 text-base text-stone-900 focus:outline-none focus:border-brand-green"
-                      required
+                      {...register('checkOut', {
+                        onChange: (e) => setCheckOut(e.target.value),
+                      })}
+                      className={`w-full bg-brand-surface border ${
+                        errors.checkOut ? 'border-red-500 focus:border-red-600' : 'border-brand-border focus:border-brand-green'
+                      } rounded-lg px-4 py-3 text-base text-stone-900 focus:outline-none`}
                     />
+                    {errors.checkOut && (
+                      <p className="text-xs text-red-600 font-medium mt-1 flex items-center gap-1">
+                        <AlertCircle className="w-3.5 h-3.5" />
+                        {errors.checkOut.message}
+                      </p>
+                    )}
                   </div>
                 </div>
 
