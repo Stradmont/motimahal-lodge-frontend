@@ -36,8 +36,8 @@ export default function RoomsPage() {
           </div>
         </section>
 
-        {/* 2. ROOMS LISTING SECTION */}
-        <section className="py-16 sm:py-24 bg-brand-surface border-b border-brand-border">
+        {/* 2. ROOMS LISTING SECTION WITH backs.png BACKGROUND TEXTURE */}
+        <section className="py-16 sm:py-24 bg-texture border-b border-brand-border">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12">
             <div className="text-center max-w-3xl mx-auto space-y-3">
               <span className="text-brand-green text-xs sm:text-sm font-semibold uppercase tracking-[0.2em] block">
