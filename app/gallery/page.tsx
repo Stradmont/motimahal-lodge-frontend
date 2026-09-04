@@ -102,10 +102,10 @@ export default function GalleryPage() {
 
                     {/* Bottom Category & Title Label */}
                     <div className="absolute bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-black/80 via-black/40 to-transparent translate-y-2 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out flex flex-col justify-end space-y-1">
-                      <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-[#E6DFD5] block">
+                      <span className="text-[10px] sm:text-[11px] font-sans font-bold uppercase tracking-widest text-[#E6DFD5] block">
                         {item.category}
                       </span>
-                      <h3 className="font-heading text-base sm:text-lg font-bold text-white leading-snug line-clamp-1 drop-shadow-xs">
+                      <h3 className="font-sans text-sm sm:text-base font-bold uppercase tracking-wider text-white leading-snug line-clamp-1 drop-shadow-xs">
                         {item.title}
                       </h3>
                     </div>

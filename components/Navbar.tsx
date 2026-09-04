@@ -127,9 +127,7 @@ export default function Navbar() {
               aria-label="Open Navigation Menu"
             >
               <Menu className="h-6 w-6 sm:h-7 sm:w-7 text-white group-hover:scale-105 transition-transform" />
-              <span className="hidden sm:inline-block text-xs sm:text-sm font-bold uppercase tracking-widest text-white/95">
-                Menu
-              </span>
+             
             </button>
 
           </div>
