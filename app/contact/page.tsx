@@ -11,12 +11,36 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 const contactSchema = z.object({
-  firstName: z.string().trim().min(2, { message: 'First name must be at least 2 characters' }),
-  lastName: z.string().trim().min(2, { message: 'Last name must be at least 2 characters' }),
-  email: z.string().trim().email({ message: 'Please enter a valid email address' }),
-  telephone: z.string().trim().min(7, { message: 'Please enter a valid phone number (min 7 digits)' }),
-  subject: z.string().trim().min(3, { message: 'Subject must be at least 3 characters' }),
-  message: z.string().trim().min(10, { message: 'Message must be at least 10 characters' }),
+  firstName: z
+    .string()
+    .trim()
+    .min(1, { message: 'First name is required' })
+    .min(2, { message: 'First name must be at least 2 characters' }),
+  lastName: z
+    .string()
+    .trim()
+    .min(1, { message: 'Last name is required' })
+    .min(2, { message: 'Last name must be at least 2 characters' }),
+  email: z
+    .string()
+    .trim()
+    .min(1, { message: 'Email address is required' })
+    .email({ message: 'Please enter a valid email address' }),
+  telephone: z
+    .string()
+    .trim()
+    .min(1, { message: 'Phone number is required' })
+    .min(7, { message: 'Please enter a valid phone number (min 7 digits)' }),
+  subject: z
+    .string()
+    .trim()
+    .min(1, { message: 'Subject is required' })
+    .min(3, { message: 'Subject must be at least 3 characters' }),
+  message: z
+    .string()
+    .trim()
+    .min(1, { message: 'Message is required' })
+    .min(10, { message: 'Message must be at least 10 characters' }),
 });
 
 type ContactFormData = z.infer<typeof contactSchema>;

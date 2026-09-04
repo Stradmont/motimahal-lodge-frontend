@@ -8,10 +8,18 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 const enquirySchema = z.object({
-  fullName: z.string().trim().min(2, { message: 'Please enter your full name' }),
-  whatsappNumber: z.string().trim().min(7, { message: 'Please enter a valid phone or WhatsApp number' }),
-  checkIn: z.string().min(1, { message: 'Check-in date is required' }),
-  checkOut: z.string().min(1, { message: 'Check-out date is required' }),
+  fullName: z
+    .string()
+    .trim()
+    .min(1, { message: 'Full name is required' })
+    .min(2, { message: 'Full name must be at least 2 characters' }),
+  whatsappNumber: z
+    .string()
+    .trim()
+    .min(1, { message: 'Phone or WhatsApp number is required' })
+    .min(7, { message: 'Please enter a valid phone or WhatsApp number (min 7 digits)' }),
+  checkIn: z.string().trim().min(1, { message: 'Check-in date is required' }),
+  checkOut: z.string().trim().min(1, { message: 'Check-out date is required' }),
 });
 
 type EnquiryFormData = z.infer<typeof enquirySchema>;
