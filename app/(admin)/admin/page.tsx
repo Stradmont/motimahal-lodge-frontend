@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import {
   MessageSquare,
@@ -8,41 +8,26 @@ import {
   Bed,
   Video,
   ExternalLink,
-  ArrowUpRight,
-  Mail,
-  Phone,
-  CheckCircle2,
-  Clock,
-  AlertCircle,
-  Eye,
-  RefreshCw,
+  ArrowRight,
+  FileText,
+  FileImage,
+  Database,
+  Settings,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import AdminPageHeader from '@/components/admin/layout/AdminPageHeader';
-import { AdminDataTable, AdminColumn } from '@/components/admin/common/AdminDataTable';
 import { useRooms } from '@/hooks/useRooms';
 import { useContacts } from '@/hooks/useContacts';
 import { useGallery } from '@/hooks/useGallery';
 import { useVideo } from '@/hooks/useVideo';
-import { GeneralContactInquiry, GeneralContactStatus } from '@/lib/types/inquiry';
 
 export default function AdminDashboardOverview() {
   const { rooms, isLoading: isLoadingRooms } = useRooms();
-  const { submissions, isLoading: isLoadingContacts, refetch } = useContacts();
+  const { submissions, isLoading: isLoadingContacts } = useContacts();
   const { sections, isLoading: isLoadingGallery } = useGallery();
   const { videos, isLoading: isLoadingVideos } = useVideo();
 
-  const [activeTab, setActiveTab] = useState<'all' | 'new' | 'in_progress'>('all');
-
-  const newInquiriesCount = submissions.filter((s) => s.status === GeneralContactStatus.NEW).length;
-  const inProgressCount = submissions.filter((s) => s.status === GeneralContactStatus.IN_PROGRESS).length;
-
-  const filteredSubmissions = submissions.filter((item) => {
-    if (activeTab === 'new') return item.status === GeneralContactStatus.NEW;
-    if (activeTab === 'in_progress') return item.status === GeneralContactStatus.IN_PROGRESS;
-    return true;
-  });
+  const newInquiriesCount = submissions.filter((s) => s.status === 'NEW').length;
 
   const metrics = [
     {
@@ -79,99 +64,48 @@ export default function AdminDashboardOverview() {
     },
   ];
 
-  const columns: AdminColumn<GeneralContactInquiry>[] = [
+  const quickNav = [
     {
-      key: 'guest',
-      header: 'Guest Contact',
-      render: (item) => (
-        <div className="flex flex-col space-y-0.5">
-          <span className="font-bold text-slate-900 dark:text-slate-100 text-xs">{item.name}</span>
-          <div className="flex items-center gap-2 text-[11px] text-slate-500 dark:text-slate-400">
-            {item.email && (
-              <span className="flex items-center gap-1">
-                <Mail className="w-3 h-3 text-slate-400" />
-                {item.email}
-              </span>
-            )}
-            {item.phone && (
-              <span className="flex items-center gap-1 font-mono">
-                <Phone className="w-3 h-3 text-slate-400" />
-                {item.phone}
-              </span>
-            )}
-          </div>
-        </div>
-      ),
+      title: 'Rooms & Rates Management',
+      description: 'Manage room categories, pricing, amenities, and inventory',
+      href: '/admin/rooms',
+      icon: Bed,
     },
     {
-      key: 'subject',
-      header: 'Subject / Message',
-      render: (item) => (
-        <div className="flex flex-col space-y-0.5 max-w-md">
-          <span className="font-semibold text-xs text-slate-800 dark:text-slate-200 line-clamp-1">
-            {item.subject}
-          </span>
-          <span className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1">
-            {item.message}
-          </span>
-        </div>
-      ),
+      title: 'Guest Contact Inquiries',
+      description: 'View and respond to guest inquiries submitted from the website',
+      href: '/admin/contact',
+      icon: MessageSquare,
     },
     {
-      key: 'status',
-      header: 'Status',
-      width: '130px',
-      render: (item) => {
-        if (item.status === GeneralContactStatus.NEW) {
-          return (
-            <Badge className="bg-rose-50 text-rose-700 dark:bg-rose-950/60 dark:text-rose-400 border-rose-200 dark:border-rose-800 font-semibold text-[11px]">
-              <AlertCircle className="w-3 h-3 mr-1" /> NEW
-            </Badge>
-          );
-        }
-        if (item.status === GeneralContactStatus.IN_PROGRESS) {
-          return (
-            <Badge className="bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-400 border-blue-200 dark:border-blue-800 font-semibold text-[11px]">
-              <Clock className="w-3 h-3 mr-1" /> IN PROGRESS
-            </Badge>
-          );
-        }
-        if (item.status === GeneralContactStatus.RESOLVED) {
-          return (
-            <Badge className="bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800 font-semibold text-[11px]">
-              <CheckCircle2 className="w-3 h-3 mr-1" /> RESOLVED
-            </Badge>
-          );
-        }
-        return (
-          <Badge variant="outline" className="text-[11px]">
-            {item.status}
-          </Badge>
-        );
-      },
+      title: 'Blog Articles & News',
+      description: 'Create and edit blog posts using the rich text editor',
+      href: '/admin/blogs',
+      icon: FileText,
     },
     {
-      key: 'date',
-      header: 'Date',
-      align: 'right',
-      width: '140px',
-      render: (item) => (
-        <span className="text-xs font-mono text-slate-500 dark:text-slate-400">{item.date}</span>
-      ),
+      title: 'Media Asset Library',
+      description: 'Upload and organize general website images and assets',
+      href: '/admin/media',
+      icon: FileImage,
     },
     {
-      key: 'actions',
-      header: 'Action',
-      align: 'right',
-      width: '90px',
-      render: () => (
-        <Link href="/admin/contact">
-          <Button variant="ghost" size="sm" className="h-7 px-2 text-xs gap-1 cursor-pointer">
-            <Eye className="w-3.5 h-3.5" />
-            View
-          </Button>
-        </Link>
-      ),
+      title: 'Photo Gallery Collections',
+      description: 'Manage homepage and about page photo gallery showcases',
+      href: '/admin/gallery',
+      icon: ImageIcon,
+    },
+    {
+      title: 'Database Backups',
+      description: 'Execute PostgreSQL dumps and inspect database audit logs',
+      href: '/admin/backups',
+      icon: Database,
+    },
+    {
+      title: 'Contact & Location Settings',
+      description: 'Update phone numbers, email addresses, and location details',
+      href: '/admin/settings',
+      icon: Settings,
     },
   ];
 
@@ -182,23 +116,11 @@ export default function AdminDashboardOverview() {
         title="Dashboard Overview"
         description="Moti Mahal Lodge & Restaurant administrative portal."
         action={
-          <div className="flex items-center gap-2.5">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => refetch()}
-              disabled={isLoadingContacts}
-              className="h-9 cursor-pointer gap-2"
-            >
-              <RefreshCw className={`w-3.5 h-3.5 ${isLoadingContacts ? 'animate-spin' : ''}`} />
-              Refresh
+          <Link href="/" target="_blank">
+            <Button variant="outline" size="sm" className="h-9 gap-1.5 cursor-pointer">
+              <ExternalLink className="w-3.5 h-3.5" /> Public Website
             </Button>
-            <Link href="/" target="_blank">
-              <Button variant="outline" size="sm" className="h-9 gap-1.5 cursor-pointer">
-                <ExternalLink className="w-3.5 h-3.5" /> Website
-              </Button>
-            </Link>
-          </div>
+          </Link>
         }
       />
 
@@ -233,68 +155,39 @@ export default function AdminDashboardOverview() {
         })}
       </div>
 
-      {/* Guest Inquiries Section */}
+      {/* Quick Navigation List */}
       <div className="rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 p-5 space-y-4 shadow-2xs">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-4">
-          <div>
-            <h2 className="text-base font-bold text-slate-900 dark:text-slate-100 tracking-tight flex items-center gap-2">
-              <MessageSquare className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-              Guest Contact Inquiries
-            </h2>
-            <p className="text-xs text-slate-500 mt-0.5">
-              Recent guest messages and contact form submissions.
-            </p>
-          </div>
+        <h2 className="text-sm font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider text-slate-500 border-b border-slate-200 dark:border-slate-800 pb-3">
+          Management Modules
+        </h2>
 
-          <div className="flex items-center gap-2">
-            <div className="flex items-center bg-slate-100 dark:bg-slate-900 p-0.5 rounded-lg border border-slate-200 dark:border-slate-800">
-              <button
-                onClick={() => setActiveTab('all')}
-                className={`px-3 py-1 text-xs font-semibold rounded-md transition-all cursor-pointer ${
-                  activeTab === 'all'
-                    ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 shadow-2xs'
-                    : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-100'
-                }`}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {quickNav.map((item) => {
+            const Icon = item.icon;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="group p-3.5 rounded-lg border border-slate-200/80 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-900/50 hover:bg-slate-100/80 dark:hover:bg-slate-900 hover:border-slate-300 dark:hover:border-slate-700 transition-all flex items-center justify-between"
               >
-                All ({submissions.length})
-              </button>
-              <button
-                onClick={() => setActiveTab('new')}
-                className={`px-3 py-1 text-xs font-semibold rounded-md transition-all cursor-pointer ${
-                  activeTab === 'new'
-                    ? 'bg-white dark:bg-slate-800 text-rose-600 dark:text-rose-400 shadow-2xs'
-                    : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-100'
-                }`}
-              >
-                Unread ({newInquiriesCount})
-              </button>
-              <button
-                onClick={() => setActiveTab('in_progress')}
-                className={`px-3 py-1 text-xs font-semibold rounded-md transition-all cursor-pointer ${
-                  activeTab === 'in_progress'
-                    ? 'bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 shadow-2xs'
-                    : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-100'
-                }`}
-              >
-                In Progress ({inProgressCount})
-              </button>
-            </div>
-
-            <Link href="/admin/contact">
-              <Button size="sm" variant="ghost" className="h-8 text-xs gap-1 cursor-pointer">
-                View All <ArrowUpRight className="w-3.5 h-3.5" />
-              </Button>
-            </Link>
-          </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-md bg-white dark:bg-slate-950 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 flex items-center justify-center shrink-0 group-hover:border-slate-400 transition-colors">
+                    <Icon className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <span className="text-xs font-bold text-slate-900 dark:text-slate-100 group-hover:text-amber-700 dark:group-hover:text-amber-400 transition-colors block">
+                      {item.title}
+                    </span>
+                    <span className="text-[11px] text-slate-500 dark:text-slate-400 font-normal block">
+                      {item.description}
+                    </span>
+                  </div>
+                </div>
+                <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-200 group-hover:translate-x-0.5 transition-all shrink-0" />
+              </Link>
+            );
+          })}
         </div>
-
-        <AdminDataTable
-          isLoading={isLoadingContacts}
-          emptyMessage="No guest inquiries found."
-          columns={columns}
-          data={filteredSubmissions.slice(0, 10)}
-          keyExtractor={(item) => item.id}
-        />
       </div>
     </div>
   );
