@@ -1,4 +1,5 @@
 export type BackupTriggerSource = 'MANUAL' | 'CRON';
+export type BackupTriggeredBy = 'SYSTEM_CRON' | 'ADMIN_USER' | 'CLI_SCRIPT';
 export type BackupStatus = 'RUNNING' | 'SUCCESS' | 'FAILED';
 
 export type BackupAction =
@@ -15,7 +16,7 @@ export interface BackupRecord {
   id: string;
   triggerSource: BackupTriggerSource;
   triggeredById?: string;
-  triggeredByName: string;
+  triggeredByName: BackupTriggeredBy;
   status: BackupStatus;
   dateFolder: string;
   schemaKey?: string;
