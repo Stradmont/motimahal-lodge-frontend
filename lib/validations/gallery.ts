@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { GallerySectionStatus } from '../types/gallery';
+import { GalleryCategory, GallerySectionStatus } from '../types/gallery';
 
 export const gallerySectionSchema = z.object({
   title: z
@@ -11,6 +11,8 @@ export const gallerySectionSchema = z.object({
   slug: z.string().trim().optional(),
 
   description: z.string().trim().optional(),
+
+  category: z.nativeEnum(GalleryCategory).optional(),
 
   status: z.nativeEnum(GallerySectionStatus),
 

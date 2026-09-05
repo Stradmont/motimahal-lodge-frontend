@@ -1,8 +1,8 @@
 import { apiClient, ApiResponse } from '@/lib/api-client';
-import { GallerySectionItem, CreateGallerySectionInput } from '@/lib/types/gallery';
+import { GallerySectionItem, CreateGallerySectionInput, GalleryCategory } from '@/lib/types/gallery';
 
 export const AdminGalleryService = {
-  async getAll(params?: { status?: string; search?: string }): Promise<ApiResponse<GallerySectionItem[]>> {
+  async getAll(params?: { status?: string; search?: string; category?: GalleryCategory }): Promise<ApiResponse<GallerySectionItem[]>> {
     return apiClient.get<GallerySectionItem[]>('/api/v1/admin/gallery', params);
   },
 
@@ -24,8 +24,8 @@ export const AdminGalleryService = {
 };
 
 export const PublicGalleryService = {
-  async getAll(): Promise<ApiResponse<GallerySectionItem[]>> {
-    return apiClient.get<GallerySectionItem[]>('/api/v1/public/gallery');
+  async getAll(category: GalleryCategory): Promise<ApiResponse<GallerySectionItem[]>> {
+    return apiClient.get<GallerySectionItem[]>('/api/v1/public/gallery', { category });
   },
 
   async getBySlug(slug: string): Promise<ApiResponse<GallerySectionItem>> {

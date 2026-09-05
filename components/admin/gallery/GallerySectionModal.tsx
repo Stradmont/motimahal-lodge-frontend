@@ -19,7 +19,7 @@ import { AdminInput as Input } from '@/components/admin/common/AdminInput';
 import { AdminSelect as Select } from '@/components/admin/common/AdminSelect';
 import MediaPickerModal from '@/components/admin/common/MediaPickerModal';
 import { gallerySectionSchema, GallerySectionFormValues } from '@/lib/validations/gallery';
-import { GallerySectionItem, CreateGallerySectionInput, GallerySectionStatus } from '@/lib/types/gallery';
+import { GallerySectionItem, CreateGallerySectionInput, GallerySectionStatus, GalleryCategory } from '@/lib/types/gallery';
 import { MediaItem, MediaSelectorMode } from '@/lib/types/media';
 import { fetchMediaList } from '@/lib/api/media';
 
@@ -55,6 +55,7 @@ export default function GallerySectionModal({
       title: '',
       slug: '',
       description: '',
+      category: GalleryCategory.GENERAL,
       status: GallerySectionStatus.ACTIVE,
       mediaIds: [],
     },
@@ -78,6 +79,7 @@ export default function GallerySectionModal({
           title: initialData.title,
           slug: initialData.slug,
           description: initialData.description || '',
+          category: initialData.category || GalleryCategory.GENERAL,
           status: initialData.status,
           mediaIds: initialData.mediaIds,
         });
@@ -87,6 +89,7 @@ export default function GallerySectionModal({
           title: '',
           slug: '',
           description: '',
+          category: GalleryCategory.GENERAL,
           status: GallerySectionStatus.ACTIVE,
           mediaIds: [],
         });
@@ -157,6 +160,7 @@ export default function GallerySectionModal({
         title: data.title,
         slug: data.slug || '',
         description: data.description || undefined,
+        category: data.category || GalleryCategory.GENERAL,
         status: data.status,
         mediaIds: selectedMediaItems.map((m) => m.id),
       };
@@ -177,7 +181,7 @@ export default function GallerySectionModal({
             </DialogTitle>
           </div>
           <DialogDescription className="text-xs text-slate-500">
-            Configure gallery section titles, collection media items from Centralized Media, and display order.
+            Configure gallery section titles, category, collection media items from Centralized Media, and display order.
           </DialogDescription>
         </DialogHeader>
 
@@ -215,7 +219,29 @@ export default function GallerySectionModal({
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                Category <span className="text-rose-500">*</span>
+              </label>
+              <Controller
+                name="category"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    value={field.value || GalleryCategory.GENERAL}
+                    onChange={field.onChange}
+                    options={[
+                      { value: GalleryCategory.HOME_ABOUT, label: 'Home About (About Carousel)' },
+                      { value: GalleryCategory.ABOUT, label: 'About Page' },
+                      { value: GalleryCategory.ROOMS, label: 'Rooms Gallery' },
+                      { value: GalleryCategory.GENERAL, label: 'General Gallery' },
+                    ]}
+                  />
+                )}
+              />
+            </div>
+
             <div>
               <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 Status <span className="text-rose-500">*</span>

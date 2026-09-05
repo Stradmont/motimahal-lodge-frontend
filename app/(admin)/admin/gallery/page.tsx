@@ -109,6 +109,16 @@ export default function AdminGalleryPage() {
       ),
     },
     {
+      key: 'category',
+      header: 'Category',
+      width: '140px',
+      render: (sec) => (
+        <Badge variant="secondary" className="capitalize text-xs font-mono">
+          {sec.category || 'general'}
+        </Badge>
+      ),
+    },
+    {
       key: 'mediaIds',
       header: 'Collection media',
       width: '180px',

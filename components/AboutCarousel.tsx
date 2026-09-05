@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { PublicGalleryService } from '@/lib/services/gallery.service';
+import { GalleryCategory } from '@/lib/types/gallery';
 
 export interface AboutSlide {
   id: string;
@@ -10,7 +12,7 @@ export interface AboutSlide {
   caption: string;
 }
 
-const REAL_SLIDES: AboutSlide[] = [
+const DEFAULT_FALLBACK_SLIDES: AboutSlide[] = [
   {
     id: 'lodge-main-building',
     title: 'Motimahal Lodge Main Building & Grounds',
@@ -61,14 +63,8 @@ const REAL_SLIDES: AboutSlide[] = [
   },
 ];
 
-// Build extended array for infinite seamless looping: [Clone Last, ...Real Slides, Clone First]
-const EXTENDED_SLIDES: AboutSlide[] = [
-  REAL_SLIDES[REAL_SLIDES.length - 1],
-  ...REAL_SLIDES,
-  REAL_SLIDES[0],
-];
-
 export default function AboutCarousel() {
+  const [slides, setSlides] = useState<AboutSlide[]>(DEFAULT_FALLBACK_SLIDES);
   const [displayIndex, setDisplayIndex] = useState(1);
   const [withTransition, setWithTransition] = useState(true);
   const [isPlaying, setIsPlaying] = useState(true);
@@ -80,8 +76,58 @@ export default function AboutCarousel() {
   const dragStartX = useRef<number>(0);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const totalRealSlides = REAL_SLIDES.length;
-  const activeRealIndex = (displayIndex - 1 + totalRealSlides) % totalRealSlides;
+  // Fetch dynamic gallery items from backend API filtered by 'home-about' category
+  useEffect(() => {
+    let isMounted = true;
+    async function loadGallery() {
+      try {
+        let res = await PublicGalleryService.getAll(GalleryCategory.HOME_ABOUT);
+        if (!res.success || !res.data || res.data.length === 0) {
+          // Fallback to GENERAL category gallery if home-about category has no items
+          res = await PublicGalleryService.getAll(GalleryCategory.GENERAL);
+        }
+
+        if (isMounted && res.success && res.data && res.data.length > 0) {
+          const dynamicSlides: AboutSlide[] = [];
+          res.data.forEach((section) => {
+            if (section.mediaItems && section.mediaItems.length > 0) {
+              section.mediaItems.forEach((media, idx) => {
+                if (media.url) {
+                  dynamicSlides.push({
+                    id: `${section.id}-${media.id || idx}`,
+                    title: section.title,
+                    image: media.url,
+                    caption: section.description || section.title,
+                  });
+                }
+              });
+            }
+          });
+
+          if (dynamicSlides.length > 0) {
+            setSlides(dynamicSlides);
+            setDisplayIndex(1);
+            setWithTransition(false);
+          }
+        }
+      } catch (error) {
+        console.error('Failed to load dynamic gallery for AboutCarousel:', error);
+      }
+    }
+    loadGallery();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const totalRealSlides = slides.length;
+  const extendedSlides: AboutSlide[] =
+    totalRealSlides > 0
+      ? [slides[totalRealSlides - 1], ...slides, slides[0]]
+      : [];
+
+  const activeRealIndex =
+    totalRealSlides > 0 ? (displayIndex - 1 + totalRealSlides) % totalRealSlides : 0;
 
   // Track window resize for responsive centering
   useEffect(() => {
@@ -135,7 +181,7 @@ export default function AboutCarousel() {
     if (displayIndex === 0) {
       setWithTransition(false);
       setDisplayIndex(totalRealSlides);
-    } else if (displayIndex === EXTENDED_SLIDES.length - 1) {
+    } else if (displayIndex === extendedSlides.length - 1) {
       setWithTransition(false);
       setDisplayIndex(1);
     }
@@ -185,7 +231,9 @@ export default function AboutCarousel() {
     setDragOffset(0);
   };
 
-  const currentSlide = REAL_SLIDES[activeRealIndex];
+  const currentSlide = slides[activeRealIndex] || slides[0];
+
+  if (!currentSlide) return null;
 
   return (
     <div className="w-full relative overflow-hidden py-4 select-none">
@@ -216,7 +264,7 @@ export default function AboutCarousel() {
           }}
           onTransitionEnd={handleTransitionEnd}
         >
-          {EXTENDED_SLIDES.map((slide, idx) => {
+          {extendedSlides.map((slide, idx) => {
             const isActive = idx === displayIndex;
 
             return (
@@ -281,7 +329,7 @@ export default function AboutCarousel() {
         {/* Minimal Dot Indicators & Counter */}
         <div className="pt-2 flex items-center justify-center gap-4">
           <div className="flex items-center gap-2">
-            {REAL_SLIDES.map((_, idx) => (
+            {slides.map((_, idx) => (
               <button
                 key={idx}
                 onClick={() => goToSlide(idx)}

@@ -2,10 +2,10 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { GalleryService } from '@/lib/services/gallery.service';
-import { GallerySectionItem, CreateGallerySectionInput } from '@/lib/types/gallery';
+import { GallerySectionItem, CreateGallerySectionInput, GalleryCategory } from '@/lib/types/gallery';
 import { ApiResponse } from '@/lib/api-client';
 
-export function useGetAllGallerySections(params?: { status?: string; search?: string }) {
+export function useGetAllGallerySections(params?: { status?: string; search?: string; category?: GalleryCategory }) {
   const [data, setData] = useState<GallerySectionItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isError, setIsError] = useState<boolean>(false);
@@ -29,7 +29,7 @@ export function useGetAllGallerySections(params?: { status?: string; search?: st
     } finally {
       setIsLoading(false);
     }
-  }, [params?.status, params?.search]);
+  }, [params?.status, params?.search, params?.category]);
 
   useEffect(() => {
     fetchSections();
@@ -83,7 +83,7 @@ export function useDeleteGallerySection() {
   return { mutateAsync, isPending };
 }
 
-export function useGallery(params?: { status?: string; search?: string }) {
+export function useGallery(params?: { status?: string; search?: string; category?: GalleryCategory }) {
   const { data, isLoading, isError, error, refetch } = useGetAllGallerySections(params);
   const createMutation = useCreateGallerySection();
   const updateMutation = useUpdateGallerySection();
