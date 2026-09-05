@@ -40,7 +40,7 @@ export type VideoFormData = z.infer<typeof videoFormSchema>;
 interface VideoFormModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: VideoFormData) => void;
+  onSubmit: (data: VideoFormData) => Promise<boolean | void> | boolean | void;
   initialData?: VideoItem | null;
   mode?: 'create' | 'edit';
 }
@@ -92,7 +92,7 @@ export default function VideoFormModal({
           platform: initialData.platform || VideoPlatform.YOUTUBE,
           videoUrl: initialData.videoUrl || '',
           thumbnailMediaId: initialData.thumbnailMediaId || '',
-          thumbnailUrl: initialData.thumbnailUrl || '',
+          thumbnailUrl: initialData.thumbnail?.url || '',
           status: initialData.status || VideoStatus.PUBLISHED,
         });
       } else {
@@ -136,9 +136,13 @@ export default function VideoFormModal({
     toast.info('Removed thumbnail attachment');
   };
 
-  const onFormSubmit = (data: VideoFormData) => {
-    onSubmit(data);
-    onClose();
+  const onFormSubmit = async (data: VideoFormData) => {
+    try {
+      await onSubmit(data);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to save video details.';
+      toast.error(message);
+    }
   };
 
   return (

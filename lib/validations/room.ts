@@ -58,26 +58,11 @@ export const roomFormSchema = z.object({
     message: 'Please select or add at least one amenity for this room',
   }),
 
-  imageUrl: z
-    .string()
-    .trim()
-    .min(1, { message: 'Main cover image URL is required' })
-    .refine(
-      (val) => {
-        if (!val) return false;
-        return (
-          val.startsWith('http://') ||
-          val.startsWith('https://') ||
-          val.startsWith('/') ||
-          val.startsWith('data:image/')
-        );
-      },
-      {
-        message: 'Please enter a valid image URL or image path',
-      }
-    ),
+  /** Media ID referencing MediaEntity — hero image */
+  imageId: z.string().trim().optional(),
 
-  galleryImages: z.array(z.string()).optional(),
+  /** Media IDs referencing MediaEntity — gallery images */
+  galleryImageIds: z.array(z.string()).optional(),
 
   isFeatured: z.boolean().optional(),
 });

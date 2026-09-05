@@ -68,7 +68,7 @@ export default function AdminHeader({
             <Menu className="w-4 h-4" />
           </Button>
 
-          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+          <span className="text-xs font-semibold ">
             Admin Portal / {title || 'Dashboard'}
           </span>
         </div>

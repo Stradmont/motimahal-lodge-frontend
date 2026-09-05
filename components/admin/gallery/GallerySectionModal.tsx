@@ -21,7 +21,7 @@ import MediaPickerModal from '@/components/admin/common/MediaPickerModal';
 import { gallerySectionSchema, GallerySectionFormValues } from '@/lib/validations/gallery';
 import { GallerySectionItem, CreateGallerySectionInput, GallerySectionStatus } from '@/lib/types/gallery';
 import { MediaItem, MediaSelectorMode } from '@/lib/types/media';
-import { getStoredMedia } from '@/lib/api/media';
+import { fetchMediaList } from '@/lib/api/media';
 
 interface GallerySectionModalProps {
   isOpen: boolean;
@@ -63,13 +63,17 @@ export default function GallerySectionModal({
 
   useEffect(() => {
     if (isOpen) {
-      const allMedia = getStoredMedia();
       if (initialData && mode === 'edit') {
-        const preselected = initialData.mediaIds
-          .map((id) => allMedia.find((m) => m.id === id || m.url === id))
-          .filter((m): m is MediaItem => !!m);
-
-        setSelectedMediaItems(preselected);
+        if (initialData.mediaItems && initialData.mediaItems.length > 0) {
+          setSelectedMediaItems(initialData.mediaItems);
+        } else {
+          fetchMediaList().then((allMedia) => {
+            const preselected = (initialData.mediaIds || [])
+              .map((id) => allMedia.find((m: MediaItem) => m.id === id || m.url === id))
+              .filter((m): m is MediaItem => !!m);
+            setSelectedMediaItems(preselected);
+          }).catch(() => {});
+        }
         reset({
           title: initialData.title,
           slug: initialData.slug,
@@ -158,8 +162,6 @@ export default function GallerySectionModal({
       };
 
       await onSubmit(payload);
-      reset();
-      onClose();
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Failed to save gallery section.';
       toast.error(message);

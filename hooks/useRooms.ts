@@ -1,10 +1,13 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { RoomService } from '@/lib/services/room.service';
+import { AdminRoomService, PublicRoomService } from '@/lib/services/room.service';
 import { RoomItem, CreateRoomInput, RoomStatus } from '@/lib/types/room';
 import { ApiResponse } from '@/lib/api-client';
 
+// ─── Admin Hooks ──────────────────────────────────────────────────────────────
+
+/** Admin: fetch all rooms (requires auth) */
 export function useGetAllRooms(params?: { type?: string; status?: string; search?: string }) {
   const [data, setData] = useState<RoomItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -16,7 +19,7 @@ export function useGetAllRooms(params?: { type?: string; status?: string; search
     setIsError(false);
     setError(null);
     try {
-      const res = await RoomService.getAll(params);
+      const res = await AdminRoomService.getAll(params);
       if (res.success && res.data) {
         setData(res.data);
       } else {
@@ -46,7 +49,7 @@ export function useGetRoom(id?: string) {
   const fetchRoom = useCallback(async () => {
     if (!id) return;
     setIsLoading(true);
-    const res = await RoomService.getById(id);
+    const res = await AdminRoomService.getById(id);
     if (res.success) {
       setData(res.data);
     } else {
@@ -68,7 +71,7 @@ export function useCreateRoom() {
   const mutateAsync = async (payload: CreateRoomInput): Promise<ApiResponse<RoomItem>> => {
     setIsPending(true);
     try {
-      const res = await RoomService.create(payload);
+      const res = await AdminRoomService.create(payload);
       return res;
     } finally {
       setIsPending(false);
@@ -84,7 +87,7 @@ export function useUpdateRoom() {
   const mutateAsync = async (id: string, payload: Partial<CreateRoomInput>): Promise<ApiResponse<RoomItem>> => {
     setIsPending(true);
     try {
-      const res = await RoomService.update(id, payload);
+      const res = await AdminRoomService.update(id, payload);
       return res;
     } finally {
       setIsPending(false);
@@ -100,7 +103,7 @@ export function useDeleteRoom() {
   const mutateAsync = async (id: string): Promise<ApiResponse<null>> => {
     setIsPending(true);
     try {
-      const res = await RoomService.delete(id);
+      const res = await AdminRoomService.delete(id);
       return res;
     } finally {
       setIsPending(false);
@@ -129,7 +132,7 @@ export function useRooms(params?: { type?: string; status?: string; search?: str
   };
 
   const updateRoomStatus = async (id: string, status: RoomStatus) => {
-    const res = await RoomService.updateStatus(id, status);
+    const res = await AdminRoomService.updateStatus(id, status);
     if (res.success) refetch();
     return res;
   };
@@ -153,4 +156,40 @@ export function useRooms(params?: { type?: string; status?: string; search?: str
     deleteRoom,
     isMutating: createMutation.isPending || updateMutation.isPending || deleteMutation.isPending,
   };
+}
+
+// ─── Public Hooks (no authentication) ────────────────────────────────────────
+
+/** Public: fetch available rooms for the marketing website */
+export function usePublicRooms(params?: { type?: string }) {
+  const [data, setData] = useState<RoomItem[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isError, setIsError] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchRooms = useCallback(async () => {
+    setIsLoading(true);
+    setIsError(false);
+    setError(null);
+    try {
+      const res = await PublicRoomService.getAll(params);
+      if (res.success && res.data) {
+        setData(res.data);
+      } else {
+        setIsError(true);
+        setError(res.message || 'Failed to fetch rooms');
+      }
+    } catch (err: any) {
+      setIsError(true);
+      setError(err.message || 'An error occurred fetching rooms');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [params?.type]);
+
+  useEffect(() => {
+    fetchRooms();
+  }, [fetchRooms]);
+
+  return { data, isLoading, isError, error, refetch: fetchRooms };
 }

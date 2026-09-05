@@ -76,8 +76,8 @@ export default function RoomFormModal({
       description: '',
       shortDescription: '',
       amenities: ['Air Conditioning', 'Free WiFi', 'Breakfast Included', 'Hot Shower'],
-      imageUrl: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80',
-      galleryImages: [],
+      imageId: undefined,
+      galleryImageIds: [],
       isFeatured: false,
     },
     mode: 'onBlur',
@@ -100,8 +100,8 @@ export default function RoomFormModal({
           description: initialData.description || '',
           shortDescription: initialData.shortDescription || '',
           amenities: initialData.amenities || [],
-          imageUrl: initialData.imageUrl || '',
-          galleryImages: initialData.galleryImages || [],
+          imageId: initialData.imageId || undefined,
+          galleryImageIds: initialData.galleryImageIds || [],
           isFeatured: !!initialData.isFeatured,
         });
       } else {
@@ -117,8 +117,8 @@ export default function RoomFormModal({
           description: '',
           shortDescription: '',
           amenities: ['Air Conditioning', 'Free WiFi', 'Breakfast Included', 'Hot Shower'],
-          imageUrl: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80',
-          galleryImages: [],
+          imageId: undefined,
+          galleryImageIds: [],
           isFeatured: false,
         });
       }
@@ -161,14 +161,12 @@ export default function RoomFormModal({
         description: data.description,
         shortDescription: data.shortDescription || undefined,
         amenities: data.amenities,
-        imageUrl: data.imageUrl,
-        galleryImages: data.galleryImages || [],
+        imageId: data.imageId || undefined,
+        galleryImageIds: data.galleryImageIds || [],
         isFeatured: data.isFeatured,
       };
 
       await onSubmit(payload);
-      reset();
-      onClose();
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Failed to save room details.';
       toast.error(message);
@@ -327,10 +325,11 @@ export default function RoomFormModal({
               <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
                 Short Summary
               </label>
-              <Input
-                type="text"
+              <textarea
                 {...register('shortDescription')}
-                placeholder="Brief one-line card summary..."
+                rows={3}
+                placeholder="Brief summary shown on the room card..."
+                className="w-full rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900/10 dark:focus:ring-slate-100/10 resize-none"
               />
             </div>
 
@@ -430,14 +429,14 @@ export default function RoomFormModal({
                 Main Cover Image <span className="text-rose-500">*</span>
               </label>
               <Controller
-                name="imageUrl"
+                name="imageId"
                 control={control}
                 render={({ field }) => (
                   <MediaSelector
                     mode={MediaSelectorMode.SINGLE}
                     value={field.value}
                     onChange={(val) => field.onChange(val as string)}
-                    error={errors.imageUrl?.message}
+                    error={errors.imageId?.message}
                   />
                 )}
               />
@@ -448,14 +447,14 @@ export default function RoomFormModal({
                 Additional Gallery Photos
               </label>
               <Controller
-                name="galleryImages"
+                name="galleryImageIds"
                 control={control}
                 render={({ field }) => (
                   <MediaSelector
                     mode={MediaSelectorMode.MULTIPLE}
                     value={field.value || []}
                     onChange={(val) => field.onChange(val as string[])}
-                    error={errors.galleryImages?.message}
+                    error={errors.galleryImageIds?.message}
                   />
                 )}
               />

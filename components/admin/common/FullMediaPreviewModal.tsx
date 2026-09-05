@@ -69,10 +69,7 @@ export default function FullMediaPreviewModal({
             src={src}
             alt={title || 'Media preview'}
             className="max-h-[75vh] max-w-full object-contain rounded-sm"
-            onError={(e) => {
-              (e.target as HTMLImageElement).src =
-                'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80';
-            }}
+            
           />
         </div>
       </div>

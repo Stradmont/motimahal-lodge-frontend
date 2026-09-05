@@ -103,11 +103,11 @@ export default function VideoPreviewModal({ isOpen, onClose, video }: VideoPrevi
               allowFullScreen
               className="w-full h-full border-0"
             />
-          ) : video.thumbnailUrl ? (
+          ) : video.thumbnail?.url ? (
             <div className="relative w-full h-full group">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={video.thumbnailUrl}
+                src={video.thumbnail.url}
                 alt={video.title}
                 className="w-full h-full object-cover opacity-90"
               />

@@ -1,3 +1,5 @@
+import type { ResolvedMedia } from './room';
+
 export enum VideoPlatform {
   YOUTUBE = 'YouTube',
   INSTAGRAM = 'Instagram',
@@ -27,9 +29,12 @@ export interface VideoItem {
   description?: string;
   category: VideoCategory;
   platform: VideoPlatform;
+  /** External embed URL (YouTube/Vimeo/etc.) — NOT a MediaEntity reference */
   videoUrl: string;
+  /** Media ID stored in entity */
   thumbnailMediaId?: string;
-  thumbnailUrl?: string;
+  /** Enriched from MediaEntity by the API */
+  thumbnail?: ResolvedMedia | null;
   status: VideoStatus;
   orderIndex: number;
   createdAt: string;
@@ -42,8 +47,8 @@ export interface CreateVideoInput {
   category: VideoCategory;
   platform: VideoPlatform;
   videoUrl: string;
+  /** Media ID to send on create/update */
   thumbnailMediaId?: string;
-  thumbnailUrl?: string;
   status: VideoStatus;
 }
 

@@ -199,7 +199,7 @@ export default function MediaPickerModal({
                 <div className="h-full flex flex-col items-center justify-center gap-2 text-center text-slate-500">
                   <ImageIcon className="w-8 h-8 text-slate-300 dark:text-slate-700" />
                   <p className="text-xs font-medium">No media items found matching criteria.</p>
-                  <Button size="sm" variant="outline" onClick={() => setActiveTab('upload')}>
+                  <Button type="button" size="sm" variant="outline" onClick={() => setActiveTab('upload')}>
                     Upload First Asset
                   </Button>
                 </div>
@@ -281,6 +281,7 @@ export default function MediaPickerModal({
                   className="hidden"
                 />
                 <Button
+                  type="button"
                   size="sm"
                   onClick={() => fileInputRef.current?.click()}
                   className="cursor-pointer"

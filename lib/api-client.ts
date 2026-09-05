@@ -1,6 +1,6 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4500';
 const AUTH_KEY = 'alpineace_admin_session';
 
 // ─── Response Types ───────────────────────────────────────────────────────────
@@ -36,6 +36,21 @@ export const axiosInstance = axios.create({
 // Request Interceptor
 axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
+    if (
+      config.data &&
+      (config.data instanceof FormData ||
+        (typeof FormData !== 'undefined' && config.data.constructor?.name === 'FormData'))
+    ) {
+      if (config.headers) {
+        if (typeof (config.headers as any).delete === 'function') {
+          (config.headers as any).delete('Content-Type');
+          (config.headers as any).delete('content-type');
+        } else {
+          delete (config.headers as any)['Content-Type'];
+          delete (config.headers as any)['content-type'];
+        }
+      }
+    }
     return config;
   },
   (error: AxiosError) => {

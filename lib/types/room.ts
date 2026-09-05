@@ -1,3 +1,11 @@
+/** Resolved Media object returned by API (enriched from MediaEntity) */
+export interface ResolvedMedia {
+  id: string;
+  url: string;
+  name: string;
+  mimeType: string;
+}
+
 export enum RoomCategory {
   DELUXE = 'Deluxe',
   SUITE = 'Suite',
@@ -19,14 +27,21 @@ export interface RoomItem {
   pricePerNight: number;
   capacity: number;
   totalUnits: number;
+  availableUnits?: number;
   bedType?: string;
   sizeSqFt?: number;
   status: RoomStatus;
   description: string;
   shortDescription?: string;
   amenities: string[];
-  imageUrl: string;
-  galleryImages: string[];
+  /** Media ID stored in entity */
+  imageId?: string;
+  /** Enriched from MediaEntity by the API */
+  image?: ResolvedMedia | null;
+  /** Media IDs stored in entity */
+  galleryImageIds?: string[];
+  /** Enriched from MediaEntity[] by the API */
+  galleryImages?: ResolvedMedia[];
   isFeatured?: boolean;
   createdAt?: string;
   updatedAt?: string;
@@ -44,8 +59,10 @@ export interface CreateRoomInput {
   description: string;
   shortDescription?: string;
   amenities: string[];
-  imageUrl: string;
-  galleryImages: string[];
+  /** Media ID to send on create/update */
+  imageId?: string;
+  /** Media IDs to send on create/update */
+  galleryImageIds?: string[];
   isFeatured?: boolean;
 }
 

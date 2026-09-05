@@ -47,7 +47,6 @@ interface SortableRoomRowProps {
   onFullscreenMediaRequested: (media: { src: string; title: string }) => void;
   onPreviewRequested: (room: RoomItem) => void;
   onEditRequested: (room: RoomItem) => void;
-  onToggleStatusRequested: (room: RoomItem) => void;
   onDeleteRequested: (room: RoomItem) => void;
   isDragDisabled: boolean;
 }
@@ -58,7 +57,6 @@ function SortableRoomRow({
   onFullscreenMediaRequested,
   onPreviewRequested,
   onEditRequested,
-  onToggleStatusRequested,
   onDeleteRequested,
   isDragDisabled,
 }: SortableRoomRowProps) {
@@ -117,7 +115,7 @@ function SortableRoomRow({
             type="button"
             onClick={() =>
               onFullscreenMediaRequested({
-                src: room.imageUrl,
+                src: room.image?.url || '',
                 title: room.name,
               })
             }
@@ -126,13 +124,10 @@ function SortableRoomRow({
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={room.imageUrl}
+              src={room.image?.url}
               alt={room.name}
               className="w-12 h-9 object-cover transition-transform duration-200 group-hover:scale-110"
-              onError={(e) => {
-                (e.target as HTMLImageElement).src =
-                  'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80';
-              }}
+              
             />
             <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
               <ZoomIn className="w-3.5 h-3.5 text-white" />
@@ -140,19 +135,26 @@ function SortableRoomRow({
           </button>
           <div>
             <div className="flex items-center gap-1.5">
-              <span className="font-semibold text-slate-900 dark:text-slate-100 text-sm">
+              <Link
+                href={`/rooms/${room.slug}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-slate-900 dark:text-slate-100 text-sm hover:underline cursor-pointer"
+                title="View public room page"
+              >
                 {room.name}
-              </span>
+              </Link>
               {room.isFeatured && (
                 <Badge variant="outline" className="text-[10px] py-0 px-1 text-amber-600 border-amber-300">
                   Featured
                 </Badge>
               )}
             </div>
-            <div className="flex items-center gap-2 text-xs text-slate-500 font-mono mt-0.5">
-              <span>{room.id}</span>
-              {room.bedType && <span>• {room.bedType}</span>}
-            </div>
+            {room.bedType && (
+              <div className="text-xs text-slate-500 font-sans mt-0.5">
+                {room.bedType}
+              </div>
+            )}
           </div>
         </div>
       </TableCell>
@@ -203,15 +205,6 @@ function SortableRoomRow({
             className="h-8 w-8"
           >
             <Pencil className="w-3.5 h-3.5 text-slate-600 dark:text-slate-400" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onToggleStatusRequested(room)}
-            className="h-8 text-xs px-2 text-slate-700 dark:text-slate-300"
-            title="Cycle availability status"
-          >
-            Cycle Status
           </Button>
           <Button
             variant="destructive"
@@ -437,7 +430,6 @@ export default function AdminRoomsPage() {
                         onFullscreenMediaRequested={setFullscreenMedia}
                         onPreviewRequested={setPreviewRoom}
                         onEditRequested={handleOpenEditModal}
-                        onToggleStatusRequested={handleToggleStatus}
                         onDeleteRequested={setDeleteTargetRoom}
                         isDragDisabled={isDragDisabled}
                       />
@@ -485,7 +477,7 @@ export default function AdminRoomsPage() {
                   type="button"
                   onClick={() =>
                     setFullscreenMedia({
-                      src: previewRoom.imageUrl,
+                      src: previewRoom.image?.url || '',
                       title: previewRoom.name,
                     })
                   }
@@ -494,7 +486,7 @@ export default function AdminRoomsPage() {
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={previewRoom.imageUrl}
+                    src={previewRoom.image?.url}
                     alt={previewRoom.name}
                     className="w-full h-36 object-cover transition-transform duration-200 group-hover:scale-105"
                   />
@@ -508,13 +500,13 @@ export default function AdminRoomsPage() {
                   <div className="space-y-1 pt-1">
                     <span className="text-[11px] font-semibold text-slate-500 block">Gallery Photos</span>
                     <div className="grid grid-cols-4 gap-1.5">
-                      {previewRoom.galleryImages.map((gUrl, idx) => (
+                      {previewRoom.galleryImages.map((gMedia, idx) => (
                         <button
                           key={idx}
                           type="button"
                           onClick={() =>
                             setFullscreenMedia({
-                              src: gUrl,
+                              src: gMedia.url,
                               title: `${previewRoom.name} - Gallery Photo ${idx + 1}`,
                             })
                           }
@@ -522,7 +514,7 @@ export default function AdminRoomsPage() {
                         >
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
-                            src={gUrl}
+                            src={gMedia.url}
                             alt=""
                             className="w-full h-full object-cover group-hover:scale-110 transition-transform"
                           />
