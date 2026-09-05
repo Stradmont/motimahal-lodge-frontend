@@ -12,19 +12,19 @@ export default function AdminPageHeader({
   action,
 }: AdminPageHeaderProps) {
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-zinc-200 dark:border-zinc-800 mb-5">
+    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800 mb-6 font-sans">
       <div>
-        <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-50 tracking-tight">
+        <h1 className="text-xl font-bold text-slate-900 dark:text-slate-50 tracking-tight">
           {title}
-        </h2>
+        </h1>
         {description && (
-          <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-0.5">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 max-w-3xl">
             {description}
           </p>
         )}
       </div>
 
-      {action && <div className="shrink-0">{action}</div>}
+      {action && <div className="shrink-0 flex items-center gap-2">{action}</div>}
     </div>
   );
 }

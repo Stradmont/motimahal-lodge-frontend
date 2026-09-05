@@ -1,342 +1,318 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Plus, Trash2, AlertCircle } from 'lucide-react';
-import { z } from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { Plus, Pencil, Trash2, Eye, Layers } from 'lucide-react';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import AdminPageHeader from '@/components/admin/layout/AdminPageHeader';
 import AdminFilterBar from '@/components/admin/layout/AdminFilterBar';
-
-interface GalleryItem {
-  id: string;
-  title: string;
-  category: 'Rooms' | 'Restaurant' | 'Riverfront' | 'Amenities' | 'Events';
-  imageUrl: string;
-  uploadedDate: string;
-  featured?: boolean;
-}
-
-const mockGallery: GalleryItem[] = [
-  {
-    id: 'GAL-01',
-    title: 'Riverfront Sunset View from Lodge Terrace',
-    category: 'Riverfront',
-    imageUrl: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80',
-    uploadedDate: '2026-09-01',
-    featured: true,
-  },
-  {
-    id: 'GAL-02',
-    title: 'Deluxe Suite King Bed & Traditional Decor',
-    category: 'Rooms',
-    imageUrl: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80',
-    uploadedDate: '2026-08-28',
-    featured: true,
-  },
-  {
-    id: 'GAL-03',
-    title: 'Signature Clay Oven Tandoori Platter',
-    category: 'Restaurant',
-    imageUrl: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?auto=format&fit=crop&w=800&q=80',
-    uploadedDate: '2026-08-25',
-    featured: true,
-  },
-  {
-    id: 'GAL-04',
-    title: 'Lush Garden Lounge & Outdoor Seating',
-    category: 'Amenities',
-    imageUrl: 'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=800&q=80',
-    uploadedDate: '2026-08-20',
-  },
-  {
-    id: 'GAL-05',
-    title: 'Chitwan Jungle Safari Excursion Group',
-    category: 'Events',
-    imageUrl: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=800&q=80',
-    uploadedDate: '2026-08-15',
-  },
-  {
-    id: 'GAL-06',
-    title: 'Evening Riverside Dining Setup',
-    category: 'Restaurant',
-    imageUrl: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80',
-    uploadedDate: '2026-08-10',
-  },
-];
-
-const gallerySchema = z.object({
-  title: z
-    .string()
-    .trim()
-    .min(1, { message: 'Photo title is required' })
-    .min(2, { message: 'Photo title must be at least 2 characters' }),
-  category: z.enum(['Rooms', 'Restaurant', 'Riverfront', 'Amenities', 'Events']),
-  imageUrl: z
-    .string()
-    .trim()
-    .min(1, { message: 'Image URL is required' })
-    .url({ message: 'Please enter a valid image URL (starting with http:// or https://)' }),
-});
-
-type GalleryFormData = z.infer<typeof gallerySchema>;
+import ConfirmDeleteDialog from '@/components/admin/common/ConfirmDeleteDialog';
+import FullMediaPreviewModal from '@/components/admin/common/FullMediaPreviewModal';
+import GallerySectionModal from '@/components/admin/gallery/GallerySectionModal';
+import { AdminDataTable, AdminColumn } from '@/components/admin/common/AdminDataTable';
+import {
+  GallerySectionItem,
+  CreateGallerySectionInput,
+  GallerySectionStatus,
+} from '@/lib/types/gallery';
+import { useGallery } from '@/hooks/useGallery';
 
 export default function AdminGalleryPage() {
-  const [items, setItems] = useState<GalleryItem[]>(mockGallery);
-  const [activeCategory, setActiveCategory] = useState<string>('All');
+  const [activeFilter, setActiveFilter] = useState<string>('ALL');
   const [searchTerm, setSearchTerm] = useState('');
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [toast, setToast] = useState('');
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<GalleryFormData>({
-    resolver: zodResolver(gallerySchema),
-    defaultValues: {
-      title: '',
-      category: 'Rooms',
-      imageUrl: '',
-    },
-    mode: 'onBlur',
+  const { sections, isLoading, createSection, updateSection, deleteSection } = useGallery({
+    status: activeFilter,
+    search: searchTerm,
   });
 
-  const filteredItems = items.filter((item) => {
-    const matchesCategory = activeCategory === 'All' || item.category === activeCategory;
-    const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
+  const [isSectionModalOpen, setIsSectionModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState<'create' | 'edit'>('create');
+  const [selectedSection, setSelectedSection] = useState<GallerySectionItem | null>(null);
+
+  const [previewSection, setPreviewSection] = useState<GallerySectionItem | null>(null);
+  const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
+  const [deleteTargetSection, setDeleteTargetSection] = useState<GallerySectionItem | null>(null);
 
   const filterOptions = [
-    { key: 'All', label: 'All' },
-    { key: 'Rooms', label: 'Rooms' },
-    { key: 'Restaurant', label: 'Restaurant' },
-    { key: 'Riverfront', label: 'Riverfront' },
-    { key: 'Amenities', label: 'Amenities' },
-    { key: 'Events', label: 'Events' },
+    { key: 'ALL', label: 'All Sections' },
+    ...Object.values(GallerySectionStatus).map((st) => ({
+      key: st,
+      label: `${st.charAt(0)}${st.slice(1).toLowerCase()}`,
+    })),
   ];
 
-  const onAddPhotoSubmit = (data: GalleryFormData) => {
-    const newItem: GalleryItem = {
-      id: `GAL-0${items.length + 1}`,
-      title: data.title,
-      category: data.category,
-      imageUrl: data.imageUrl,
-      uploadedDate: new Date().toISOString().split('T')[0],
-      featured: false,
-    };
-
-    setItems([newItem, ...items]);
-    setIsAddModalOpen(false);
-    reset();
-    showToast('Photo entry created successfully');
+  const handleOpenCreateModal = () => {
+    setSelectedSection(null);
+    setModalMode('create');
+    setIsSectionModalOpen(true);
   };
 
-  const handleDelete = (id: string) => {
-    setItems(items.filter((item) => item.id !== id));
-    showToast('Photo deleted');
+  const handleOpenEditModal = (sec: GallerySectionItem) => {
+    setSelectedSection(sec);
+    setModalMode('edit');
+    setIsSectionModalOpen(true);
   };
 
-  const toggleFeatured = (id: string) => {
-    setItems(
-      items.map((item) =>
-        item.id === id ? { ...item, featured: !item.featured } : item
-      )
-    );
-    showToast('Featured status updated');
+  const handleFormSubmit = async (data: CreateGallerySectionInput) => {
+    try {
+      if (!selectedSection) {
+        const res = await createSection(data);
+        if (res.success) {
+          toast.success(res.message || `Gallery section "${data.title}" created`);
+          setIsSectionModalOpen(false);
+        } else {
+          toast.error(res.message || 'Failed to create gallery section');
+        }
+      } else {
+        const res = await updateSection(selectedSection.id, data);
+        if (res.success) {
+          toast.success(res.message || `Gallery section "${data.title}" updated`);
+          setIsSectionModalOpen(false);
+        } else {
+          toast.error(res.message || 'Failed to update gallery section');
+        }
+      }
+    } catch (error) {
+      toast.error('Something went wrong');
+    }
   };
 
-  const showToast = (msg: string) => {
-    setToast(msg);
-    setTimeout(() => setToast(''), 2500);
+  const handleConfirmDelete = async () => {
+    if (!deleteTargetSection) return;
+    try {
+      const res = await deleteSection(deleteTargetSection.id);
+      if (res.success) {
+        toast.success(res.message || `Gallery section "${deleteTargetSection.title}" deleted`);
+      } else {
+        toast.error(res.message || 'Failed to delete gallery section');
+      }
+    } catch (err) {
+      toast.error('Something went wrong deleting gallery section');
+    } finally {
+      setDeleteTargetSection(null);
+    }
   };
+
+  const columns: AdminColumn<GallerySectionItem>[] = [
+    {
+      key: 'title',
+      header: 'Gallery section & website location',
+      render: (sec) => (
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center shrink-0">
+            <Layers className="w-5 h-5 text-slate-500" />
+          </div>
+          <div>
+            <span className="font-semibold text-slate-900 dark:text-slate-100 text-sm">
+              {sec.title}
+            </span>
+            <div className="flex items-center gap-2 text-xs text-slate-500 font-mono mt-0.5">
+              <span>{sec.slug}</span>
+              {sec.description && <span className="truncate max-w-md">• {sec.description}</span>}
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      key: 'mediaIds',
+      header: 'Collection media',
+      width: '180px',
+      render: (sec) => (
+        <div className="flex items-center gap-2">
+          <Badge variant="outline" className="text-xs font-mono">
+            {sec.mediaIds.length} {sec.mediaIds.length === 1 ? 'image' : 'images'}
+          </Badge>
+          {sec.mediaItems && sec.mediaItems.length > 0 && (
+            <div className="flex -space-x-2 overflow-hidden">
+              {sec.mediaItems.slice(0, 3).map((item, idx) => (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img
+                  key={idx}
+                  src={item.url}
+                  alt={item.name}
+                  className="inline-block h-6 w-6 rounded-full ring-2 ring-white dark:ring-slate-950 object-cover"
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      ),
+    },
+    {
+      key: 'status',
+      header: 'Status',
+      width: '140px',
+      render: (sec) => (
+        <>
+          {sec.status === GallerySectionStatus.ACTIVE && <Badge variant="success">Active</Badge>}
+          {sec.status === GallerySectionStatus.DRAFT && <Badge variant="secondary">Draft</Badge>}
+          {sec.status === GallerySectionStatus.INACTIVE && <Badge variant="outline">Inactive</Badge>}
+        </>
+      ),
+    },
+    {
+      key: 'updatedAt',
+      header: 'Last updated',
+      width: '160px',
+      render: (sec) => (
+        <span className="text-xs text-slate-500 font-mono">
+          {new Date(sec.updatedAt || sec.createdAt).toLocaleDateString()}
+        </span>
+      ),
+    },
+    {
+      key: 'actions',
+      header: 'Actions',
+      align: 'right',
+      width: '140px',
+      render: (sec) => (
+        <div className="flex items-center justify-end gap-1" onClick={(e) => e.stopPropagation()}>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setPreviewSection(sec)}
+            title="Preview Collection"
+            className="h-8 w-8"
+          >
+            <Eye className="w-3.5 h-3.5 text-slate-600 dark:text-slate-400" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => handleOpenEditModal(sec)}
+            title="Edit Section"
+            className="h-8 w-8"
+          >
+            <Pencil className="w-3.5 h-3.5 text-slate-600 dark:text-slate-400" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setDeleteTargetSection(sec)}
+            title="Delete Section"
+            className="h-8 w-8 text-rose-500 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40"
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+          </Button>
+        </div>
+      ),
+    },
+  ];
 
   return (
-    <div>
-      {/* Toast */}
-      {toast && (
-        <div className="fixed bottom-5 right-5 z-50 bg-zinc-900 text-zinc-50 border border-zinc-700 px-4 py-2 rounded-sm text-sm font-medium shadow-md">
-          {toast}
-        </div>
-      )}
-
-      {/* Reusable Page Header */}
+    <div className="space-y-6 font-sans">
+      {/* Page Header */}
       <AdminPageHeader
-        title="Gallery Media Manager"
-        description="Curate high-resolution lodge photography, category tags, and featured images."
+        title="Gallery Section Management"
+        description="Organize website photography into dedicated placement sections and collections."
         action={
-          <Button
-            size="sm"
-            onClick={() => setIsAddModalOpen(true)}
-            className="text-sm h-9"
-          >
-            <Plus className="w-4 h-4 mr-1.5" />
-            Add Photo
+          <Button size="sm" onClick={handleOpenCreateModal} className="cursor-pointer">
+            <Plus className="w-3.5 h-3.5 mr-1.5" />
+            Create Gallery Section
           </Button>
         }
       />
 
-      {/* Reusable Control & Search Bar */}
+      {/* Filter Bar */}
       <AdminFilterBar
         filterOptions={filterOptions}
-        activeFilter={activeCategory}
-        onFilterChange={setActiveCategory}
+        activeFilter={activeFilter}
+        onFilterChange={setActiveFilter}
         searchValue={searchTerm}
         onSearchChange={setSearchTerm}
-        searchPlaceholder="Search photo titles..."
+        searchPlaceholder="Search section title or location slug..."
       />
 
-      {/* Photo Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredItems.map((item) => (
-          <div
-            key={item.id}
-            className="border border-zinc-200 dark:border-zinc-800 rounded-sm bg-white dark:bg-zinc-950 overflow-hidden flex flex-col justify-between"
-          >
-            <div className="relative h-44 bg-zinc-100 dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800">
-              <img
-                src={item.imageUrl}
-                alt={item.title}
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute top-2 left-2">
-                <Badge variant="default">{item.category}</Badge>
+      {/* Spacious Centralized Table */}
+      <AdminDataTable<GallerySectionItem>
+        columns={columns}
+        data={sections}
+        keyExtractor={(sec) => sec.id}
+        isLoading={isLoading}
+        emptyMessage="No gallery sections found matching criteria."
+        onRowClick={handleOpenEditModal}
+        footer={<span>Total {sections.length} website gallery sections</span>}
+      />
+
+      {/* Create / Edit Section Modal */}
+      <GallerySectionModal
+        isOpen={isSectionModalOpen}
+        onClose={() => setIsSectionModalOpen(false)}
+        onSubmit={handleFormSubmit}
+        initialData={selectedSection}
+        mode={modalMode}
+      />
+
+      {/* Collection Preview Dialog */}
+      <Dialog open={!!previewSection} onOpenChange={(open) => !open && setPreviewSection(null)} size="3xl">
+        {previewSection && (
+          <div className="space-y-4 font-sans select-none">
+            <DialogHeader>
+              <div className="flex items-center justify-between">
+                <DialogTitle>{previewSection.title}</DialogTitle>
+                <Badge variant="outline" className="text-xs font-mono">
+                  {previewSection.mediaIds.length} assets
+                </Badge>
               </div>
-              {item.featured && (
-                <div className="absolute top-2 right-2">
-                  <Badge variant="secondary">Featured</Badge>
+              <DialogDescription className="font-mono text-[11px]">
+                Location: /{previewSection.slug} • Status: {previewSection.status}
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="border border-slate-200 dark:border-slate-800 rounded-md bg-slate-950 p-3 h-80 overflow-y-auto">
+              {previewSection.mediaItems && previewSection.mediaItems.length > 0 ? (
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  {previewSection.mediaItems.map((item) => (
+                    <div
+                      key={item.id}
+                      onClick={() => setLightboxSrc(item.url)}
+                      className="group relative aspect-square rounded border border-slate-800 overflow-hidden cursor-pointer bg-slate-900"
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={item.url} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200" />
+                      <div className="absolute inset-x-0 bottom-0 bg-slate-950/70 p-1 text-[10px] text-white font-mono truncate">
+                        {item.name}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="h-full flex items-center justify-center text-xs text-slate-500">
+                  No images attached to this collection.
                 </div>
               )}
             </div>
 
-            <div className="p-3.5 space-y-3">
-              <div>
-                <h4 className="font-medium text-zinc-900 dark:text-zinc-100 text-sm line-clamp-1">
-                  {item.title}
-                </h4>
-                <p className="text-xs text-zinc-500 mt-0.5">
-                  Uploaded {item.uploadedDate}
-                </p>
-              </div>
-
-              <div className="pt-2 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => toggleFeatured(item.id)}
-                  className="h-8 text-xs px-2"
-                >
-                  {item.featured ? 'Featured' : 'Make Featured'}
-                </Button>
-
-                <Button
-                  variant="destructive"
-                  size="icon"
-                  onClick={() => handleDelete(item.id)}
-                  className="h-8 w-8"
-                  title="Delete image"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
+            <DialogFooter>
+              <Button type="button" variant="outline" size="sm" onClick={() => setPreviewSection(null)}>
+                Close Preview
+              </Button>
+            </DialogFooter>
           </div>
-        ))}
-      </div>
-
-      {/* Add Photo Modal Dialog - Spacious size="3xl" */}
-      <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen} size="3xl">
-        <form onSubmit={handleSubmit(onAddPhotoSubmit)} noValidate className="space-y-4 font-sans">
-          <DialogHeader>
-            <DialogTitle>Add Photo to Gallery</DialogTitle>
-            <DialogDescription>
-              Enter image title, category tag, and high-resolution image URL.
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="space-y-4 py-2">
-            <div>
-              <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
-                Photo Title <span className="text-rose-500">*</span>
-              </label>
-              <Input
-                type="text"
-                {...register('title')}
-                placeholder="e.g. Garden Lounge Seating"
-                className={errors.title ? 'border-rose-500 focus-visible:ring-rose-500' : ''}
-              />
-              {errors.title && (
-                <p className="text-xs text-rose-600 dark:text-rose-400 font-medium mt-1 flex items-center gap-1">
-                  <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                  {errors.title.message}
-                </p>
-              )}
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
-                  Category <span className="text-rose-500">*</span>
-                </label>
-                <select
-                  {...register('category')}
-                  className="w-full h-9 rounded-sm border border-zinc-300 bg-white px-3 py-1 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50 focus:outline-none font-sans"
-                >
-                  <option value="Rooms">Rooms</option>
-                  <option value="Restaurant">Restaurant</option>
-                  <option value="Riverfront">Riverfront</option>
-                  <option value="Amenities">Amenities</option>
-                  <option value="Events">Events</option>
-                </select>
-                {errors.category && (
-                  <p className="text-xs text-rose-600 dark:text-rose-400 font-medium mt-1 flex items-center gap-1">
-                    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                    {errors.category.message}
-                  </p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
-                  Image URL <span className="text-rose-500">*</span>
-                </label>
-                <Input
-                  type="url"
-                  {...register('imageUrl')}
-                  placeholder="https://images.unsplash.com/..."
-                  className={errors.imageUrl ? 'border-rose-500 focus-visible:ring-rose-500' : ''}
-                />
-                {errors.imageUrl && (
-                  <p className="text-xs text-rose-600 dark:text-rose-400 font-medium mt-1 flex items-center gap-1">
-                    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                    {errors.imageUrl.message}
-                  </p>
-                )}
-              </div>
-            </div>
-          </div>
-
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => setIsAddModalOpen(false)}
-            >
-              Cancel
-            </Button>
-            <Button type="submit" size="sm">
-              Save Photo
-            </Button>
-          </DialogFooter>
-        </form>
+        )}
       </Dialog>
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmDeleteDialog
+        isOpen={!!deleteTargetSection}
+        onClose={() => setDeleteTargetSection(null)}
+        onConfirm={handleConfirmDelete}
+        title="Delete Gallery Section"
+        itemName={deleteTargetSection?.title}
+        description="Are you sure you want to delete this gallery section? Note: Centralized Media assets will remain intact in the Media Library."
+      />
+
+      {/* Full Lightbox */}
+      <FullMediaPreviewModal
+        isOpen={!!lightboxSrc}
+        onClose={() => setLightboxSrc(null)}
+        src={lightboxSrc || undefined}
+        title="Gallery Asset Inspection"
+      />
     </div>
   );
 }

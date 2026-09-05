@@ -326,7 +326,7 @@ export const BLOG_DATA: BlogPost[] = [
     excerpt: 'Connecting Kathmandu, Pokhara, and Chitwan, see why breaking your journey at Motimahal Lodge ensures peaceful rest.',
     content: [
       'Bharatpur sits at the strategic crossroads of Nepal’s major transport corridors—connecting the Prithvi Highway, Mahendra Highway, and routes heading toward the Indian border.',
-      'Long overland travel across winding hill roads can be exhausting. Taking a overnight break in Bharatpur-10 allows drivers and families to rest in clean air-conditioned rooms with reliable solar hot water and secure gated parking.',
+      'Long overland travel across winding hill roads can be exhausting. Taking a overnight break in Bharatpur-3 allows drivers and families to rest in clean air-conditioned rooms with reliable solar hot water and secure gated parking.',
       'At Motimahal Lodge, our front desk operates 24/7 to welcome late-arriving travelers with warm hospitality, hot tea, and prompt room service.',
     ],
     image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80&w=1200',

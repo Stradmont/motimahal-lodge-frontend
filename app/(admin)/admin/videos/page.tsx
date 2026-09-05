@@ -1,373 +1,472 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Plus, Play, Trash2, Eye, AlertCircle } from 'lucide-react';
-import { z } from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { Plus, Trash2, Pencil, ExternalLink, GripVertical, Play, Eye, Video } from 'lucide-react';
+import { toast } from 'sonner';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+  useSortable,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableHead,
+  TableRow,
+  TableCell,
+} from '@/components/ui/table';
 import AdminPageHeader from '@/components/admin/layout/AdminPageHeader';
 import AdminFilterBar from '@/components/admin/layout/AdminFilterBar';
+import ConfirmDeleteDialog from '@/components/admin/common/ConfirmDeleteDialog';
 
-interface VideoItem {
-  id: string;
-  title: string;
-  category: 'Resort Tour' | 'Culinary' | 'Riverfront' | 'Culture';
-  videoUrl: string;
-  thumbnailUrl: string;
-  duration: string;
-  featured?: boolean;
+import { VideoItem, VideoPlatform, VideoStatus } from '@/lib/types/video';
+import VideoFormModal, { VideoFormData } from '@/components/admin/videos/VideoFormModal';
+import VideoPreviewModal, { getPlatformBadge } from '@/components/admin/videos/VideoPreviewModal';
+import { useVideo } from '@/hooks/useVideo';
+
+interface SortableVideoRowProps {
+  vid: VideoItem;
+  index: number;
+  onPreviewRequested: (vid: VideoItem) => void;
+  onEditRequested: (vid: VideoItem) => void;
+  onDeleteRequested: (vid: VideoItem) => void;
+  isDragDisabled: boolean;
 }
 
-const mockVideos: VideoItem[] = [
-  {
-    id: 'VID-01',
-    title: 'Moti Mahal Lodge Full Cinematic Aerial & Resort Tour',
-    category: 'Resort Tour',
-    videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80',
-    duration: '3:45',
-    featured: true,
-  },
-  {
-    id: 'VID-02',
-    title: 'Authentic Tandoori Cooking & Clay Oven Secrets',
-    category: 'Culinary',
-    videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?auto=format&fit=crop&w=800&q=80',
-    duration: '2:15',
-    featured: true,
-  },
-  {
-    id: 'VID-03',
-    title: 'Sunset Views & Narayani River Relaxation',
-    category: 'Riverfront',
-    videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80',
-    duration: '1:50',
-  },
-  {
-    id: 'VID-04',
-    title: 'Chitwan Tharu Cultural Dance Evening Performance',
-    category: 'Culture',
-    videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=800&q=80',
-    duration: '4:20',
-  },
-];
+function SortableVideoRow({
+  vid,
+  index,
+  onPreviewRequested,
+  onEditRequested,
+  onDeleteRequested,
+  isDragDisabled,
+}: SortableVideoRowProps) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: vid.id, disabled: isDragDisabled });
 
-const videoSchema = z.object({
-  title: z
-    .string()
-    .trim()
-    .min(1, { message: 'Video title is required' })
-    .min(2, { message: 'Video title must be at least 2 characters' }),
-  category: z.enum(['Resort Tour', 'Culinary', 'Riverfront', 'Culture']),
-  videoUrl: z
-    .string()
-    .trim()
-    .min(1, { message: 'Embed video URL is required' })
-    .url({ message: 'Please enter a valid URL (starting with http:// or https://)' }),
-});
+  const style: React.CSSProperties = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.6 : 1,
+    position: 'relative',
+    zIndex: isDragging ? 40 : 1,
+  };
 
-type VideoFormData = z.infer<typeof videoSchema>;
+  const defaultThumbnail =
+    vid.thumbnailUrl ||
+    'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=800&q=80';
+
+  return (
+    <TableRow
+      ref={setNodeRef}
+      style={style}
+      className={`transition-colors border-b border-slate-100 dark:border-slate-800/60 hover:bg-slate-50/80 dark:hover:bg-slate-900/50 ${
+        isDragging
+          ? 'bg-amber-50/80 dark:bg-amber-950/40 shadow-md ring-1 ring-amber-300 dark:ring-amber-800'
+          : ''
+      }`}
+    >
+      {/* 1. Order Column */}
+      <TableCell className="py-3.5 px-4 text-sm align-middle w-24">
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            {...attributes}
+            {...listeners}
+            disabled={isDragDisabled}
+            className={`p-1.5 rounded transition-colors ${
+              isDragDisabled
+                ? 'cursor-not-allowed text-slate-300 dark:text-slate-700'
+                : 'cursor-grab active:cursor-grabbing text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800'
+            }`}
+            title={isDragDisabled ? 'Filter active (reordering disabled)' : 'Drag to reorder'}
+          >
+            <GripVertical className="w-4 h-4" />
+          </button>
+          <span className="font-mono text-xs font-semibold text-slate-500 w-5 text-center">
+            {index + 1}
+          </span>
+        </div>
+      </TableCell>
+
+      {/* 2. Video Title, Category & Thumbnail */}
+      <TableCell className="py-3.5 px-4 text-sm align-middle">
+        <div className="flex items-center gap-3">
+          <div
+            onClick={() => onPreviewRequested(vid)}
+            className="group relative w-20 h-14 rounded-md overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-900 shrink-0 cursor-pointer"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={defaultThumbnail}
+              alt={vid.title}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+            />
+            <div className="absolute inset-0 bg-slate-950/40 group-hover:bg-slate-950/60 flex items-center justify-center transition-colors">
+              <div className="w-6 h-6 rounded-full bg-white/90 text-slate-900 flex items-center justify-center shadow-xs">
+                <Play className="w-3 h-3 ml-0.5 fill-slate-900" />
+              </div>
+            </div>
+          </div>
+
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-2">
+              <span className="font-medium text-slate-900 dark:text-slate-100 text-sm hover:text-brand-green cursor-pointer truncate" onClick={() => onPreviewRequested(vid)}>
+                {vid.title}
+              </span>
+            </div>
+            <div className="flex items-center gap-2 text-xs text-slate-500 mt-1">
+              <Badge variant="outline" className="text-[10px] py-0 px-1.5 font-normal">
+                {vid.category}
+              </Badge>
+              {vid.thumbnailMediaId && (
+                <span className="text-[10px] font-mono text-slate-400">
+                  Media ID: {vid.thumbnailMediaId}
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+      </TableCell>
+
+      {/* 3. Platform & Link Column */}
+      <TableCell className="py-3.5 px-4 text-sm align-middle w-48">
+        <div className="space-y-1">
+          {getPlatformBadge(vid.platform)}
+          <a
+            href={vid.videoUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1 text-xs text-brand-green hover:underline truncate max-w-[180px]"
+            title={vid.videoUrl}
+          >
+            <span className="truncate">{vid.videoUrl.replace(/^https?:\/\/(www\.)?/, '')}</span>
+            <ExternalLink className="w-3 h-3 shrink-0" />
+          </a>
+        </div>
+      </TableCell>
+
+      {/* 4. Status Column */}
+      <TableCell className="py-3.5 px-4 text-sm align-middle w-32">
+        {vid.status === VideoStatus.PUBLISHED ? (
+          <Badge variant="success">Published</Badge>
+        ) : (
+          <Badge variant="secondary">Draft</Badge>
+        )}
+      </TableCell>
+
+      {/* 5. Actions Column */}
+      <TableCell className="py-3.5 px-4 text-sm align-middle w-36 text-right">
+        <div className="flex items-center justify-end gap-1">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => onPreviewRequested(vid)}
+            title="Preview Video"
+            className="h-8 w-8 text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
+          >
+            <Eye className="w-4 h-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => onEditRequested(vid)}
+            title="Edit Video"
+            className="h-8 w-8 text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
+          >
+            <Pencil className="w-4 h-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => onDeleteRequested(vid)}
+            title="Delete Video"
+            className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/30"
+          >
+            <Trash2 className="w-4 h-4" />
+          </Button>
+        </div>
+      </TableCell>
+    </TableRow>
+  );
+}
 
 export default function AdminVideosPage() {
-  const [videos, setVideos] = useState<VideoItem[]>(mockVideos);
   const [searchTerm, setSearchTerm] = useState('');
-  const [activeCategory, setActiveCategory] = useState<string>('All');
-  const [playingVideo, setPlayingVideo] = useState<VideoItem | null>(null);
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [toast, setToast] = useState('');
+  const [activeFilter, setActiveFilter] = useState<string>('All');
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<VideoFormData>({
-    resolver: zodResolver(videoSchema),
-    defaultValues: {
-      title: '',
-      category: 'Resort Tour',
-      videoUrl: '',
-    },
-    mode: 'onBlur',
-  });
+  const { videos, isLoading, createVideo, updateVideo, reorderVideos, deleteVideo } = useVideo();
 
-  const filteredVideos = videos.filter((v) => {
-    const matchesCat = activeCategory === 'All' || v.category === activeCategory;
-    const matchesSearch = v.title.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesCat && matchesSearch;
+  const [isFormModalOpen, setIsFormModalOpen] = useState(false);
+  const [formMode, setFormMode] = useState<'create' | 'edit'>('create');
+  const [editingVideo, setEditingVideo] = useState<VideoItem | null>(null);
+
+  const [previewVideo, setPreviewVideo] = useState<VideoItem | null>(null);
+  const [deleteTargetVideo, setDeleteTargetVideo] = useState<VideoItem | null>(null);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 5,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  const handleDragEnd = async (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+
+    const oldIndex = videos.findIndex((item) => item.id === active.id);
+    const newIndex = videos.findIndex((item) => item.id === over.id);
+    const reordered = arrayMove(videos, oldIndex, newIndex).map((item, idx) => ({
+      ...item,
+      orderIndex: idx + 1,
+    }));
+
+    const res = await reorderVideos(reordered);
+    if (res.success) {
+      toast.success(res.message || 'Video order updated');
+    } else {
+      toast.error(res.message || 'Failed to update order');
+    }
+  };
+
+  const isFiltered = activeFilter !== 'All' || searchTerm.trim() !== '';
+
+  const filteredVideos = videos.filter((vid) => {
+    const matchesFilter =
+      activeFilter === 'All'
+        ? true
+        : activeFilter === VideoStatus.PUBLISHED
+        ? vid.status === VideoStatus.PUBLISHED
+        : activeFilter === VideoStatus.DRAFT
+        ? vid.status === VideoStatus.DRAFT
+        : vid.platform === activeFilter;
+
+    const matchesSearch =
+      vid.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      vid.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      vid.platform.toLowerCase().includes(searchTerm.toLowerCase());
+
+    return matchesFilter && matchesSearch;
   });
 
   const filterOptions = [
-    { key: 'All', label: 'All' },
-    { key: 'Resort Tour', label: 'Resort Tour' },
-    { key: 'Culinary', label: 'Culinary' },
-    { key: 'Riverfront', label: 'Riverfront' },
-    { key: 'Culture', label: 'Culture' },
+    { key: 'All', label: 'All Videos' },
+    { key: VideoStatus.PUBLISHED, label: 'Published' },
+    { key: VideoStatus.DRAFT, label: 'Drafts' },
+    { key: VideoPlatform.YOUTUBE, label: 'YouTube' },
+    { key: VideoPlatform.INSTAGRAM, label: 'Instagram' },
+    { key: VideoPlatform.FACEBOOK, label: 'Facebook' },
   ];
 
-  const handleDelete = (id: string) => {
-    setVideos(videos.filter((v) => v.id !== id));
-    showToast('Video deleted');
+  const handleOpenCreateModal = () => {
+    setEditingVideo(null);
+    setFormMode('create');
+    setIsFormModalOpen(true);
   };
 
-  const toggleFeatured = (id: string) => {
-    setVideos(
-      videos.map((v) => (v.id === id ? { ...v, featured: !v.featured } : v))
-    );
-    showToast('Featured status updated');
+  const handleOpenEditModal = (vid: VideoItem) => {
+    setEditingVideo(vid);
+    setFormMode('edit');
+    setIsFormModalOpen(true);
   };
 
-  const onAddVideoSubmit = (data: VideoFormData) => {
-    const newVideo: VideoItem = {
-      id: `VID-0${videos.length + 1}`,
-      title: data.title,
-      category: data.category,
-      videoUrl: data.videoUrl,
-      thumbnailUrl:
-        'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80',
-      duration: '2:30',
-      featured: false,
-    };
-
-    setVideos([newVideo, ...videos]);
-    setIsAddModalOpen(false);
-    reset();
-    showToast('Video entry created successfully');
+  const handleConfirmDelete = async () => {
+    if (!deleteTargetVideo) return;
+    try {
+      const res = await deleteVideo(deleteTargetVideo.id);
+      if (res.success) {
+        toast.success(res.message || `Deleted video showcase "${deleteTargetVideo.title}"`);
+      } else {
+        toast.error(res.message || 'Failed to delete video showcase');
+      }
+    } catch (error) {
+      toast.error('Something went wrong');
+    } finally {
+      setDeleteTargetVideo(null);
+    }
   };
 
-  const showToast = (msg: string) => {
-    setToast(msg);
-    setTimeout(() => setToast(''), 2500);
+  const handleFormSubmit = async (data: VideoFormData) => {
+    try {
+      if (formMode === 'create') {
+        const res = await createVideo(data);
+        if (res.success) {
+          toast.success(res.message || 'Created new video showcase');
+          setIsFormModalOpen(false);
+          return true;
+        } else {
+          toast.error(res.message || 'Failed to create video showcase');
+          return false;
+        }
+      } else if (editingVideo) {
+        const res = await updateVideo(editingVideo.id, data);
+        if (res.success) {
+          toast.success(res.message || 'Updated video showcase details');
+          setIsFormModalOpen(false);
+          return true;
+        } else {
+          toast.error(res.message || 'Failed to update video showcase');
+          return false;
+        }
+      }
+    } catch (error) {
+      toast.error('Something went wrong');
+      return false;
+    }
   };
 
   return (
-    <div>
-      {/* Toast */}
-      {toast && (
-        <div className="fixed bottom-5 right-5 z-50 bg-zinc-900 text-zinc-50 border border-zinc-700 px-4 py-2 rounded-sm text-sm font-medium shadow-md">
-          {toast}
-        </div>
-      )}
-
-      {/* Reusable Page Header */}
+    <div className="space-y-6 font-sans">
+      {/* Header */}
       <AdminPageHeader
         title="Videos & Virtual Tours"
-        description="Manage resort video links, YouTube embeds, and promotional showcases."
+        description="Manage hotel tour videos, jungle safari reels, dining clips, and cover thumbnails."
         action={
-          <Button
-            size="sm"
-            onClick={() => setIsAddModalOpen(true)}
-            className="text-sm h-9"
-          >
+          <Button onClick={handleOpenCreateModal} size="sm" className="bg-brand-green hover:bg-brand-green-dark text-white">
             <Plus className="w-4 h-4 mr-1.5" />
             Add Video
           </Button>
         }
       />
 
-      {/* Reusable Control & Search Bar */}
+      {/* Filter Bar */}
       <AdminFilterBar
         filterOptions={filterOptions}
-        activeFilter={activeCategory}
-        onFilterChange={setActiveCategory}
+        activeFilter={activeFilter}
+        onFilterChange={setActiveFilter}
         searchValue={searchTerm}
         onSearchChange={setSearchTerm}
-        searchPlaceholder="Search video titles..."
+        searchPlaceholder="Filter video title, category..."
       />
 
-      {/* Video Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredVideos.map((video) => (
-          <div
-            key={video.id}
-            className="border border-zinc-200 dark:border-zinc-800 rounded-sm bg-white dark:bg-zinc-950 overflow-hidden flex flex-col justify-between"
-          >
-            <div className="relative h-44 bg-zinc-900 overflow-hidden border-b border-zinc-200 dark:border-zinc-800">
-              <img
-                src={video.thumbnailUrl}
-                alt={video.title}
-                className="w-full h-full object-cover opacity-80"
-              />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <Button
-                  size="icon"
-                  onClick={() => setPlayingVideo(video)}
-                  className="w-10 h-10 rounded-full bg-zinc-950/80 text-zinc-100 hover:bg-zinc-950"
-                >
-                  <Play className="w-4 h-4 fill-white ml-0.5" />
-                </Button>
-              </div>
+      {/* Main Table with @dnd-kit Drag and Drop */}
+      <div className="w-full border border-slate-200 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-950 overflow-hidden shadow-xs font-sans">
+        <div className="w-full overflow-x-auto">
+          <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+            <Table className="w-full text-left border-collapse text-sm">
+              <TableHeader className="bg-slate-50/80 dark:bg-slate-900/60 border-b border-slate-200 dark:border-slate-800">
+                <TableRow className="hover:bg-transparent">
+                  <TableHead className="w-24">
+                    Order
+                  </TableHead>
+                  <TableHead>
+                    Video showcase details & cover
+                  </TableHead>
+                  <TableHead className="w-48">
+                    Platform & link
+                  </TableHead>
+                  <TableHead className="w-32">
+                    Status
+                  </TableHead>
+                  <TableHead className="w-36 text-right">
+                    Actions
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
 
-              <div className="absolute top-2 left-2">
-                <Badge variant="default">{video.category}</Badge>
-              </div>
+              <TableBody className="divide-y divide-slate-100 dark:divide-slate-800/60">
+                {isLoading ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="h-40 text-center text-slate-500 text-sm">
+                      Loading video showcases...
+                    </TableCell>
+                  </TableRow>
+                ) : filteredVideos.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="h-40 text-center text-slate-500 text-sm">
+                      <div className="flex flex-col items-center justify-center gap-1.5 py-4">
+                        <Video className="w-8 h-8 text-slate-400 stroke-1" />
+                        <span className="font-medium text-slate-700 dark:text-slate-300">No video showcases found</span>
+                        <span className="text-xs text-slate-500">
+                          {isFiltered ? 'Try clearing filter or search criteria.' : 'Click "Add Video" to configure your first video.'}
+                        </span>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  <SortableContext items={filteredVideos.map((v) => v.id)} strategy={verticalListSortingStrategy}>
+                    {filteredVideos.map((vid, index) => (
+                      <SortableVideoRow
+                        key={vid.id}
+                        vid={vid}
+                        index={index}
+                        onPreviewRequested={setPreviewVideo}
+                        onEditRequested={handleOpenEditModal}
+                        onDeleteRequested={setDeleteTargetVideo}
+                        isDragDisabled={isFiltered}
+                      />
+                    ))}
+                  </SortableContext>
+                )}
+              </TableBody>
+            </Table>
+          </DndContext>
+        </div>
 
-              {video.featured && (
-                <div className="absolute top-2 right-2">
-                  <Badge variant="secondary">Featured</Badge>
-                </div>
-              )}
-            </div>
-
-            <div className="p-3.5 space-y-3">
-              <h4 className="font-medium text-zinc-900 dark:text-zinc-100 text-sm line-clamp-2">
-                {video.title}
-              </h4>
-
-              <div className="pt-2 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => toggleFeatured(video.id)}
-                  className="h-8 text-xs px-2"
-                >
-                  {video.featured ? 'Featured' : 'Highlight'}
-                </Button>
-
-                <div className="flex items-center gap-1">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setPlayingVideo(video)}
-                    className="h-8 w-8"
-                    title="Preview video"
-                  >
-                    <Eye className="w-4 h-4" />
-                  </Button>
-                  <Button
-                    variant="destructive"
-                    size="icon"
-                    onClick={() => handleDelete(video.id)}
-                    className="h-8 w-8"
-                    title="Delete video"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
+        {/* Footer Summary */}
+        <div className="px-4 py-3 bg-slate-50/50 dark:bg-slate-900/30 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500">
+          <span>
+            Showing {filteredVideos.length} of {videos.length} video showcase entries
+          </span>
+          {isFiltered && (
+            <span className="text-[11px] text-amber-600 dark:text-amber-400 font-medium">
+              * Drag-and-drop reordering is disabled while search/filter is active
+            </span>
+          )}
+        </div>
       </div>
 
-      {/* Video Player Dialog - Extra spacious size="4xl" */}
-      <Dialog open={!!playingVideo} onOpenChange={(open) => !open && setPlayingVideo(null)} size="4xl">
-        {playingVideo && (
-          <div className="space-y-3 font-sans">
-            <DialogHeader>
-              <DialogTitle>{playingVideo.title}</DialogTitle>
-              <DialogDescription>{playingVideo.category}</DialogDescription>
-            </DialogHeader>
-            <div className="aspect-video bg-black rounded-sm overflow-hidden">
-              <iframe
-                src={playingVideo.videoUrl}
-                title={playingVideo.title}
-                className="w-full h-full border-0"
-                allowFullScreen
-              />
-            </div>
-            <DialogFooter>
-              <Button size="sm" onClick={() => setPlayingVideo(null)}>
-                Close Preview
-              </Button>
-            </DialogFooter>
-          </div>
-        )}
-      </Dialog>
+      {/* Video Form Modal (Create / Edit with Centralized Media Selector for Thumbnail) */}
+      <VideoFormModal
+        isOpen={isFormModalOpen}
+        onClose={() => setIsFormModalOpen(false)}
+        onSubmit={handleFormSubmit}
+        initialData={editingVideo}
+        mode={formMode}
+      />
 
-      {/* Add Video Dialog - Spacious size="3xl" */}
-      <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen} size="3xl">
-        <form onSubmit={handleSubmit(onAddVideoSubmit)} noValidate className="space-y-4 font-sans">
-          <DialogHeader>
-            <DialogTitle>Add Video Embed</DialogTitle>
-            <DialogDescription>
-              Provide video title, category, and YouTube/Vimeo embed URL.
-            </DialogDescription>
-          </DialogHeader>
+      {/* Video Preview Modal */}
+      <VideoPreviewModal
+        isOpen={!!previewVideo}
+        onClose={() => setPreviewVideo(null)}
+        video={previewVideo}
+      />
 
-          <div className="space-y-4 py-2">
-            <div>
-              <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
-                Video Title <span className="text-rose-500">*</span>
-              </label>
-              <Input
-                type="text"
-                {...register('title')}
-                placeholder="e.g. Resort Sunset Aerial View"
-                className={errors.title ? 'border-rose-500 focus-visible:ring-rose-500' : ''}
-              />
-              {errors.title && (
-                <p className="text-xs text-rose-600 dark:text-rose-400 font-medium mt-1 flex items-center gap-1">
-                  <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                  {errors.title.message}
-                </p>
-              )}
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
-                  Category <span className="text-rose-500">*</span>
-                </label>
-                <select
-                  {...register('category')}
-                  className="w-full h-9 rounded-sm border border-zinc-300 bg-white px-3 py-1 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50 focus:outline-none font-sans"
-                >
-                  <option value="Resort Tour">Resort Tour</option>
-                  <option value="Culinary">Culinary</option>
-                  <option value="Riverfront">Riverfront</option>
-                  <option value="Culture">Culture</option>
-                </select>
-                {errors.category && (
-                  <p className="text-xs text-rose-600 dark:text-rose-400 font-medium mt-1 flex items-center gap-1">
-                    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                    {errors.category.message}
-                  </p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
-                  Embed Video URL <span className="text-rose-500">*</span>
-                </label>
-                <Input
-                  type="url"
-                  {...register('videoUrl')}
-                  placeholder="https://www.youtube.com/embed/..."
-                  className={errors.videoUrl ? 'border-rose-500 focus-visible:ring-rose-500' : ''}
-                />
-                {errors.videoUrl && (
-                  <p className="text-xs text-rose-600 dark:text-rose-400 font-medium mt-1 flex items-center gap-1">
-                    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                    {errors.videoUrl.message}
-                  </p>
-                )}
-              </div>
-            </div>
-          </div>
-
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => setIsAddModalOpen(false)}
-            >
-              Cancel
-            </Button>
-            <Button type="submit" size="sm">
-              Save Video
-            </Button>
-          </DialogFooter>
-        </form>
-      </Dialog>
+      {/* Confirm Delete Dialog */}
+      <ConfirmDeleteDialog
+        isOpen={!!deleteTargetVideo}
+        onClose={() => setDeleteTargetVideo(null)}
+        onConfirm={handleConfirmDelete}
+        title="Delete Video Showcase"
+        description={`Are you sure you want to remove "${deleteTargetVideo?.title}"? This action cannot be undone.`}
+      />
     </div>
   );
 }

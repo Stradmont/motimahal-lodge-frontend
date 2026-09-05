@@ -9,6 +9,7 @@ import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useContactSettings } from '@/lib/contact-settings';
+import { ContactService } from '@/lib/services/contact.service';
 
 const contactSchema = z.object({
   firstName: z
@@ -60,7 +61,18 @@ export default function ContactPage() {
     mode: 'onBlur',
   });
 
-  const onSubmit = (data: ContactFormData) => {
+  const onSubmit = async (data: ContactFormData) => {
+    try {
+      await ContactService.submit({
+        name: `${data.firstName} ${data.lastName}`.trim(),
+        email: data.email,
+        phone: data.telephone,
+        subject: data.subject,
+        message: data.message,
+      });
+    } catch (e) {
+      console.error('Failed to submit contact message:', e);
+    }
     setSubmittedName(data.firstName);
     setSubmitted(true);
     reset();

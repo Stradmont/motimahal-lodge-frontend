@@ -21,7 +21,7 @@ export default function AboutSection() {
 
         <div className="space-y-5 text-stone-700 text-base sm:text-lg lg:text-xl leading-relaxed font-normal max-w-4xl mx-auto">
           <p>
-            Welcome to Motimahal Lodge and Restaurant, a family-owned establishment located in Bharatpur-10, Chitwan. Established three decades ago by our family, our lodge stands as a testament to our unwavering passion for hospitality, fresh local food, and quiet rest.
+            Welcome to Motimahal Lodge and Restaurant, a family-owned establishment located in Bharatpur-3, Chitwan. Established three decades ago by our family, our lodge stands as a testament to our unwavering passion for hospitality, fresh local food, and quiet rest.
           </p>
           <p>
             Located just 5 minutes from the Narayani Riverfront promenade and 30 minutes drive from Chitwan National Park, guests enjoy easy access to river sunsets and wildlife safaris.

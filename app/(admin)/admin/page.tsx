@@ -7,197 +7,214 @@ import {
   Image as ImageIcon,
   Bed,
   Video,
-  ArrowRight,
   ExternalLink,
+  Settings,
+  ArrowRight,
+  Loader2,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableHead,
-  TableRow,
-  TableCell,
-} from '@/components/ui/table';
+import { AdminDataTable } from '@/components/admin/common/AdminDataTable';
 import AdminPageHeader from '@/components/admin/layout/AdminPageHeader';
+import { useRooms } from '@/hooks/useRooms';
+import { useContacts } from '@/hooks/useContacts';
+import { useGallery } from '@/hooks/useGallery';
+import { useVideo } from '@/hooks/useVideo';
+import { GeneralContactStatus } from '@/lib/types/inquiry';
 
 export default function AdminDashboardOverview() {
-  const cmsModules = [
+  const { rooms, isLoading: isLoadingRooms } = useRooms();
+  const { submissions, isLoading: isLoadingContacts } = useContacts();
+  const { sections, isLoading: isLoadingGallery } = useGallery();
+  const { videos, isLoading: isLoadingVideos } = useVideo();
+
+  const newInquiriesCount = submissions.filter((s) => s.status === GeneralContactStatus.NEW).length;
+
+  const metrics = [
     {
-      title: 'Contact Inquiries',
-      description: 'Review guest booking requests, restaurant reservations, and dispatch replies.',
+      title: 'Unread Inquiries',
+      value: isLoadingContacts ? '...' : `${newInquiriesCount} New`,
       href: '/admin/contact',
       icon: MessageSquare,
-      stat: '3 Unread',
+      badge: 'Action Required',
+      badgeVariant: 'destructive' as const,
+    },
+    {
+      title: 'Total Rooms',
+      value: isLoadingRooms ? '...' : `${rooms.length} Categories`,
+      href: '/admin/rooms',
+      icon: Bed,
+      badge: `${rooms.reduce((acc, r) => acc + (r.totalUnits || 1), 0)} Units`,
+      badgeVariant: 'outline' as const,
     },
     {
       title: 'Gallery Media',
-      description: 'Manage photo collections, high-res lodge imagery, and categories.',
+      value: isLoadingGallery ? '...' : `${sections.length} Collections`,
       href: '/admin/gallery',
       icon: ImageIcon,
-      stat: '24 Photos',
+      badge: 'Active',
+      badgeVariant: 'secondary' as const,
     },
     {
-      title: 'Rooms & Rates',
-      description: 'Update room pricing tiers, guest capacity, and availability status.',
-      href: '/admin/rooms',
-      icon: Bed,
-      stat: '4 Rooms',
-    },
-    {
-      title: 'Videos & Tours',
-      description: 'Curate resort video links, YouTube embeds, and promotional showcases.',
+      title: 'Video Showcase',
+      value: isLoadingVideos ? '...' : `${videos.length} Tours`,
       href: '/admin/videos',
       icon: Video,
-      stat: '4 Videos',
+      badge: 'Published',
+      badgeVariant: 'outline' as const,
     },
   ];
 
+  const recentActivities = submissions.slice(0, 5).map((sub) => ({
+    id: sub.id,
+    activity: `Inquiry from ${sub.name}: "${sub.subject}"`,
+    module: sub.category || 'Contact',
+    timestamp: sub.date,
+  }));
+
   return (
-    <div>
-      {/* Reusable Page Header */}
+    <div className="space-y-6 font-sans">
+      {/* Page Header */}
       <AdminPageHeader
-        title="Moti Mahal Administration"
-        description="Centralized CMS for managing room inventories, contact submissions, gallery media, and promotional video content."
+        title="Dashboard Overview"
+        description="Moti Mahal Lodge business management portal."
         action={
           <div className="flex items-center gap-2">
             <Link href="/admin/contact">
-              <Button size="sm" className="h-9 text-sm">
-                Inquiries (3)
+              <Button size="sm">
+                View Inquiries ({newInquiriesCount})
               </Button>
             </Link>
             <Link href="/" target="_blank">
-              <Button variant="outline" size="sm" className="h-9 text-sm">
-                <ExternalLink className="w-4 h-4 mr-1.5" /> Public Site
+              <Button variant="outline" size="sm">
+                <ExternalLink className="w-3.5 h-3.5 mr-1.5" /> Website
               </Button>
             </Link>
           </div>
         }
       />
 
-      {/* CMS Modules Grid */}
-      <div className="mb-6">
-        <h3 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">
-          Content Modules
-        </h3>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {cmsModules.map((item) => {
-            const Icon = item.icon;
-            return (
-              <Link key={item.href} href={item.href}>
-                <div className="border border-zinc-200 dark:border-zinc-800 rounded-sm bg-white dark:bg-zinc-950 p-4 hover:border-zinc-400 dark:hover:border-zinc-600 transition-colors group cursor-pointer h-full flex flex-col justify-between space-y-3 font-sans">
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2.5">
-                        <div className="w-8 h-8 rounded-sm bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 flex items-center justify-center border border-zinc-200 dark:border-zinc-700">
-                          <Icon className="w-4 h-4" />
-                        </div>
-                        <h4 className="font-semibold text-sm text-zinc-900 dark:text-zinc-50">
-                          {item.title}
-                        </h4>
-                      </div>
-                      <Badge variant="outline">{item.stat}</Badge>
-                    </div>
-
-                    <p className="text-sm text-zinc-500 dark:text-zinc-400 leading-normal">
-                      {item.description}
-                    </p>
-                  </div>
-
-                  <div className="pt-2 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between text-sm font-medium text-zinc-900 dark:text-zinc-100">
-                    <span>Manage {item.title}</span>
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </div>
+      {/* Summary Metric Strip */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {metrics.map((m) => {
+          const Icon = m.icon;
+          return (
+            <Link key={m.href} href={m.href} className="group">
+              <div className="border border-slate-200 dark:border-slate-800 rounded-md bg-white dark:bg-slate-950 p-4 hover:border-slate-400 dark:hover:border-slate-700 transition-colors flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-medium text-slate-500">{m.title}</p>
+                  <p className="text-lg font-bold text-slate-900 dark:text-slate-100 mt-0.5">{m.value}</p>
                 </div>
-              </Link>
-            );
-          })}
-        </div>
+                <div className="w-9 h-9 rounded bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300 flex items-center justify-center border border-slate-200 dark:border-slate-800 group-hover:bg-slate-900 group-hover:text-white dark:group-hover:bg-slate-100 dark:group-hover:text-slate-900 transition-colors">
+                  <Icon className="w-4 h-4" />
+                </div>
+              </div>
+            </Link>
+          );
+        })}
       </div>
 
-      {/* Activity Table & System Summary */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 border border-zinc-200 dark:border-zinc-800 rounded-sm bg-white dark:bg-zinc-950 overflow-hidden font-sans">
-          <div className="p-4 border-b border-zinc-200 dark:border-zinc-800">
-            <h4 className="font-semibold text-sm text-zinc-900 dark:text-zinc-50">
-              Recent Activity Log
-            </h4>
+      {/* Recent Activity Table & Quick Shortcuts */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pt-2">
+        <div className="lg:col-span-2 space-y-2">
+          <div className="flex items-center justify-between px-1">
+            <h3 className="font-semibold text-sm text-slate-900 dark:text-slate-100">
+              Recent System Inquiries & Activity
+            </h3>
+            <Link href="/admin/contact" className="text-xs text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 font-medium">
+              View all
+            </Link>
           </div>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Event</TableHead>
-                <TableHead>Module</TableHead>
-                <TableHead className="text-right">Timestamp</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell className="font-medium text-sm">
-                  New inquiry received from Aarav Sharma (Deluxe Suite)
-                </TableCell>
-                <TableCell>
-                  <Badge variant="outline">Contact</Badge>
-                </TableCell>
-                <TableCell className="text-right text-xs text-zinc-500">
-                  Today, 14:30
-                </TableCell>
-              </TableRow>
-
-              <TableRow>
-                <TableCell className="font-medium text-sm">
-                  Dispatched email response to Maya Lin
-                </TableCell>
-                <TableCell>
-                  <Badge variant="outline">Contact</Badge>
-                </TableCell>
-                <TableCell className="text-right text-xs text-zinc-500">
-                  Yesterday, 09:20
-                </TableCell>
-              </TableRow>
-
-              <TableRow>
-                <TableCell className="font-medium text-sm">
-                  Updated Gallery photo: Riverfront Sunset View
-                </TableCell>
-                <TableCell>
-                  <Badge variant="outline">Gallery</Badge>
-                </TableCell>
-                <TableCell className="text-right text-xs text-zinc-500">
-                  Sep 01, 2026
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
+          <AdminDataTable
+            isLoading={isLoadingContacts}
+            emptyMessage="No recent guest inquiry activity recorded."
+            columns={[
+              {
+                key: 'activity',
+                header: 'Activity description',
+                render: (item) => (
+                  <span className="font-medium text-slate-900 dark:text-slate-100">{item.activity}</span>
+                ),
+              },
+              {
+                key: 'module',
+                header: 'Module',
+                width: '120px',
+                render: (item) => (
+                  <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300">
+                    {item.module}
+                  </span>
+                ),
+              },
+              {
+                key: 'timestamp',
+                header: 'Date',
+                align: 'right',
+                width: '150px',
+                render: (item) => (
+                  <span className="text-xs text-slate-500 font-mono">{item.timestamp}</span>
+                ),
+              },
+            ]}
+            data={recentActivities}
+            keyExtractor={(item) => item.id}
+          />
         </div>
 
-        <div className="border border-zinc-200 dark:border-zinc-800 rounded-sm bg-white dark:bg-zinc-950 p-4 space-y-4 flex flex-col justify-between font-sans">
+        {/* System Summary & Quick Actions */}
+        <div className="border border-slate-200 dark:border-slate-800 rounded-md bg-white dark:bg-slate-950 p-4 flex flex-col justify-between font-sans">
           <div className="space-y-3">
-            <h4 className="font-semibold text-sm text-zinc-900 dark:text-zinc-50 border-b border-zinc-200 dark:border-zinc-800 pb-2">
-              System Environment
-            </h4>
+            <h3 className="font-semibold text-sm text-slate-900 dark:text-slate-100 border-b border-slate-200 dark:border-slate-800 pb-2">
+              Management Navigation
+            </h3>
 
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between py-1 border-b border-zinc-100 dark:border-zinc-900">
-                <span className="text-zinc-500">Active Role:</span>
-                <span className="font-medium text-zinc-900 dark:text-zinc-100">Administrator</span>
-              </div>
-              <div className="flex justify-between py-1 border-b border-zinc-100 dark:border-zinc-900">
-                <span className="text-zinc-500">CMS Engine:</span>
-                <span className="font-mono text-zinc-700 dark:text-zinc-300 text-xs">Next.js App Router</span>
-              </div>
-              <div className="flex justify-between py-1">
-                <span className="text-zinc-500">Status:</span>
-                <span className="font-medium text-emerald-600 dark:text-emerald-400">Operational</span>
-              </div>
+            <div className="space-y-1">
+              <Link
+                href="/admin/rooms"
+                className="flex items-center justify-between p-2 rounded hover:bg-slate-100 dark:hover:bg-slate-900 text-xs text-slate-700 dark:text-slate-300 font-medium transition-colors"
+              >
+                <span className="flex items-center gap-2">
+                  <Bed className="w-3.5 h-3.5 text-slate-500" /> Manage Rooms & Pricing
+                </span>
+                <ArrowRight className="w-3 h-3 text-slate-400" />
+              </Link>
+              <Link
+                href="/admin/contact"
+                className="flex items-center justify-between p-2 rounded hover:bg-slate-100 dark:hover:bg-slate-900 text-xs text-slate-700 dark:text-slate-300 font-medium transition-colors"
+              >
+                <span className="flex items-center gap-2">
+                  <MessageSquare className="w-3.5 h-3.5 text-slate-500" /> Guest Contact Inquiries
+                </span>
+                <ArrowRight className="w-3 h-3 text-slate-400" />
+              </Link>
+              <Link
+                href="/admin/gallery"
+                className="flex items-center justify-between p-2 rounded hover:bg-slate-100 dark:hover:bg-slate-900 text-xs text-slate-700 dark:text-slate-300 font-medium transition-colors"
+              >
+                <span className="flex items-center gap-2">
+                  <ImageIcon className="w-3.5 h-3.5 text-slate-500" /> Lodge Photo Gallery
+                </span>
+                <ArrowRight className="w-3 h-3 text-slate-400" />
+              </Link>
+              <Link
+                href="/admin/settings"
+                className="flex items-center justify-between p-2 rounded hover:bg-slate-100 dark:hover:bg-slate-900 text-xs text-slate-700 dark:text-slate-300 font-medium transition-colors"
+              >
+                <span className="flex items-center gap-2">
+                  <Settings className="w-3.5 h-3.5 text-slate-500" /> Contact & Location Info
+                </span>
+                <ArrowRight className="w-3 h-3 text-slate-400" />
+              </Link>
             </div>
           </div>
 
-          <Link href="/admin/contact">
-            <Button className="w-full text-sm h-9">Go to Inquiries</Button>
-          </Link>
+          <div className="pt-4 border-t border-slate-200 dark:border-slate-800">
+            <div className="flex items-center justify-between text-xs text-slate-500">
+              <span>System Status:</span>
+              <span className="text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" /> API Connected
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     </div>

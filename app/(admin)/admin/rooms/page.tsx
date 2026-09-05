@@ -1,12 +1,28 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Plus, Trash2, AlertCircle } from 'lucide-react';
-import { z } from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { Plus, Pencil, Trash2, Eye, Loader2, CalendarCheck, ZoomIn, GripVertical } from 'lucide-react';
+import { toast } from 'sonner';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+  useSortable,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import {
   Table,
@@ -19,423 +35,572 @@ import {
 import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import AdminPageHeader from '@/components/admin/layout/AdminPageHeader';
 import AdminFilterBar from '@/components/admin/layout/AdminFilterBar';
+import ConfirmDeleteDialog from '@/components/admin/common/ConfirmDeleteDialog';
+import RoomFormModal from '@/components/admin/rooms/RoomFormModal';
+import FullMediaPreviewModal from '@/components/admin/common/FullMediaPreviewModal';
+import { RoomItem, CreateRoomInput, RoomCategory, RoomStatus } from '@/lib/types/room';
+import { useRooms } from '@/hooks/useRooms';
 
-interface RoomItem {
-  id: string;
-  name: string;
-  type: 'Deluxe' | 'Suite' | 'Standard' | 'Family';
-  pricePerNight: number;
-  capacity: number;
-  status: 'available' | 'occupied' | 'maintenance';
-  amenities: string[];
-  imageUrl: string;
+interface SortableRoomRowProps {
+  room: RoomItem;
+  index: number;
+  onFullscreenMediaRequested: (media: { src: string; title: string }) => void;
+  onPreviewRequested: (room: RoomItem) => void;
+  onEditRequested: (room: RoomItem) => void;
+  onToggleStatusRequested: (room: RoomItem) => void;
+  onDeleteRequested: (room: RoomItem) => void;
+  isDragDisabled: boolean;
 }
 
-const mockRooms: RoomItem[] = [
-  {
-    id: 'RM-101',
-    name: 'River View Deluxe Suite',
-    type: 'Suite',
-    pricePerNight: 8500,
-    capacity: 2,
-    status: 'available',
-    amenities: ['River Balcony', 'AC', 'Free WiFi', 'Breakfast'],
-    imageUrl: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80',
-  },
-  {
-    id: 'RM-102',
-    name: 'Heritage Garden Double Room',
-    type: 'Deluxe',
-    pricePerNight: 5500,
-    capacity: 2,
-    status: 'occupied',
-    amenities: ['Garden View', 'AC', 'Free WiFi', 'Flat TV'],
-    imageUrl: 'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=800&q=80',
-  },
-  {
-    id: 'RM-103',
-    name: 'Executive Family Cottage',
-    type: 'Family',
-    pricePerNight: 12000,
-    capacity: 5,
-    status: 'available',
-    amenities: ['2 Bedrooms', 'Living Room', 'Patio'],
-    imageUrl: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80',
-  },
-  {
-    id: 'RM-104',
-    name: 'Standard Cozy Twin Room',
-    type: 'Standard',
-    pricePerNight: 3800,
-    capacity: 2,
-    status: 'maintenance',
-    amenities: ['Twin Beds', 'Free WiFi', 'Hot Shower'],
-    imageUrl: 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=800&q=80',
-  },
-];
-
-const roomSchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(1, { message: 'Room title is required' })
-    .min(2, { message: 'Room title must be at least 2 characters' }),
-  type: z.enum(['Deluxe', 'Suite', 'Family', 'Standard']),
-  pricePerNight: z
-    .string()
-    .trim()
-    .min(1, { message: 'Rate per night is required' })
-    .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
-      message: 'Rate per night must be a valid positive number',
-    }),
-  capacity: z
-    .string()
-    .trim()
-    .min(1, { message: 'Guest capacity is required' })
-    .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
-      message: 'Capacity must be a valid positive number',
-    }),
-  imageUrl: z
-    .string()
-    .trim()
-    .optional()
-    .refine((val) => !val || z.string().url().safeParse(val).success, {
-      message: 'Please enter a valid URL (starting with http:// or https://)',
-    }),
-});
-
-type RoomFormData = z.infer<typeof roomSchema>;
-
-export default function AdminRoomsPage() {
-  const [rooms, setRooms] = useState<RoomItem[]>(mockRooms);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterType, setFilterType] = useState<string>('All');
-  const [toast, setToast] = useState('');
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-
+function SortableRoomRow({
+  room,
+  index,
+  onFullscreenMediaRequested,
+  onPreviewRequested,
+  onEditRequested,
+  onToggleStatusRequested,
+  onDeleteRequested,
+  isDragDisabled,
+}: SortableRoomRowProps) {
   const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<RoomFormData>({
-    resolver: zodResolver(roomSchema),
-    defaultValues: {
-      name: '',
-      type: 'Deluxe',
-      pricePerNight: '5000',
-      capacity: '2',
-      imageUrl: '',
-    },
-    mode: 'onBlur',
-  });
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: room.id, disabled: isDragDisabled });
 
-  const filteredRooms = rooms.filter((room) => {
-    const matchesType = filterType === 'All' || room.type === filterType;
-    const matchesSearch = room.name.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesType && matchesSearch;
-  });
-
-  const filterOptions = [
-    { key: 'All', label: 'All' },
-    { key: 'Deluxe', label: 'Deluxe' },
-    { key: 'Suite', label: 'Suite' },
-    { key: 'Family', label: 'Family' },
-    { key: 'Standard', label: 'Standard' },
-  ];
-
-  const handleToggleStatus = (id: string) => {
-    setRooms(
-      rooms.map((room) => {
-        if (room.id === id) {
-          const nextStatus: RoomItem['status'] =
-            room.status === 'available'
-              ? 'occupied'
-              : room.status === 'occupied'
-              ? 'maintenance'
-              : 'available';
-          return { ...room, status: nextStatus };
-        }
-        return room;
-      })
-    );
-    showToast('Room status updated');
-  };
-
-  const handleDeleteRoom = (id: string) => {
-    setRooms(rooms.filter((r) => r.id !== id));
-    showToast('Room deleted from inventory');
-  };
-
-  const onAddRoomSubmit = (data: RoomFormData) => {
-    const newRoom: RoomItem = {
-      id: `RM-10${rooms.length + 1}`,
-      name: data.name,
-      type: data.type,
-      pricePerNight: parseInt(data.pricePerNight),
-      capacity: parseInt(data.capacity),
-      status: 'available',
-      amenities: ['Free WiFi', 'AC', 'Breakfast Included'],
-      imageUrl:
-        data.imageUrl ||
-        'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80',
-    };
-
-    setRooms([newRoom, ...rooms]);
-    setIsAddModalOpen(false);
-    reset();
-    showToast('Room entry created successfully');
-  };
-
-  const showToast = (msg: string) => {
-    setToast(msg);
-    setTimeout(() => setToast(''), 2500);
+  const style: React.CSSProperties = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.6 : 1,
+    position: 'relative',
+    zIndex: isDragging ? 40 : 1,
   };
 
   return (
-    <div>
-      {/* Toast */}
-      {toast && (
-        <div className="fixed bottom-5 right-5 z-50 bg-zinc-900 text-zinc-50 border border-zinc-700 px-4 py-2 rounded-sm text-sm font-medium shadow-md">
-          {toast}
-        </div>
-      )}
-
-      {/* Reusable Page Header */}
-      <AdminPageHeader
-        title="Rooms & Rates Inventory"
-        description="Manage lodge room categories, nightly rates, capacity, and availability status."
-        action={
-          <Button
-            size="sm"
-            onClick={() => setIsAddModalOpen(true)}
-            className="text-sm h-9"
+    <TableRow
+      ref={setNodeRef}
+      style={style}
+      className={`transition-colors border-b border-slate-100 dark:border-slate-800/60 hover:bg-slate-50/80 dark:hover:bg-slate-900/50 ${
+        isDragging
+          ? 'bg-amber-50/80 dark:bg-amber-950/40 shadow-md ring-1 ring-amber-300 dark:ring-amber-800'
+          : ''
+      }`}
+    >
+      <TableCell className="py-3.5 px-4 text-sm align-middle w-28">
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            {...attributes}
+            {...listeners}
+            disabled={isDragDisabled}
+            className={`p-1.5 rounded transition-colors ${
+              isDragDisabled
+                ? 'opacity-30 cursor-not-allowed text-slate-300 dark:text-slate-600'
+                : 'text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 cursor-grab active:cursor-grabbing hover:bg-slate-100 dark:hover:bg-slate-800'
+            }`}
+            title={isDragDisabled ? 'Clear search/filter to reorder' : 'Drag to reorder display sequence'}
           >
-            <Plus className="w-4 h-4 mr-1.5" />
-            Add Room
+            <GripVertical className="w-4 h-4 shrink-0" />
+          </button>
+          <Badge variant="outline" className="text-[11px] font-mono px-2 py-0.5 font-semibold shrink-0">
+            #{index + 1}
+          </Badge>
+        </div>
+      </TableCell>
+
+      <TableCell className="py-3.5 px-4 text-sm align-middle">
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() =>
+              onFullscreenMediaRequested({
+                src: room.imageUrl,
+                title: room.name,
+              })
+            }
+            className="relative group shrink-0 rounded overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-900 cursor-pointer focus:outline-none focus:ring-2 focus:ring-slate-400"
+            title="Click to view full media"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={room.imageUrl}
+              alt={room.name}
+              className="w-12 h-9 object-cover transition-transform duration-200 group-hover:scale-110"
+              onError={(e) => {
+                (e.target as HTMLImageElement).src =
+                  'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80';
+              }}
+            />
+            <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <ZoomIn className="w-3.5 h-3.5 text-white" />
+            </div>
+          </button>
+          <div>
+            <div className="flex items-center gap-1.5">
+              <span className="font-semibold text-slate-900 dark:text-slate-100 text-sm">
+                {room.name}
+              </span>
+              {room.isFeatured && (
+                <Badge variant="outline" className="text-[10px] py-0 px-1 text-amber-600 border-amber-300">
+                  Featured
+                </Badge>
+              )}
+            </div>
+            <div className="flex items-center gap-2 text-xs text-slate-500 font-mono mt-0.5">
+              <span>{room.id}</span>
+              {room.bedType && <span>• {room.bedType}</span>}
+            </div>
+          </div>
+        </div>
+      </TableCell>
+
+      <TableCell className="py-3.5 px-4 text-sm align-middle w-32">
+        <Badge variant="outline" className="text-xs font-normal">
+          {room.type}
+        </Badge>
+      </TableCell>
+
+      <TableCell className="py-3.5 px-4 text-sm align-middle w-36">
+        <span className="font-semibold text-sm text-slate-900 dark:text-slate-100 font-mono">
+          NPR {room.pricePerNight.toLocaleString()}
+        </span>
+      </TableCell>
+
+      <TableCell className="py-3.5 px-4 text-sm align-middle w-40">
+        <div>
+          <div className="text-sm text-slate-700 dark:text-slate-300 font-medium">{room.capacity} Guests</div>
+          <span className="text-xs text-slate-400 font-mono">
+            {room.totalUnits || 1} {room.totalUnits === 1 ? 'unit' : 'units'}
+          </span>
+        </div>
+      </TableCell>
+
+      <TableCell className="py-3.5 px-4 text-sm align-middle w-32">
+        {room.status === RoomStatus.AVAILABLE && <Badge variant="success">Available</Badge>}
+        {room.status === RoomStatus.OCCUPIED && <Badge variant="secondary">Occupied</Badge>}
+        {room.status === RoomStatus.MAINTENANCE && <Badge variant="destructive">Maintenance</Badge>}
+      </TableCell>
+
+      <TableCell className="py-3.5 px-4 text-sm align-middle w-48 text-right">
+        <div className="flex items-center justify-end gap-1">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => onPreviewRequested(room)}
+            title="View details"
+            className="h-8 w-8"
+          >
+            <Eye className="w-3.5 h-3.5 text-slate-600 dark:text-slate-400" />
           </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => onEditRequested(room)}
+            title="Edit room"
+            className="h-8 w-8"
+          >
+            <Pencil className="w-3.5 h-3.5 text-slate-600 dark:text-slate-400" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => onToggleStatusRequested(room)}
+            className="h-8 text-xs px-2 text-slate-700 dark:text-slate-300"
+            title="Cycle availability status"
+          >
+            Cycle Status
+          </Button>
+          <Button
+            variant="destructive"
+            size="icon"
+            onClick={() => onDeleteRequested(room)}
+            className="h-8 w-8"
+            title="Delete room"
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+          </Button>
+        </div>
+      </TableCell>
+    </TableRow>
+  );
+}
+
+export default function AdminRoomsPage() {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterType, setFilterType] = useState<string>('All');
+
+  // Domain API Hook
+  const { rooms, isLoading, createRoom, updateRoom, updateRoomStatus, deleteRoom } = useRooms({
+    type: filterType,
+    search: searchTerm,
+  });
+
+  // Modal states
+  const [isFormModalOpen, setIsFormModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState<'create' | 'edit'>('create');
+  const [selectedRoom, setSelectedRoom] = useState<RoomItem | null>(null);
+  const [deleteTargetRoom, setDeleteTargetRoom] = useState<RoomItem | null>(null);
+  const [previewRoom, setPreviewRoom] = useState<RoomItem | null>(null);
+  const [fullscreenMedia, setFullscreenMedia] = useState<{
+    src: string;
+    title: string;
+  } | null>(null);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 5,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  const filterOptions = [
+    { key: 'All', label: 'All Categories' },
+    ...Object.values(RoomCategory).map((cat) => ({ key: cat as string, label: cat as string })),
+  ];
+
+  const isDragDisabled = filterType !== 'All' || searchTerm.trim().length > 0;
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (over && active.id !== over.id) {
+      toast.success('Room inventory display order updated');
+    }
+  };
+
+  const handleOpenCreateModal = () => {
+    setSelectedRoom(null);
+    setModalMode('create');
+    setIsFormModalOpen(true);
+  };
+
+  const handleOpenEditModal = (room: RoomItem) => {
+    setSelectedRoom(room);
+    setModalMode('edit');
+    setIsFormModalOpen(true);
+  };
+
+  const handleFormSubmit = async (data: CreateRoomInput) => {
+    try {
+      if (modalMode === 'create') {
+        const res = await createRoom(data);
+        if (res.success) {
+          toast.success(res.message || `Room "${data.name}" created successfully`);
+          setIsFormModalOpen(false);
+        } else {
+          toast.error(res.message || 'Failed to create room');
+        }
+      } else if (selectedRoom) {
+        const res = await updateRoom(selectedRoom.id, data);
+        if (res.success) {
+          toast.success(res.message || `Room "${data.name}" updated successfully`);
+          setIsFormModalOpen(false);
+        } else {
+          toast.error(res.message || 'Failed to update room');
+        }
+      }
+    } catch (error) {
+      toast.error('Something went wrong');
+    }
+  };
+
+  const handleToggleStatus = async (room: RoomItem) => {
+    const nextStatus: RoomStatus =
+      room.status === RoomStatus.AVAILABLE
+        ? RoomStatus.OCCUPIED
+        : room.status === RoomStatus.OCCUPIED
+        ? RoomStatus.MAINTENANCE
+        : RoomStatus.AVAILABLE;
+
+    try {
+      const res = await updateRoomStatus(room.id, nextStatus);
+      if (res.success) {
+        toast.success(res.message || `Status for "${room.name}" changed to ${nextStatus}`);
+      } else {
+        toast.error(res.message || 'Failed to update room status');
+      }
+    } catch (err: any) {
+      toast.error('Something went wrong updating room status');
+    }
+  };
+
+  const handleConfirmDeleteRoom = async () => {
+    if (!deleteTargetRoom) return;
+    try {
+      const res = await deleteRoom(deleteTargetRoom.id);
+      if (res.success) {
+        toast.success(res.message || `Room "${deleteTargetRoom.name}" deleted`);
+      } else {
+        toast.error(res.message || 'Failed to delete room');
+      }
+    } catch (err: any) {
+      toast.error('Something went wrong deleting room');
+    } finally {
+      setDeleteTargetRoom(null);
+    }
+  };
+
+  return (
+    <div className="space-y-6 font-sans">
+      {/* Page Header */}
+      <AdminPageHeader
+        title="Rooms & Accommodations"
+        description="Manage room inventories, pricing tiers, amenities, and drag & drop display order."
+        action={
+          <div className="flex items-center gap-2">
+            <Link href="/admin/rooms/inquiries">
+              <Button size="sm" variant="outline">
+                <CalendarCheck className="w-3.5 h-3.5 mr-1.5 text-slate-500" />
+                Room Inquiries
+              </Button>
+            </Link>
+            <Button size="sm" onClick={handleOpenCreateModal}>
+              <Plus className="w-3.5 h-3.5 mr-1.5" />
+              Create Room
+            </Button>
+          </div>
         }
       />
 
-      {/* Reusable Control & Search Bar */}
+      {/* Filter Bar */}
       <AdminFilterBar
         filterOptions={filterOptions}
         activeFilter={filterType}
         onFilterChange={setFilterType}
         searchValue={searchTerm}
         onSearchChange={setSearchTerm}
-        searchPlaceholder="Filter room name..."
+        searchPlaceholder="Search room title or ID..."
       />
 
-      {/* Main Data Table */}
-      <div className="border border-zinc-200 dark:border-zinc-800 rounded-sm bg-white dark:bg-zinc-950 overflow-hidden">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Room Details</TableHead>
-              <TableHead>Category</TableHead>
-              <TableHead>Nightly Rate</TableHead>
-              <TableHead>Capacity</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredRooms.map((room) => (
-              <TableRow key={room.id}>
-                <TableCell>
-                  <div className="flex items-center gap-3">
-                    <img
-                      src={room.imageUrl}
-                      alt={room.name}
-                      className="w-12 h-9 object-cover rounded-sm border border-zinc-200 dark:border-zinc-800 shrink-0"
-                    />
-                    <div>
-                      <p className="font-semibold text-zinc-900 dark:text-zinc-100 text-sm">
-                        {room.name}
-                      </p>
-                      <span className="text-xs text-zinc-500 font-mono">
-                        {room.id}
-                      </span>
-                    </div>
-                  </div>
-                </TableCell>
+      {/* Main Table with @dnd-kit */}
+      <div className="w-full border border-slate-200 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-950 overflow-hidden shadow-xs font-sans">
+        <div className="w-full overflow-x-auto">
+          <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+            <Table className="w-full text-left border-collapse text-sm">
+              <TableHeader className="bg-slate-50/80 dark:bg-slate-900/60 border-b border-slate-200 dark:border-slate-800">
+                <TableRow className="hover:bg-transparent">
+                  <TableHead className="w-28">
+                    Order
+                  </TableHead>
+                  <TableHead>
+                    Room specifications & title
+                  </TableHead>
+                  <TableHead className="w-32">
+                    Category
+                  </TableHead>
+                  <TableHead className="w-36">
+                    Nightly rate
+                  </TableHead>
+                  <TableHead className="w-40">
+                    Capacity & units
+                  </TableHead>
+                  <TableHead className="w-32">
+                    Availability
+                  </TableHead>
+                  <TableHead className="w-48 text-right">
+                    Actions
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
 
-                <TableCell>
-                  <Badge variant="outline" className="text-xs">
-                    {room.type}
-                  </Badge>
-                </TableCell>
+              <TableBody className="divide-y divide-slate-100 dark:divide-slate-800/60">
+                {isLoading ? (
+                  <TableRow>
+                    <TableCell colSpan={7} className="h-40 text-center text-slate-500 text-sm">
+                      <div className="flex flex-col items-center justify-center gap-2 py-4">
+                        <Loader2 className="w-5 h-5 animate-spin text-slate-400" />
+                        <span className="text-xs font-medium">Loading rooms inventory...</span>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ) : rooms.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={7} className="h-40 text-center text-slate-500 text-sm">
+                      <div className="py-6 text-xs text-slate-500 font-medium">
+                        No rooms found matching filter criteria.
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  <SortableContext items={rooms.map((r) => r.id)} strategy={verticalListSortingStrategy}>
+                    {rooms.map((room, index) => (
+                      <SortableRoomRow
+                        key={room.id}
+                        room={room}
+                        index={index}
+                        onFullscreenMediaRequested={setFullscreenMedia}
+                        onPreviewRequested={setPreviewRoom}
+                        onEditRequested={handleOpenEditModal}
+                        onToggleStatusRequested={handleToggleStatus}
+                        onDeleteRequested={setDeleteTargetRoom}
+                        isDragDisabled={isDragDisabled}
+                      />
+                    ))}
+                  </SortableContext>
+                )}
+              </TableBody>
+            </Table>
+          </DndContext>
+        </div>
 
-                <TableCell className="font-semibold text-sm text-zinc-900 dark:text-zinc-100">
-                  NPR {room.pricePerNight.toLocaleString()}
-                </TableCell>
-
-                <TableCell className="text-sm text-zinc-600 dark:text-zinc-400">
-                  {room.capacity} Guests
-                </TableCell>
-
-                <TableCell>
-                  {room.status === 'available' && (
-                    <Badge variant="default">Available</Badge>
-                  )}
-                  {room.status === 'occupied' && (
-                    <Badge variant="secondary">Occupied</Badge>
-                  )}
-                  {room.status === 'maintenance' && (
-                    <Badge variant="destructive">Maintenance</Badge>
-                  )}
-                </TableCell>
-
-                <TableCell className="text-right">
-                  <div className="flex items-center justify-end gap-1">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleToggleStatus(room.id)}
-                      className="h-8 text-xs px-2.5"
-                    >
-                      Cycle Status
-                    </Button>
-                    <Button
-                      variant="destructive"
-                      size="icon"
-                      onClick={() => handleDeleteRoom(room.id)}
-                      className="h-8 w-8"
-                      title="Delete room"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+        <div className="px-4 py-2.5 bg-slate-50/50 dark:bg-slate-900/40 border-t border-slate-200 dark:border-slate-800 text-xs text-slate-500 flex items-center justify-between">
+          <span>
+            Showing {rooms.length} room entries {!isDragDisabled && '(Drag grip handle to reorder)'}
+          </span>
+        </div>
       </div>
 
-      {/* Add Room Modal Dialog - Spacious size="3xl" */}
-      <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen} size="3xl">
-        <form onSubmit={handleSubmit(onAddRoomSubmit)} noValidate className="space-y-4 font-sans">
-          <DialogHeader>
-            <DialogTitle>Add Room Entry</DialogTitle>
-            <DialogDescription>
-              Create a new room in the lodge inventory system.
-            </DialogDescription>
-          </DialogHeader>
+      {/* Room Form Modal */}
+      <RoomFormModal
+        isOpen={isFormModalOpen}
+        onClose={() => setIsFormModalOpen(false)}
+        onSubmit={handleFormSubmit}
+        initialData={selectedRoom}
+        mode={modalMode}
+      />
 
-          <div className="space-y-4 py-2">
-            <div>
-              <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
-                Room Title <span className="text-rose-500">*</span>
-              </label>
-              <Input
-                type="text"
-                {...register('name')}
-                placeholder="e.g. Royal Riverside Villa"
-                className={errors.name ? 'border-rose-500 focus-visible:ring-rose-500' : ''}
-              />
-              {errors.name && (
-                <p className="text-xs text-rose-600 dark:text-rose-400 font-medium mt-1 flex items-center gap-1">
-                  <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                  {errors.name.message}
-                </p>
-              )}
-            </div>
+      {/* Room Details Preview Dialog */}
+      <Dialog open={!!previewRoom} onOpenChange={(open) => !open && setPreviewRoom(null)} size="3xl">
+        {previewRoom && (
+          <div className="space-y-4 font-sans">
+            <DialogHeader>
+              <div className="flex items-center justify-between">
+                <DialogTitle>{previewRoom.name}</DialogTitle>
+                <Badge variant="outline">{previewRoom.type}</Badge>
+              </div>
+              <DialogDescription>
+                ID: {previewRoom.id} • Rate: NPR {previewRoom.pricePerNight.toLocaleString()} / night • Capacity: {previewRoom.capacity} Guests
+              </DialogDescription>
+            </DialogHeader>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
-                  Category <span className="text-rose-500">*</span>
-                </label>
-                <select
-                  {...register('type')}
-                  className="w-full h-9 rounded-sm border border-zinc-300 bg-white px-3 py-1 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50 focus:outline-none font-sans"
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="md:col-span-1 space-y-2">
+                <button
+                  type="button"
+                  onClick={() =>
+                    setFullscreenMedia({
+                      src: previewRoom.imageUrl,
+                      title: previewRoom.name,
+                    })
+                  }
+                  className="relative group w-full rounded overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-900 cursor-pointer focus:outline-none"
+                  title="Click to view full media"
                 >
-                  <option value="Deluxe">Deluxe</option>
-                  <option value="Suite">Suite</option>
-                  <option value="Family">Family</option>
-                  <option value="Standard">Standard</option>
-                </select>
-                {errors.type && (
-                  <p className="text-xs text-rose-600 dark:text-rose-400 font-medium mt-1 flex items-center gap-1">
-                    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                    {errors.type.message}
-                  </p>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={previewRoom.imageUrl}
+                    alt={previewRoom.name}
+                    className="w-full h-36 object-cover transition-transform duration-200 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1 text-white text-xs font-medium">
+                    <ZoomIn className="w-4 h-4" />
+                    <span>View Full Image</span>
+                  </div>
+                </button>
+
+                {previewRoom.galleryImages && previewRoom.galleryImages.length > 0 && (
+                  <div className="space-y-1 pt-1">
+                    <span className="text-[11px] font-semibold text-slate-500 block">Gallery Photos</span>
+                    <div className="grid grid-cols-4 gap-1.5">
+                      {previewRoom.galleryImages.map((gUrl, idx) => (
+                        <button
+                          key={idx}
+                          type="button"
+                          onClick={() =>
+                            setFullscreenMedia({
+                              src: gUrl,
+                              title: `${previewRoom.name} - Gallery Photo ${idx + 1}`,
+                            })
+                          }
+                          className="relative group aspect-square rounded overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-900 cursor-pointer"
+                        >
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={gUrl}
+                            alt=""
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform"
+                          />
+                          <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <ZoomIn className="w-3 h-3 text-white" />
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                 )}
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
-                  Rate per Night (NPR) <span className="text-rose-500">*</span>
-                </label>
-                <Input
-                  type="number"
-                  {...register('pricePerNight')}
-                  placeholder="5000"
-                  className={errors.pricePerNight ? 'border-rose-500 focus-visible:ring-rose-500' : ''}
-                />
-                {errors.pricePerNight && (
-                  <p className="text-xs text-rose-600 dark:text-rose-400 font-medium mt-1 flex items-center gap-1">
-                    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                    {errors.pricePerNight.message}
+              <div className="md:col-span-2 space-y-3">
+                {previewRoom.shortDescription && (
+                  <p className="text-xs text-slate-600 dark:text-slate-400 italic bg-slate-50 dark:bg-slate-900 p-2 rounded border border-slate-200 dark:border-slate-800">
+                    "{previewRoom.shortDescription}"
                   </p>
                 )}
-              </div>
 
-              <div>
-                <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
-                  Guest Capacity <span className="text-rose-500">*</span>
-                </label>
-                <Input
-                  type="number"
-                  {...register('capacity')}
-                  placeholder="2"
-                  className={errors.capacity ? 'border-rose-500 focus-visible:ring-rose-500' : ''}
-                />
-                {errors.capacity && (
-                  <p className="text-xs text-rose-600 dark:text-rose-400 font-medium mt-1 flex items-center gap-1">
-                    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                    {errors.capacity.message}
-                  </p>
-                )}
+                <div>
+                  <h4 className="text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Amenities</h4>
+                  <div className="flex flex-wrap gap-1">
+                    {previewRoom.amenities.map((a) => (
+                      <Badge key={a} variant="secondary" className="text-xs">
+                        {a}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <h4 className="text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Full Description</h4>
+                  <div
+                    className="prose dark:prose-invert prose-xs max-w-none bg-slate-50 dark:bg-slate-900 p-3 rounded border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 overflow-y-auto max-h-48"
+                    dangerouslySetInnerHTML={{ __html: previewRoom.description }}
+                  />
+                </div>
               </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
-                Image URL (Optional)
-              </label>
-              <Input
-                type="url"
-                {...register('imageUrl')}
-                placeholder="https://images.unsplash.com/..."
-                className={errors.imageUrl ? 'border-rose-500 focus-visible:ring-rose-500' : ''}
-              />
-              {errors.imageUrl && (
-                <p className="text-xs text-rose-600 dark:text-rose-400 font-medium mt-1 flex items-center gap-1">
-                  <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                  {errors.imageUrl.message}
-                </p>
-              )}
-            </div>
+            <DialogFooter>
+              <Button size="sm" variant="outline" onClick={() => setPreviewRoom(null)}>
+                Close
+              </Button>
+              <Button
+                size="sm"
+                onClick={() => {
+                  const target = previewRoom;
+                  setPreviewRoom(null);
+                  handleOpenEditModal(target);
+                }}
+              >
+                <Pencil className="w-3.5 h-3.5 mr-1.5" />
+                Edit Room
+              </Button>
+            </DialogFooter>
           </div>
-
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => setIsAddModalOpen(false)}
-            >
-              Cancel
-            </Button>
-            <Button type="submit" size="sm">
-              Save Room
-            </Button>
-          </DialogFooter>
-        </form>
+        )}
       </Dialog>
+
+      {/* Confirm Delete Dialog */}
+      <ConfirmDeleteDialog
+        isOpen={!!deleteTargetRoom}
+        onClose={() => setDeleteTargetRoom(null)}
+        onConfirm={handleConfirmDeleteRoom}
+        title="Delete Room Entry"
+        itemName={deleteTargetRoom?.name}
+        description="Are you sure you want to remove this room category entry from your lodge inventory?"
+      />
+
+      {/* Full Media Lightbox Modal */}
+      <FullMediaPreviewModal
+        isOpen={!!fullscreenMedia}
+        onClose={() => setFullscreenMedia(null)}
+        src={fullscreenMedia?.src}
+        title={fullscreenMedia?.title}
+      />
     </div>
   );
 }

@@ -25,20 +25,30 @@
 
     /* ── Dedicated Admin Tokens (Strictly Scoped & Isolated from Marketing) ── */
     --admin-bg: #FFFFFF;
-    --admin-surface: #F9FAFB;
+    --admin-surface: #FFFFFF;
     --admin-card: #FFFFFF;
-    --admin-foreground: #09090B;
-    --admin-muted: #71717A;
-    --admin-muted-light: #F4F4F5;
-    --admin-border: #E4E4E7;
-    --admin-primary: #09090B;
-    --admin-primary-hover: #18181B;
-    --admin-primary-foreground: #FAFAFA;
-    --admin-sidebar-bg: #09090B;
-    --admin-sidebar-border: #27272A;
-    --admin-sidebar-text: #A1A1AA;
-    --admin-sidebar-text-active: #FAFAFA;
-    --admin-radius: 0.25rem; /* 4px subtle rounded-sm radius */
+    --admin-foreground: #0F172A;
+    --admin-muted: #64748B;
+    --admin-muted-light: #F8FAFC;
+    --admin-border: #E2E8F0;
+    --admin-border-subtle: #F1F5F9;
+    --admin-primary: #0F172A;
+    --admin-primary-hover: #1E293B;
+    --admin-primary-foreground: #FFFFFF;
+    --admin-accent: #C88A3B;
+
+    /* Admin Sidebar Specific Tokens */
+    --admin-sidebar-bg: #FFFFFF;
+    --admin-sidebar-border: #E2E8F0;
+    --admin-sidebar-text: #334155;
+    --admin-sidebar-text-hover: #0F172A;
+    --admin-sidebar-hover-bg: #F8FAFC;
+    --admin-sidebar-active-bg: #0F172A;
+    --admin-sidebar-active-text: #FFFFFF;
+    --admin-sidebar-active-accent: #C88A3B;
+    --admin-radius-sm: 0.25rem;  /* 4px - subtle restrained inputs, buttons, badges */
+    --admin-radius-md: 0.375rem; /* 6px - subtle restrained cards, modals, tables */
+    --admin-radius-lg: 0.5rem;   /* 8px - main layout containers */
   }
 }
 
@@ -72,14 +82,22 @@
   --color-admin-muted: var(--admin-muted);
   --color-admin-muted-light: var(--admin-muted-light);
   --color-admin-border: var(--admin-border);
+  --color-admin-border-subtle: var(--admin-border-subtle);
   --color-admin-primary: var(--admin-primary);
   --color-admin-primary-hover: var(--admin-primary-hover);
   --color-admin-primary-foreground: var(--admin-primary-foreground);
   --color-admin-sidebar-bg: var(--admin-sidebar-bg);
   --color-admin-sidebar-border: var(--admin-sidebar-border);
   --color-admin-sidebar-text: var(--admin-sidebar-text);
-  --color-admin-sidebar-text-active: var(--admin-sidebar-text-active);
-  --radius-admin: var(--admin-radius);
+  --color-admin-sidebar-text-hover: var(--admin-sidebar-text-hover);
+  --color-admin-sidebar-hover-bg: var(--admin-sidebar-hover-bg);
+  --color-admin-sidebar-active-bg: var(--admin-sidebar-active-bg);
+  --color-admin-sidebar-active-text: var(--admin-sidebar-active-text);
+  --color-admin-sidebar-active-accent: var(--admin-sidebar-active-accent);
+
+  --radius-admin-sm: var(--admin-radius-sm);
+  --radius-admin-md: var(--admin-radius-md);
+  --radius-admin-lg: var(--admin-radius-lg);
 
   --font-heading: var(--font-heading), Mirza, cursive;
   --font-sans: var(--font-sans), Jost, Helvetica, sans-serif;
@@ -108,6 +126,18 @@ h3,
 h4,
 .font-heading {
   font-family: var(--font-heading);
+}
+
+/* ── Admin Dedicated Scope (Strictly Scoped & Isolated from Marketing) ── */
+.admin-theme,
+.admin-theme h1,
+.admin-theme h2,
+.admin-theme h3,
+.admin-theme h4,
+.admin-theme h5,
+.admin-theme h6,
+.admin-theme .font-heading {
+  font-family: var(--font-sans), Jost, system-ui, -apple-system, sans-serif !important;
 }
 
 p {

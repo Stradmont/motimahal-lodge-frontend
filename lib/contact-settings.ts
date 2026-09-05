@@ -18,7 +18,7 @@ export interface ContactSettings {
 }
 
 export const DEFAULT_CONTACT_SETTINGS: ContactSettings = {
-  address: 'Bharatpur-10, Narayangarh',
+  address: 'Bharatpur-3, Narayangarh',
   cityProvince: 'Chitwan District, Bagmati Province, Nepal',
   primaryPhone: '+977 98550 12345',
   secondaryPhone: '+977 98450 67890',
@@ -44,7 +44,7 @@ export function getContactSettings(): ContactSettings {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (!saved) return DEFAULT_CONTACT_SETTINGS;
     return { ...DEFAULT_CONTACT_SETTINGS, ...JSON.parse(saved) };
-  } catch (e) {
+  } catch {
     return DEFAULT_CONTACT_SETTINGS;
   }
 }
@@ -54,17 +54,15 @@ export function saveContactSettings(settings: ContactSettings): void {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
     window.dispatchEvent(new Event('contact_settings_updated'));
-  } catch (e) {
-    console.error('Failed to save contact settings', e);
+  } catch {
+    // Ignore storage write error
   }
 }
 
 export function useContactSettings() {
-  const [settings, setSettings] = useState<ContactSettings>(DEFAULT_CONTACT_SETTINGS);
+  const [settings, setSettings] = useState<ContactSettings>(() => getContactSettings());
 
   useEffect(() => {
-    setSettings(getContactSettings());
-
     const handleUpdate = () => {
       setSettings(getContactSettings());
     };

@@ -7,6 +7,7 @@ import { Phone, Mail, Minus, Plus, CheckCircle2, MessageSquare, AlertCircle, Che
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { InquiryService } from '@/lib/services/inquiry.service';
 
 const enquirySchema = z.object({
   fullName: z
@@ -91,7 +92,19 @@ export default function RoomEnquirySection({
     mode: 'onBlur',
   });
 
-  const onEnquirySubmit = (data: EnquiryFormData) => {
+  const onEnquirySubmit = async (data: EnquiryFormData) => {
+    try {
+      await InquiryService.create({
+        roomType: activeBookingRoom.name,
+        guestName: data.fullName,
+        phone: data.whatsappNumber,
+        checkIn: data.checkIn,
+        checkOut: data.checkOut,
+        guestsCount: adultsCount + childrenCount,
+      });
+    } catch (e) {
+      console.error('Failed to submit room inquiry:', e);
+    }
     setSubmittedData({ name: data.fullName, whatsapp: data.whatsappNumber });
     setCheckIn(data.checkIn);
     setCheckOut(data.checkOut);
