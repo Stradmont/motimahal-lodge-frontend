@@ -34,7 +34,7 @@ export default function AccommodationShowcaseSection() {
       description: item.shortDescription || item.description || '',
       image:
         item.image?.url ||
-        'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=80',
+        '/about/room1.PNG',
       amenities: item.amenities || [],
     }));
   }, [apiRooms]);

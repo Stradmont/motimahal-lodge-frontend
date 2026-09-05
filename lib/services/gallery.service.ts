@@ -1,17 +1,9 @@
 import { apiClient, ApiResponse } from '@/lib/api-client';
 import { GallerySectionItem, CreateGallerySectionInput } from '@/lib/types/gallery';
 
-export const GalleryService = {
+export const AdminGalleryService = {
   async getAll(params?: { status?: string; search?: string }): Promise<ApiResponse<GallerySectionItem[]>> {
     return apiClient.get<GallerySectionItem[]>('/api/v1/admin/gallery', params);
-  },
-
-  async getPublicAll(): Promise<ApiResponse<GallerySectionItem[]>> {
-    return apiClient.get<GallerySectionItem[]>('/api/v1/public/gallery');
-  },
-
-  async getPublicBySlug(slug: string): Promise<ApiResponse<GallerySectionItem>> {
-    return apiClient.get<GallerySectionItem>(`/api/v1/public/gallery/${slug}`);
   },
 
   async getById(id: string): Promise<ApiResponse<GallerySectionItem | null>> {
@@ -29,4 +21,20 @@ export const GalleryService = {
   async delete(id: string): Promise<ApiResponse<null>> {
     return apiClient.delete<null>(`/api/v1/admin/gallery/${id}`);
   },
+};
+
+export const PublicGalleryService = {
+  async getAll(): Promise<ApiResponse<GallerySectionItem[]>> {
+    return apiClient.get<GallerySectionItem[]>('/api/v1/public/gallery');
+  },
+
+  async getBySlug(slug: string): Promise<ApiResponse<GallerySectionItem>> {
+    return apiClient.get<GallerySectionItem>(`/api/v1/public/gallery/${slug}`);
+  },
+};
+
+export const GalleryService = {
+  ...AdminGalleryService,
+  getPublicAll: PublicGalleryService.getAll,
+  getPublicBySlug: PublicGalleryService.getBySlug,
 };

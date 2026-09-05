@@ -13,15 +13,9 @@ export interface BlogItem {
   createdAt: string;
 }
 
-export const BlogService = {
+export const AdminBlogService = {
   async getAll(params?: any): Promise<ApiResponse<BlogItem[]>> {
     return apiClient.get<BlogItem[]>('/api/v1/admin/blogs', params);
-  },
-  async getPublicAll(params?: any): Promise<ApiResponse<BlogItem[]>> {
-    return apiClient.get<BlogItem[]>('/api/v1/public/blogs', params);
-  },
-  async getPublicBySlug(slug: string): Promise<ApiResponse<BlogItem>> {
-    return apiClient.get<BlogItem>(`/api/v1/public/blogs/${slug}`);
   },
   async getById(id: string): Promise<ApiResponse<BlogItem | null>> {
     return apiClient.get<BlogItem>(`/api/v1/admin/blogs/${id}`);
@@ -35,4 +29,19 @@ export const BlogService = {
   async delete(id: string): Promise<ApiResponse<null>> {
     return apiClient.delete<null>(`/api/v1/admin/blogs/${id}`);
   },
+};
+
+export const PublicBlogService = {
+  async getAll(params?: any): Promise<ApiResponse<BlogItem[]>> {
+    return apiClient.get<BlogItem[]>('/api/v1/public/blogs', params);
+  },
+  async getBySlug(slug: string): Promise<ApiResponse<BlogItem>> {
+    return apiClient.get<BlogItem>(`/api/v1/public/blogs/${slug}`);
+  },
+};
+
+export const BlogService = {
+  ...AdminBlogService,
+  getPublicAll: PublicBlogService.getAll,
+  getPublicBySlug: PublicBlogService.getBySlug,
 };

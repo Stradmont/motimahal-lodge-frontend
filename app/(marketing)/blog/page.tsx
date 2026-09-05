@@ -1,17 +1,65 @@
-'use client';
-
 import React from 'react';
+import { Metadata } from 'next';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import WhyChooseSection from '@/components/WhyChooseSection';
 import CtaSection from '@/components/CtaSection';
 import { BLOG_DATA } from '@/lib/data';
 import { ArrowRight, Clock, User, Calendar } from 'lucide-react';
+import { SITE_URL } from '@/lib/config/env.config';
+
+export const metadata: Metadata = {
+  title: 'Local Guides & News | Motimahal Lodge, Bharatpur',
+  description:
+    'Travel tips, safari planning advice, and local food guides from our family team at Motimahal Lodge in Bharatpur.',
+  alternates: {
+    canonical: `${SITE_URL}/blog`,
+  },
+  openGraph: {
+    title: 'Local Guides & News | Motimahal Lodge, Bharatpur',
+    description:
+      'Practical tips for visiting Chitwan, local travel routes, and food highlights from Motimahal Lodge.',
+    url: `${SITE_URL}/blog`,
+    siteName: 'Motimahal Lodge & Restaurant',
+    images: [
+      {
+        url: `${SITE_URL}/heroes/blog-hero.jpg`,
+        width: 1200,
+        height: 630,
+        alt: 'Motimahal Lodge Blog & Stories',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+};
+
+const blogBreadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'Home',
+      item: SITE_URL,
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: 'Stories & Blog',
+      item: `${SITE_URL}/blog`,
+    },
+  ],
+};
 
 export default function BlogListingPage() {
   return (
     <div className="min-h-screen flex flex-col text-brand-charcoal bg-texture">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogBreadcrumbSchema) }}
+      />
       <Navbar />
 
       <main className="flex-1">
@@ -27,7 +75,7 @@ export default function BlogListingPage() {
 
           <div className="relative z-20 mx-auto max-w-4xl px-6 text-center text-white space-y-4">
             <h1 className="font-heading text-4xl sm:text-6xl font-bold text-white drop-shadow-md leading-tight">
-              Stories & Travel Guides
+              Stories &amp; Travel Guides
             </h1>
             <p className="text-stone-200 text-base sm:text-xl max-w-2xl mx-auto leading-relaxed font-normal">
               Local travel advice, safari planning tips, and authentic culinary stories from Motimahal Lodge in Chitwan.
@@ -40,7 +88,7 @@ export default function BlogListingPage() {
           <div className="space-y-12">
             <div className="text-center max-w-3xl mx-auto space-y-3">
               <h2 className="font-heading text-3xl sm:text-4xl font-bold text-brand-charcoal">
-                Latest Articles & Hospitality Stories
+                Latest Articles &amp; Hospitality Stories
               </h2>
               <p className="text-stone-600 text-base sm:text-lg leading-relaxed font-normal">
                 Explore local insight from our family host team for your visit to Chitwan National Park and Bharatpur.
@@ -126,7 +174,6 @@ export default function BlogListingPage() {
             </div>
           </div>
         </section>
-
 
         {/* 4. FINAL CTA SECTION */}
         <CtaSection

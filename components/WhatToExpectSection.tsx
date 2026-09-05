@@ -5,28 +5,28 @@ import React from 'react';
 const WHAT_TO_EXPECT_ITEMS = [
   {
     icon: '/icons/mountain.svg',
-    title: 'Narayani view',
-    description: 'Enjoy peaceful river breezes and tranquil views of surrounding garden greenery in Bharatpur.',
+    title: 'River views',
+    description: 'Catch gentle river breezes and views of the Narayani River and our peaceful garden.',
   },
   {
     icon: '/icons/namche.svg',
-    title: 'Sunrise view',
-    description: 'Wake up to soft morning light, fresh air, and quiet natural surroundings ideal for relaxation.',
+    title: 'Morning sunlight',
+    description: 'Bright morning light and fresh air in every room, perfect for quiet morning tea.',
   },
   {
     icon: '/icons/blankets.svg',
-    title: 'Blankets',
-    description: 'Thoroughly sanitized, warm blankets provided in every room for cozy rest during cool nights.',
+    title: 'Warm blankets',
+    description: 'Clean, heavy blankets in every room to keep you warm on cool Chitwan evenings.',
   },
   {
     icon: '/icons/bedding.svg',
-    title: 'Full bedding',
-    description: 'Crisp laundered cotton bedsheets, plush pillows, and clean mattress setup for a restful sleep.',
+    title: 'Fresh bedding',
+    description: 'Freshly washed cotton sheets, soft pillows, and comfortable mattresses in every room.',
   },
   {
     icon: '/icons/bathroom.svg',
-    title: 'Clean bathrooms',
-    description: 'Attached ensuite bathroom with 24/7 solar hot shower water, clean towels, and essential amenities.',
+    title: 'Private bathroom',
+    description: 'Clean attached bathroom with 24/7 hot water, fresh towels, and soap.',
   },
 ];
 
@@ -41,7 +41,7 @@ export default function WhatToExpectSection() {
             What to expect from our rooms
           </h2>
           <p className="text-stone-700 text-base sm:text-lg lg:text-xl leading-relaxed font-normal">
-            Every room at Motimahal Lodge is prepared with genuine family care, fresh laundered bedding, and quiet comfort.
+            We keep our rooms simple, clean, and comfortable—so you can relax and feel right at home.
           </p>
         </div>
 

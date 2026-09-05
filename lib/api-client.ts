@@ -1,6 +1,7 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
+import { API_URL } from '@/lib/config/env.config';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4500';
+const API_BASE_URL = API_URL;
 const AUTH_KEY = 'alpineace_admin_session';
 
 // ─── Response Types ───────────────────────────────────────────────────────────

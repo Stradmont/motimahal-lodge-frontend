@@ -11,12 +11,9 @@ export interface TestimonialItem {
   status: 'PUBLISHED' | 'DRAFT';
 }
 
-export const TestimonialService = {
+export const AdminTestimonialService = {
   async getAll(params?: any): Promise<ApiResponse<TestimonialItem[]>> {
     return apiClient.get<TestimonialItem[]>('/api/v1/admin/testimonials', params);
-  },
-  async getPublicAll(params?: any): Promise<ApiResponse<TestimonialItem[]>> {
-    return apiClient.get<TestimonialItem[]>('/api/v1/public/testimonials', params);
   },
   async getById(id: string): Promise<ApiResponse<TestimonialItem | null>> {
     return apiClient.get<TestimonialItem>(`/api/v1/admin/testimonials/${id}`);
@@ -30,4 +27,15 @@ export const TestimonialService = {
   async delete(id: string): Promise<ApiResponse<null>> {
     return apiClient.delete<null>(`/api/v1/admin/testimonials/${id}`);
   },
+};
+
+export const PublicTestimonialService = {
+  async getAll(params?: any): Promise<ApiResponse<TestimonialItem[]>> {
+    return apiClient.get<TestimonialItem[]>('/api/v1/public/testimonials', params);
+  },
+};
+
+export const TestimonialService = {
+  ...AdminTestimonialService,
+  getPublicAll: PublicTestimonialService.getAll,
 };

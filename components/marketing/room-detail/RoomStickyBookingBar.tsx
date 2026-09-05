@@ -3,7 +3,7 @@
 import React from 'react';
 import { Room } from '@/lib/data';
 import { Calendar, Phone } from 'lucide-react';
-import { useContactSettings, DEFAULT_PRIMARY_PHONE } from '@/lib/contact-settings';
+import { useContactSettings } from '@/lib/contact-settings';
 
 interface RoomStickyBookingBarProps {
   room: Room;
@@ -29,8 +29,8 @@ export default function RoomStickyBookingBar({
   onScrollToEnquiry,
 }: RoomStickyBookingBarProps) {
   const settings = useContactSettings();
-  const phoneDisplay = settings?.primaryPhone || DEFAULT_PRIMARY_PHONE;
-  const phoneTel = `tel:${phoneDisplay.replace(/[^0-9+]/g, '')}`;
+  const phoneDisplay = settings?.primaryPhone || '';
+  const phoneTel = phoneDisplay ? `tel:${phoneDisplay.replace(/[^0-9+]/g, '')}` : '#';
   return (
     <>
       {/* DESKTOP STICKY CARD */}

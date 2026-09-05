@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { SettingsService } from '@/lib/services/settings.service';
+import { AdminSettingsService } from '@/lib/services/settings.service';
 import { ContactSettings, saveContactSettings } from '@/lib/contact-settings';
 import { ApiResponse } from '@/lib/api-client';
 
@@ -13,7 +13,7 @@ export function useSettings() {
   const fetchSettings = useCallback(async () => {
     setIsLoading(true);
     try {
-      const res = await SettingsService.getContactSettings();
+      const res = await AdminSettingsService.getContactSettings();
       if (res.success && res.data) {
         setSettings(res.data);
         saveContactSettings(res.data);
@@ -30,7 +30,7 @@ export function useSettings() {
   const updateSettings = async (payload: ContactSettings): Promise<ApiResponse<ContactSettings>> => {
     setIsSaving(true);
     try {
-      const res = await SettingsService.updateContactSettings(payload);
+      const res = await AdminSettingsService.updateContactSettings(payload);
       if (res.success && res.data) {
         setSettings(res.data);
         saveContactSettings(res.data);

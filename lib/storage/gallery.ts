@@ -2,8 +2,9 @@ import {
   GallerySectionItem,
   CreateGallerySectionInput,
 } from '../types/gallery';
+import { API_URL } from '@/lib/config/env.config';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4500';
+const API_BASE_URL = API_URL;
 export const GALLERY_SECTIONS_UPDATED_EVENT = 'motimahal_gallery_sections_updated';
 
 export async function fetchGallerySections(

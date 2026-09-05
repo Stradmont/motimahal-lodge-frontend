@@ -8,12 +8,9 @@ export interface FaqItem {
   orderIndex?: number;
 }
 
-export const FaqService = {
+export const AdminFaqService = {
   async getAll(params?: any): Promise<ApiResponse<FaqItem[]>> {
     return apiClient.get<FaqItem[]>('/api/v1/admin/faqs', params);
-  },
-  async getPublicAll(params?: any): Promise<ApiResponse<FaqItem[]>> {
-    return apiClient.get<FaqItem[]>('/api/v1/public/faqs', params);
   },
   async getById(id: string): Promise<ApiResponse<FaqItem | null>> {
     return apiClient.get<FaqItem>(`/api/v1/admin/faqs/${id}`);
@@ -27,4 +24,15 @@ export const FaqService = {
   async delete(id: string): Promise<ApiResponse<null>> {
     return apiClient.delete<null>(`/api/v1/admin/faqs/${id}`);
   },
+};
+
+export const PublicFaqService = {
+  async getAll(params?: any): Promise<ApiResponse<FaqItem[]>> {
+    return apiClient.get<FaqItem[]>('/api/v1/public/faqs', params);
+  },
+};
+
+export const FaqService = {
+  ...AdminFaqService,
+  getPublicAll: PublicFaqService.getAll,
 };

@@ -25,7 +25,7 @@ export default function AmenitiesSection() {
           <div className="lg:col-span-6 rounded-lg overflow-hidden border border-brand-border">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&q=80&w=1000"
+              src="/about/single-bed-room.PNG"
               alt="Clean AC Room & Bedding"
               className="w-full h-72 sm:h-88 object-cover"
             />
@@ -45,7 +45,7 @@ export default function AmenitiesSection() {
           <div className="lg:col-span-6 lg:order-2 rounded-lg overflow-hidden border border-brand-border">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&q=80&w=1000"
+              src="/about/outside-image.png"
               alt="Narayani River Breeze"
               className="w-full h-72 sm:h-88 object-cover"
             />

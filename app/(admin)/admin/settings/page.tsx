@@ -6,12 +6,13 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { AdminInput as Input } from '@/components/admin/common/AdminInput';
 import AdminPageHeader from '@/components/admin/layout/AdminPageHeader';
-import { ContactSettings, DEFAULT_CONTACT_SETTINGS } from '@/lib/contact-settings';
+import { ContactSettings, EMPTY_CONTACT_SETTINGS } from '@/lib/contact-settings';
 import { useSettings } from '@/hooks/useSettings';
+import { isValidNepaliPhone } from '@/lib/utils/phone';
 
 export default function AdminSettingsPage() {
   const { settings, isLoading, isSaving, updateSettings } = useSettings();
-  const [formData, setFormData] = useState<ContactSettings>(DEFAULT_CONTACT_SETTINGS);
+  const [formData, setFormData] = useState<ContactSettings>(EMPTY_CONTACT_SETTINGS);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
@@ -36,6 +37,16 @@ export default function AdminSettingsPage() {
 
     if (!formData.primaryPhone.trim()) {
       newErrors.primaryPhone = 'Primary phone number is required';
+    } else if (!isValidNepaliPhone(formData.primaryPhone)) {
+      newErrors.primaryPhone = 'Primary phone must be a valid Nepali phone number (e.g. 9855012345 or +977 98550 12345)';
+    }
+
+    if (formData.secondaryPhone?.trim() && !isValidNepaliPhone(formData.secondaryPhone)) {
+      newErrors.secondaryPhone = 'Secondary phone must be a valid Nepali phone number';
+    }
+
+    if (formData.whatsappNumber?.trim() && !isValidNepaliPhone(formData.whatsappNumber)) {
+      newErrors.whatsappNumber = 'WhatsApp number must be a valid Nepali phone number';
     }
 
     if (!formData.email.trim()) {

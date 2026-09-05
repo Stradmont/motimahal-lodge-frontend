@@ -1,13 +1,13 @@
-'use client';
-
-import React, { use } from 'react';
+import React from 'react';
+import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import WhyChooseSection from '@/components/WhyChooseSection';
 import CtaSection from '@/components/CtaSection';
-import { getBlogPostBySlug, getRelatedBlogPosts } from '@/lib/data';
+import { getBlogPostBySlug, getRelatedBlogPosts, BLOG_DATA } from '@/lib/data';
 import { Calendar, User, Clock, ArrowRight, ArrowLeft } from 'lucide-react';
+import { SITE_URL } from '@/lib/config/env.config';
 
 interface BlogDetailsPageProps {
   params: Promise<{
@@ -15,38 +15,126 @@ interface BlogDetailsPageProps {
   }>;
 }
 
-export default function BlogDetailsPage({ params }: BlogDetailsPageProps) {
-  const resolvedParams = use(params);
-  const post = getBlogPostBySlug(resolvedParams.slug);
+export async function generateMetadata({ params }: BlogDetailsPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const post = getBlogPostBySlug(slug);
 
   if (!post) {
-    return (
-      <div className="min-h-screen flex flex-col text-brand-charcoal bg-texture">
-        <Navbar />
-        <main className="flex-1 py-32 text-center space-y-4">
-          <h1 className="font-heading text-4xl font-bold text-brand-charcoal">
-            Article Not Found
-          </h1>
-          <p className="text-stone-600">
-            The blog story you are looking for does not exist or has been moved.
-          </p>
-          <Link
-            href="/blog"
-            className="inline-flex items-center gap-2 bg-brand-green text-white px-6 py-2.5 rounded-md font-medium text-sm"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            <span>Return to Blog</span>
-          </Link>
-        </main>
-        <Footer />
-      </div>
-    );
+    return {
+      title: 'Article Not Found | Motimahal Lodge',
+      description: 'The requested blog story could not be found.',
+    };
+  }
+
+  const canonicalUrl = `${SITE_URL}/blog/${post.slug || post.id}`;
+  const ogImage = post.image.startsWith('http') ? post.image : `${SITE_URL}${post.image}`;
+
+  return {
+    title: `${post.title} | Motimahal Lodge`,
+    description: post.excerpt,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      title: `${post.title} | Motimahal Lodge`,
+      description: post.excerpt,
+      url: canonicalUrl,
+      siteName: 'Motimahal Lodge & Restaurant',
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
+      locale: 'en_US',
+      type: 'article',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: post.excerpt,
+      images: [ogImage],
+    },
+  };
+}
+
+export async function generateStaticParams() {
+  return BLOG_DATA.map((post) => ({
+    slug: post.slug || post.id,
+  }));
+}
+
+export default async function BlogDetailsPage({ params }: BlogDetailsPageProps) {
+  const { slug } = await params;
+  const post = getBlogPostBySlug(slug);
+
+  if (!post) {
+    notFound();
   }
 
   const relatedPosts = getRelatedBlogPosts(post.slug || post.id, 3);
+  const pageUrl = `${SITE_URL}/blog/${post.slug || post.id}`;
+  const postImage = post.image.startsWith('http') ? post.image : `${SITE_URL}${post.image}`;
+
+  const blogPostingSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: post.excerpt,
+    image: [postImage],
+    datePublished: post.date,
+    author: {
+      '@type': 'Person',
+      name: post.author,
+    },
+    publisher: {
+      '@type': 'Hotel',
+      name: 'Motimahal Lodge & Restaurant',
+      url: SITE_URL,
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': pageUrl,
+    },
+  };
+
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: SITE_URL,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Blog',
+        item: `${SITE_URL}/blog`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: post.title,
+        item: pageUrl,
+      },
+    ],
+  };
 
   return (
     <div className="min-h-screen flex flex-col text-brand-charcoal bg-texture">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <Navbar />
 
       <main className="flex-1">
@@ -88,9 +176,8 @@ export default function BlogDetailsPage({ params }: BlogDetailsPageProps) {
           </div>
         </section>
 
-        {/* 2. MAIN ARTICLE CONTENT CONTAINER (CLEAN UNBOXED LAYOUT) */}
+        {/* 2. MAIN ARTICLE CONTENT CONTAINER */}
         <section className="py-12 sm:py-20 mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-          {/* Back to Blog Link */}
           <div className="pb-8">
             <Link
               href="/blog"
@@ -102,19 +189,16 @@ export default function BlogDetailsPage({ params }: BlogDetailsPageProps) {
           </div>
 
           <article className="space-y-8">
-            {/* Excerpt Summary Box */}
             <div className="p-6 sm:p-8 bg-white/80 rounded-xl border-l-4 border-brand-green border-y border-r border-brand-border text-stone-800 font-medium italic text-lg sm:text-xl leading-relaxed shadow-2xs">
               &ldquo;{post.excerpt}&rdquo;
             </div>
 
-            {/* Content Paragraphs */}
             <div className="space-y-6 text-stone-800 text-base sm:text-lg lg:text-xl leading-relaxed font-normal">
               {post.content.map((paragraph, pIdx) => (
                 <p key={pIdx}>{paragraph}</p>
               ))}
             </div>
 
-            {/* Tags Footer */}
             {post.tags && post.tags.length > 0 && (
               <div className="pt-8 border-t border-brand-border space-y-3">
                 <span className="text-xs font-semibold uppercase tracking-widest text-stone-500 block">
@@ -135,13 +219,13 @@ export default function BlogDetailsPage({ params }: BlogDetailsPageProps) {
           </article>
         </section>
 
-        {/* 3. RELATED / RECENT BLOG POSTS */}
+        {/* 3. RELATED BLOG POSTS */}
         {relatedPosts.length > 0 && (
           <section className="py-16 sm:py-24 border-t border-brand-border bg-white">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12">
               <div className="text-center max-w-3xl mx-auto space-y-3">
                 <h2 className="font-heading text-3xl sm:text-4xl font-bold text-brand-charcoal">
-                  Related Stories & Travel Guides
+                  Related Stories &amp; Travel Guides
                 </h2>
                 <p className="text-stone-600 text-base sm:text-lg leading-relaxed font-normal">
                   More tips and insights from Motimahal Lodge for your Chitwan visit.
@@ -198,8 +282,7 @@ export default function BlogDetailsPage({ params }: BlogDetailsPageProps) {
           </section>
         )}
 
-
-        {/* 5. FINAL BOOKING CTA SECTION */}
+        {/* 4. FINAL BOOKING CTA SECTION */}
         <CtaSection
           title="Visiting Chitwan soon?"
           description="Book directly with Motimahal Lodge for clean AC rooms, solar hot showers, and authentic tandoori dining."

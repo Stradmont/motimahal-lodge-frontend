@@ -41,8 +41,8 @@ export default function FoodMenuSection() {
           <div className="lg:col-span-6 rounded-lg overflow-hidden border border-brand-border">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="https://images.unsplash.com/photo-1625220194771-7ebedd0b70b9?auto=format&fit=crop&q=80&w=1000"
-              alt="Fresh Tandoori Chicken from Clay Oven"
+              src="/about/outside-image.png"
+              alt="Motimahal Lodge Restaurant & Garden Dining"
               className="w-full h-80 sm:h-96 object-cover"
             />
           </div>

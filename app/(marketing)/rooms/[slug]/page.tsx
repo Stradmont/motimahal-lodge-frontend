@@ -5,6 +5,7 @@ import { getRoomBySlug, Room } from '@/lib/data';
 import { fetchRoomBySlug, fetchRooms } from '@/lib/api/rooms';
 import { RoomItem } from '@/lib/types/room';
 import RoomDetailClient from '@/components/RoomDetailClient';
+import { SITE_URL } from '@/lib/config/env.config';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -15,7 +16,7 @@ function mapRoomItemToRoom(item: RoomItem): Room {
     item.image?.url ||
     (typeof item.imageId === 'string' && item.imageId.startsWith('http')
       ? item.imageId
-      : 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=80');
+      : '/about/room1.PNG');
 
   const galleryImages = (item.galleryImages?.map((g) => g.url) || item.galleryImageIds || []).filter(Boolean);
 
@@ -31,7 +32,7 @@ function mapRoomItemToRoom(item: RoomItem): Room {
     image: heroImage,
     galleryImages: galleryImages.length > 0 ? galleryImages : [heroImage],
     amenities: item.amenities || [],
-    description: item.shortDescription || item.description || '',
+    description: item.shortDescription || item.description?.replace(/<[^>]*>/g, '').slice(0, 160) || '',
     fullDescription: item.description ? [item.description] : [],
     features: item.amenities || [],
     featured: item.isFeatured,
@@ -40,13 +41,11 @@ function mapRoomItemToRoom(item: RoomItem): Room {
 }
 
 async function getRoomData(slug: string): Promise<Room | null> {
-  // 1. Try API first
   const apiRoom = await fetchRoomBySlug(slug);
   if (apiRoom) {
     return mapRoomItemToRoom(apiRoom);
   }
 
-  // 2. Fall back to static data
   const staticRoom = getRoomBySlug(slug);
   if (staticRoom) {
     return staticRoom;
@@ -66,13 +65,36 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   }
 
+  const canonicalUrl = `${SITE_URL}/rooms/${room.slug}`;
+  const ogImage = room.image.startsWith('http') ? room.image : `${SITE_URL}${room.image}`;
+
   return {
-    title: `${room.name} | Motimahal Lodge & Restaurant, Chitwan`,
-    description: room.description,
+    title: `${room.name} | Motimahal Lodge, Bharatpur`,
+    description: `${room.name} at Motimahal Lodge in Bharatpur. Fits ${room.capacity} with ${room.bedType}, AC, hot shower, and free WiFi at NPR ${room.priceNpr.toLocaleString()} per night.`,
+    alternates: {
+      canonical: canonicalUrl,
+    },
     openGraph: {
-      title: `${room.name} — Motimahal Lodge Chitwan`,
-      description: room.description,
-      images: [{ url: room.image }],
+      title: `${room.name} — Room Details & Rates | Motimahal Lodge`,
+      description: `Book the ${room.name} at Motimahal Lodge in Bharatpur. Includes AC, hot shower, and free parking.`,
+      url: canonicalUrl,
+      siteName: 'Motimahal Lodge & Restaurant',
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: room.name,
+        },
+      ],
+      locale: 'en_US',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${room.name} | Motimahal Lodge, Bharatpur`,
+      description: `Book the ${room.name} at Motimahal Lodge in Bharatpur. Includes AC, hot shower, and free parking.`,
+      images: [ogImage],
     },
   };
 }
@@ -99,5 +121,70 @@ export default async function RoomDetailPage({ params }: PageProps) {
     notFound();
   }
 
-  return <RoomDetailClient room={room} />;
+  const roomUrl = `${SITE_URL}/rooms/${room.slug}`;
+
+  const hotelRoomSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'HotelRoom',
+    name: room.name,
+    description: room.description,
+    image: [room.image],
+    bed: {
+      '@type': 'BedDetails',
+      typeOfBed: room.bedType,
+    },
+    occupancy: {
+      '@type': 'QuantitativeValue',
+      value: parseInt(room.capacity) || 2,
+    },
+    amenityFeature: (room.amenities || []).map((amenity) => ({
+      '@type': 'LocationFeatureSpecification',
+      name: amenity,
+      value: true,
+    })),
+    offeredBy: {
+      '@type': 'Hotel',
+      name: 'Motimahal Lodge & Restaurant',
+      url: SITE_URL,
+    },
+  };
+
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: SITE_URL,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Rooms',
+        item: `${SITE_URL}/rooms`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: room.name,
+        item: roomUrl,
+      },
+    ],
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(hotelRoomSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <RoomDetailClient room={room} />
+    </>
+  );
 }

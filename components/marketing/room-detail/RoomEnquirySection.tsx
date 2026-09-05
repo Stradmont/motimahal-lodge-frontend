@@ -2,13 +2,14 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Room, ROOMS_DATA } from '@/lib/data';
-import { useContactSettings, DEFAULT_PRIMARY_PHONE } from '@/lib/contact-settings';
+import { useContactSettings } from '@/lib/contact-settings';
 import { Phone, Mail, Minus, Plus, CheckCircle2, MessageSquare, AlertCircle, ChevronDown, Check } from 'lucide-react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { InquiryService } from '@/lib/services/inquiry.service';
 import { toast } from 'sonner';
+import { isValidNepaliPhone } from '@/lib/utils/phone';
 
 const enquirySchema = z.object({
   fullName: z
@@ -20,7 +21,9 @@ const enquirySchema = z.object({
     .string()
     .trim()
     .min(1, { message: 'Phone or WhatsApp number is required' })
-    .min(7, { message: 'Please enter a valid phone or WhatsApp number (min 7 digits)' }),
+    .refine((val) => isValidNepaliPhone(val), {
+      message: 'Please enter a valid Nepali phone or WhatsApp number (e.g. 9855012345 or +977 98550 12345)',
+    }),
   checkIn: z.string().trim().min(1, { message: 'Check-in date is required' }),
   checkOut: z.string().trim().min(1, { message: 'Check-out date is required' }),
 });
@@ -266,7 +269,7 @@ export default function RoomEnquirySection({
                     </label>
                     <input
                       type="tel"
-                      placeholder={`e.g. ${DEFAULT_PRIMARY_PHONE}`}
+                      placeholder="e.g. +977 98xxxxxxx"
                       {...register('whatsappNumber')}
                       className={`w-full bg-brand-surface border ${
                         errors.whatsappNumber ? 'border-red-500 focus:border-red-600' : 'border-brand-border focus:border-brand-green'

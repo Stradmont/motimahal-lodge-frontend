@@ -1,13 +1,9 @@
 import { apiClient, ApiResponse } from '@/lib/api-client';
 import { VideoItem, CreateVideoInput } from '@/lib/types/video';
 
-export const VideoService = {
+export const AdminVideoService = {
   async getAll(params?: { category?: string; status?: string; search?: string }): Promise<ApiResponse<VideoItem[]>> {
     return apiClient.get<VideoItem[]>('/api/v1/admin/videos', params);
-  },
-
-  async getPublicAll(params?: { category?: string }): Promise<ApiResponse<VideoItem[]>> {
-    return apiClient.get<VideoItem[]>('/api/v1/public/videos', params);
   },
 
   async getById(id: string): Promise<ApiResponse<VideoItem | null>> {
@@ -29,4 +25,15 @@ export const VideoService = {
   async delete(id: string): Promise<ApiResponse<null>> {
     return apiClient.delete<null>(`/api/v1/admin/videos/${id}`);
   },
+};
+
+export const PublicVideoService = {
+  async getAll(params?: { category?: string }): Promise<ApiResponse<VideoItem[]>> {
+    return apiClient.get<VideoItem[]>('/api/v1/public/videos', params);
+  },
+};
+
+export const VideoService = {
+  ...AdminVideoService,
+  getPublicAll: PublicVideoService.getAll,
 };
