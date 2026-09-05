@@ -21,6 +21,7 @@ import {
   AlertTriangle,
   CalendarCheck,
   Building2,
+  Database,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -129,6 +130,11 @@ export default function AdminSidebar({
     {
       groupLabel: 'System Settings',
       items: [
+        {
+          title: 'Database Backups',
+          href: '/admin/backups',
+          icon: Database,
+        },
         {
           title: 'Contact & Location',
           href: '/admin/settings',
