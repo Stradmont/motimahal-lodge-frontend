@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { X, MapPin, Phone } from 'lucide-react';
 import { FacebookIcon, InstagramIcon } from '@/components/SocialIcons';
-import { SOCIAL_LINKS } from '@/lib/data';
+import { useContactSettings } from '@/lib/contact-settings';
 
 export interface NavItem {
   label: string;
@@ -27,6 +27,7 @@ export default function MobileNavDrawer({
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
   const [visible, setVisible] = useState(false);
+  const contact = useContactSettings();
 
   useEffect(() => {
     setMounted(true);
@@ -140,11 +141,11 @@ export default function MobileNavDrawer({
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-1.5">
               <MapPin className="h-3.5 w-3.5 text-brand-gold shrink-0" />
-              <span>Bharatpur, Chitwan</span>
+              <span>{contact.address.split(',')[0]}</span>
             </div>
             <div className="flex items-center gap-2">
               <a
-                href={SOCIAL_LINKS.facebook}
+                href={contact.facebookUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Facebook"
@@ -153,7 +154,7 @@ export default function MobileNavDrawer({
                 <FacebookIcon className="w-3.5 h-3.5" />
               </a>
               <a
-                href={SOCIAL_LINKS.instagram}
+                href={contact.instagramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram"

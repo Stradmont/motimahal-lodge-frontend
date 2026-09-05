@@ -1,6 +1,7 @@
 import React from 'react';
+import Link from 'next/link';
 import { Room } from '@/lib/data';
-import { Users, BedDouble, Maximize2 } from 'lucide-react';
+import { Users, BedDouble, Maximize2, ArrowLeft, ChevronRight } from 'lucide-react';
 
 interface RoomDetailHeaderProps {
   room: Room;
@@ -9,13 +10,26 @@ interface RoomDetailHeaderProps {
 export default function RoomDetailHeader({ room }: RoomDetailHeaderProps) {
   return (
     <section
-      className="py-14 sm:py-18 border-b border-brand-border text-brand-charcoal"
+      className="py-10 sm:py-14 border-b border-brand-border text-brand-charcoal"
       style={{
         backgroundImage: "url('/textures/backs-2.png')",
         backgroundRepeat: 'repeat',
       }}
     >
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 space-y-4 text-left">
+        {/* Breadcrumb & Navigation */}
+        <div className="flex items-center gap-2 text-xs sm:text-sm text-stone-600 font-medium pb-2">
+          <Link
+            href="/rooms"
+            className="inline-flex items-center gap-1.5 text-brand-green hover:text-brand-green/80 transition-colors font-semibold"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            <span>All Rooms</span>
+          </Link>
+          <ChevronRight className="h-3.5 w-3.5 text-stone-400" />
+          <span className="text-stone-700 truncate max-w-[200px] sm:max-w-none">{room.name}</span>
+        </div>
+
         {/* Price Subtitle */}
         <span className="text-brand-green text-base sm:text-lg font-bold block">
           From NPR {room.priceNpr.toLocaleString()} / night

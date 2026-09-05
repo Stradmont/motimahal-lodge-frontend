@@ -1,8 +1,8 @@
 'use client';
 
 import React from 'react';
-import { X, ExternalLink, Copy, Check } from 'lucide-react';
-import { Dialog, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { ExternalLink, Copy, Check } from 'lucide-react';
+import { Dialog, DialogHeader, DialogTitle, DialogBody, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 
@@ -32,47 +32,58 @@ export default function FullMediaPreviewModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()} size="4xl">
-      <div className="font-sans space-y-3">
-        {/* Minimal Header Bar */}
-        <div className="flex items-center justify-between px-1 pt-1 pb-1">
-          <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate max-w-sm sm:max-w-md">
+      <DialogHeader>
+        <div className="flex items-center justify-between pr-4">
+          <DialogTitle className="text-sm font-semibold truncate max-w-sm sm:max-w-md">
             {title || 'Media Asset Preview'}
-          </span>
-
-          <div className="flex items-center gap-1.5 pr-6">
+          </DialogTitle>
+          <div className="flex items-center gap-1.5">
             <Button
               type="button"
               variant="outline"
-              size="icon"
+              size="sm"
               onClick={handleCopyUrl}
               title="Copy image URL"
-              className="h-8 w-8 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-800"
             >
-              {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+              {copied ? (
+                <>
+                  <Check className="w-3.5 h-3.5 mr-1 text-emerald-600" />
+                  Copied
+                </>
+              ) : (
+                <>
+                  <Copy className="w-3.5 h-3.5 mr-1" />
+                  Copy URL
+                </>
+              )}
             </Button>
             <a
               href={src}
               target="_blank"
               rel="noopener noreferrer"
-              title="Open full size in new tab"
-              className="inline-flex items-center justify-center h-8 w-8 rounded-md border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors"
+              className="inline-flex items-center justify-center h-8 px-2.5 rounded-md border border-slate-200 dark:border-slate-800 text-xs font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors"
             >
-              <ExternalLink className="w-3.5 h-3.5" />
+              <ExternalLink className="w-3.5 h-3.5 mr-1" />
+              Open Original
             </a>
           </div>
         </div>
+      </DialogHeader>
 
-        {/* Pure Image Viewing Stage */}
-        <div className="relative rounded-lg overflow-hidden bg-slate-950 flex items-center justify-center p-3 min-h-[300px] max-h-[80vh] border border-slate-800/80 shadow-2xl">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={src}
-            alt={title || 'Media preview'}
-            className="max-h-[75vh] max-w-full object-contain rounded-sm"
-            
-          />
-        </div>
-      </div>
+      <DialogBody className="p-4 flex items-center justify-center bg-slate-950">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={src}
+          alt={title || 'Media preview'}
+          className="max-h-[65vh] max-w-full object-contain rounded-sm"
+        />
+      </DialogBody>
+
+      <DialogFooter>
+        <Button type="button" variant="outline" size="sm" onClick={onClose}>
+          Close Preview
+        </Button>
+      </DialogFooter>
     </Dialog>
   );
 }

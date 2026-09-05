@@ -28,37 +28,29 @@ export default function AdminContactPage() {
   const [deleteTargetSubmission, setDeleteTargetSubmission] = useState<GeneralContactInquiry | null>(null);
 
   const handleUpdateContact = async (updated: GeneralContactInquiry) => {
-    try {
-      const res = await updateContact(updated.id, updated);
-      if (res.success) {
-        toast.success(res.message || 'Updated contact inquiry');
-        if (managingContact?.id === updated.id) {
-          setManagingContact(updated);
-        }
-      } else {
-        toast.error(res.message || 'Failed to update contact inquiry');
+    const res = await updateContact(updated.id, updated);
+    if (res.success) {
+      toast.success(res.message || 'Updated contact inquiry');
+      if (managingContact?.id === updated.id) {
+        setManagingContact(updated);
       }
-    } catch (error) {
-      toast.error('Something went wrong');
+    } else {
+      toast.error(res.message || 'Failed to update contact inquiry');
     }
+    return res.success;
   };
 
   const handleConfirmDeleteSubmission = async () => {
     if (!deleteTargetSubmission) return;
-    try {
-      const res = await deleteContact(deleteTargetSubmission.id);
-      if (res.success) {
-        if (managingContact?.id === deleteTargetSubmission.id) {
-          setManagingContact(null);
-        }
-        toast.success(res.message || 'Deleted contact submission from records');
-      } else {
-        toast.error(res.message || 'Failed to delete contact submission');
+    const res = await deleteContact(deleteTargetSubmission.id);
+    if (res.success) {
+      if (managingContact?.id === deleteTargetSubmission.id) {
+        setManagingContact(null);
       }
-    } catch (error) {
-      toast.error('Something went wrong');
-    } finally {
+      toast.success(res.message || 'Deleted contact submission from records');
       setDeleteTargetSubmission(null);
+    } else {
+      toast.error(res.message || 'Failed to delete contact submission');
     }
   };
 

@@ -11,7 +11,7 @@ export async function fetchMediaList(
   if (documentType && documentType !== 'ALL') params.documentType = documentType;
   if (search) params.search = search;
 
-  const res = await apiClient.get<MediaItem[]>('/api/v1/media', params);
+  const res = await apiClient.get<MediaItem[]>('/api/v1/admin/media', params);
   if (!res.success) {
     throw new Error(res.message || 'Failed to fetch media list');
   }
@@ -31,7 +31,7 @@ export async function uploadMediaApi(
   formData.append('entityType', entityType);
   if (entityId) formData.append('entityId', entityId);
 
-  const res = await apiClient.post<MediaItem>('/api/v1/media/upload', formData);
+  const res = await apiClient.post<MediaItem>('/api/v1/admin/media/upload', formData);
   if (!res.success || !res.data) {
     throw new Error(res.message || 'Failed to upload media file');
   }
@@ -44,7 +44,7 @@ export async function uploadMediaApi(
 }
 
 export async function deleteMediaApi(id: string): Promise<boolean> {
-  const res = await apiClient.delete<null>(`/api/v1/media/${id}`);
+  const res = await apiClient.delete<null>(`/api/v1/admin/media/${id}`);
   if (!res.success) {
     throw new Error(res.message || 'Failed to delete media item');
   }
@@ -63,7 +63,7 @@ export async function updateMediaMetadataApi(
     entityId?: string;
   }
 ): Promise<MediaItem> {
-  const res = await apiClient.patch<MediaItem>(`/api/v1/media/${id}`, metadata);
+  const res = await apiClient.patch<MediaItem>(`/api/v1/admin/media/${id}`, metadata);
   if (!res.success || !res.data) {
     throw new Error(res.message || 'Failed to update media metadata');
   }
@@ -83,7 +83,7 @@ export async function replaceMediaFileApi(id: string, file: File): Promise<Media
   const formData = new FormData();
   formData.append('file', file);
 
-  const res = await apiClient.put<MediaItem>(`/api/v1/media/${id}/replace`, formData);
+  const res = await apiClient.put<MediaItem>(`/api/v1/admin/media/${id}/replace`, formData);
   if (!res.success || !res.data) {
     throw new Error(res.message || 'Failed to replace media file');
   }

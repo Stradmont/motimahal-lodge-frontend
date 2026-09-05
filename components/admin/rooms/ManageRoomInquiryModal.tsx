@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Mail, Send, ChevronDown, ChevronUp, BedDouble, Calendar, Users } from 'lucide-react';
 import { toast } from 'sonner';
 
-import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogBody, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { AdminSelect as Select } from '@/components/admin/common/AdminSelect';
@@ -17,7 +17,7 @@ interface ManageRoomInquiryModalProps {
   isOpen: boolean;
   onClose: () => void;
   inquiry: RoomInquiry | null;
-  onSave: (updated: RoomInquiry) => void;
+  onSave: (updated: RoomInquiry) => Promise<boolean | void> | void;
 }
 
 export function getRoomInquiryStageBadge(status: RoomInquiryStatus) {
@@ -56,7 +56,7 @@ export default function ManageRoomInquiryModal({ isOpen, onClose, inquiry, onSav
 
   if (!inquiry) return null;
 
-  const handleSaveChanges = () => {
+  const handleSaveChanges = async () => {
     const timestamp = new Date().toLocaleString('sv-SE').slice(0, 16);
     const logsToAdd: ContactActivityLog[] = [];
 
@@ -99,9 +99,11 @@ export default function ManageRoomInquiryModal({ isOpen, onClose, inquiry, onSav
       history: [...logsToAdd, ...(inquiry.history || [])],
     };
 
-    onSave(updatedInquiry);
-    toast.success('Room inquiry record updated successfully');
-    onClose();
+    const res = await onSave(updatedInquiry);
+    if (res !== false) {
+      toast.success('Room inquiry record updated successfully');
+      onClose();
+    }
   };
 
   return (
@@ -115,7 +117,7 @@ export default function ManageRoomInquiryModal({ isOpen, onClose, inquiry, onSav
         </DialogDescription>
       </DialogHeader>
 
-      <div className="space-y-6 py-4 font-sans max-h-[75vh] overflow-y-auto pr-1">
+      <DialogBody className="space-y-6">
         {/* Guest Header Info */}
         <InquiryCustomerHeader
           name={inquiry.guestName}
@@ -262,7 +264,7 @@ export default function ManageRoomInquiryModal({ isOpen, onClose, inquiry, onSav
 
         {/* Activity Timeline */}
         <InquiryActivityTimeline history={inquiry.history} />
-      </div>
+      </DialogBody>
 
       {/* Single Unified Action Footer */}
       <DialogFooter>

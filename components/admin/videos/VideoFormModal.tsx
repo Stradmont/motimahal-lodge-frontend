@@ -7,7 +7,7 @@ import { z } from 'zod';
 import { Image as ImageIcon, Link as LinkIcon, Trash2, Video } from 'lucide-react';
 import { toast } from 'sonner';
 
-import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogBody, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { AdminInput as Input } from '@/components/admin/common/AdminInput';
 import { AdminSelect as Select } from '@/components/admin/common/AdminSelect';
@@ -137,30 +137,26 @@ export default function VideoFormModal({
   };
 
   const onFormSubmit = async (data: VideoFormData) => {
-    try {
-      await onSubmit(data);
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Failed to save video details.';
-      toast.error(message);
-    }
+    await onSubmit(data);
   };
 
   return (
     <>
       <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()} size="2xl">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-slate-900 dark:text-slate-100">
-            <Video className="w-5 h-5 text-brand-green" />
-            {mode === 'create' ? 'Add Video Showcase' : 'Edit Video Showcase'}
-          </DialogTitle>
-          <DialogDescription>
-            {mode === 'create'
-              ? 'Configure a video link from YouTube, Instagram, Facebook, or Vimeo and attach a cover thumbnail.'
-              : 'Update platform source, video link, thumbnail cover, or status details.'}
-          </DialogDescription>
-        </DialogHeader>
+        <form onSubmit={handleSubmit(onFormSubmit)} className="flex flex-col flex-1 min-h-0 overflow-hidden">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-slate-900 dark:text-slate-100">
+              <Video className="w-5 h-5 text-brand-green" />
+              {mode === 'create' ? 'Add Video Showcase' : 'Edit Video Showcase'}
+            </DialogTitle>
+            <DialogDescription>
+              {mode === 'create'
+                ? 'Configure a video link from YouTube, Instagram, Facebook, or Vimeo and attach a cover thumbnail.'
+                : 'Update platform source, video link, thumbnail cover, or status details.'}
+            </DialogDescription>
+          </DialogHeader>
 
-        <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4 py-2 font-sans">
+          <DialogBody className="space-y-4">
           {/* Row 1: Title & Category */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
@@ -360,17 +356,18 @@ export default function VideoFormModal({
               className="w-full px-3 py-2 text-sm rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-hidden focus:ring-1 focus:ring-slate-400"
             />
           </div>
+        </DialogBody>
 
-          <DialogFooter className="pt-2 border-t border-slate-100 dark:border-slate-800">
-            <Button type="button" variant="outline" size="sm" onClick={onClose}>
-              Cancel
-            </Button>
-            <Button type="submit" size="sm" disabled={isSubmitting} className="bg-brand-green hover:bg-brand-green-dark text-white">
-              {mode === 'create' ? 'Create Video' : 'Save Changes'}
-            </Button>
-          </DialogFooter>
-        </form>
-      </Dialog>
+        <DialogFooter>
+          <Button type="button" variant="outline" size="sm" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button type="submit" size="sm" disabled={isSubmitting} className="bg-brand-green hover:bg-brand-green-dark text-white">
+            {mode === 'create' ? 'Create Video' : 'Save Changes'}
+          </Button>
+        </DialogFooter>
+      </form>
+    </Dialog>
 
       {/* Centralized Media Picker Modal */}
       <MediaPickerModal

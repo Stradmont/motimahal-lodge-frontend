@@ -5,7 +5,7 @@ import { Plus, Pencil, Trash2, Eye, Layers } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogBody, DialogFooter } from '@/components/ui/dialog';
 import AdminPageHeader from '@/components/admin/layout/AdminPageHeader';
 import AdminFilterBar from '@/components/admin/layout/AdminFilterBar';
 import ConfirmDeleteDialog from '@/components/admin/common/ConfirmDeleteDialog';
@@ -57,42 +57,33 @@ export default function AdminGalleryPage() {
   };
 
   const handleFormSubmit = async (data: CreateGallerySectionInput) => {
-    try {
-      if (!selectedSection) {
-        const res = await createSection(data);
-        if (res.success) {
-          toast.success(res.message || `Gallery section "${data.title}" created`);
-          setIsSectionModalOpen(false);
-        } else {
-          toast.error(res.message || 'Failed to create gallery section');
-        }
+    if (!selectedSection) {
+      const res = await createSection(data);
+      if (res.success) {
+        toast.success(res.message || `Gallery section "${data.title}" created`);
+        setIsSectionModalOpen(false);
       } else {
-        const res = await updateSection(selectedSection.id, data);
-        if (res.success) {
-          toast.success(res.message || `Gallery section "${data.title}" updated`);
-          setIsSectionModalOpen(false);
-        } else {
-          toast.error(res.message || 'Failed to update gallery section');
-        }
+        toast.error(res.message || 'Failed to create gallery section');
       }
-    } catch (error) {
-      toast.error('Something went wrong');
+    } else {
+      const res = await updateSection(selectedSection.id, data);
+      if (res.success) {
+        toast.success(res.message || `Gallery section "${data.title}" updated`);
+        setIsSectionModalOpen(false);
+      } else {
+        toast.error(res.message || 'Failed to update gallery section');
+      }
     }
   };
 
   const handleConfirmDelete = async () => {
     if (!deleteTargetSection) return;
-    try {
-      const res = await deleteSection(deleteTargetSection.id);
-      if (res.success) {
-        toast.success(res.message || `Gallery section "${deleteTargetSection.title}" deleted`);
-      } else {
-        toast.error(res.message || 'Failed to delete gallery section');
-      }
-    } catch (err) {
-      toast.error('Something went wrong deleting gallery section');
-    } finally {
+    const res = await deleteSection(deleteTargetSection.id);
+    if (res.success) {
+      toast.success(res.message || `Gallery section "${deleteTargetSection.title}" deleted`);
       setDeleteTargetSection(null);
+    } else {
+      toast.error(res.message || 'Failed to delete gallery section');
     }
   };
 
@@ -250,7 +241,7 @@ export default function AdminGalleryPage() {
       {/* Collection Preview Dialog */}
       <Dialog open={!!previewSection} onOpenChange={(open) => !open && setPreviewSection(null)} size="3xl">
         {previewSection && (
-          <div className="space-y-4 font-sans select-none">
+          <>
             <DialogHeader>
               <div className="flex items-center justify-between">
                 <DialogTitle>{previewSection.title}</DialogTitle>
@@ -263,36 +254,38 @@ export default function AdminGalleryPage() {
               </DialogDescription>
             </DialogHeader>
 
-            <div className="border border-slate-200 dark:border-slate-800 rounded-md bg-slate-950 p-3 h-80 overflow-y-auto">
-              {previewSection.mediaItems && previewSection.mediaItems.length > 0 ? (
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  {previewSection.mediaItems.map((item) => (
-                    <div
-                      key={item.id}
-                      onClick={() => setLightboxSrc(item.url)}
-                      className="group relative aspect-square rounded border border-slate-800 overflow-hidden cursor-pointer bg-slate-900"
-                    >
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={item.url} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200" />
-                      <div className="absolute inset-x-0 bottom-0 bg-slate-950/70 p-1 text-[10px] text-white font-mono truncate">
-                        {item.name}
+            <DialogBody className="space-y-4 select-none">
+              <div className="border border-slate-200 dark:border-slate-800 rounded-md bg-slate-950 p-3 min-h-60 max-h-96 overflow-y-auto">
+                {previewSection.mediaItems && previewSection.mediaItems.length > 0 ? (
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    {previewSection.mediaItems.map((item) => (
+                      <div
+                        key={item.id}
+                        onClick={() => setLightboxSrc(item.url)}
+                        className="group relative aspect-square rounded border border-slate-800 overflow-hidden cursor-pointer bg-slate-900"
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={item.url} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200" />
+                        <div className="absolute inset-x-0 bottom-0 bg-slate-950/70 p-1 text-[10px] text-white font-mono truncate">
+                          {item.name}
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="h-full flex items-center justify-center text-xs text-slate-500">
-                  No images attached to this collection.
-                </div>
-              )}
-            </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="h-full flex items-center justify-center text-xs text-slate-500 py-12">
+                    No images attached to this collection.
+                  </div>
+                )}
+              </div>
+            </DialogBody>
 
             <DialogFooter>
               <Button type="button" variant="outline" size="sm" onClick={() => setPreviewSection(null)}>
                 Close Preview
               </Button>
             </DialogFooter>
-          </div>
+          </>
         )}
       </Dialog>
 

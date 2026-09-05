@@ -13,7 +13,7 @@ import {
   Info,
   Layers,
 } from 'lucide-react';
-import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogBody, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { AdminInput as Input } from '@/components/admin/common/AdminInput';
 import { AdminSelect as Select } from '@/components/admin/common/AdminSelect';
@@ -162,9 +162,6 @@ export default function GallerySectionModal({
       };
 
       await onSubmit(payload);
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Failed to save gallery section.';
-      toast.error(message);
     } finally {
       setIsSubmitting(false);
     }
@@ -172,8 +169,8 @@ export default function GallerySectionModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && !isSubmitting && onClose()} size="4xl">
-      <div className="font-sans max-h-[85vh] flex flex-col">
-        <DialogHeader className="px-1 pb-3 border-b border-slate-200 dark:border-slate-800">
+      <form onSubmit={handleSubmit(onFormSubmit)} noValidate className="flex flex-col flex-1 min-h-0 overflow-hidden">
+        <DialogHeader>
           <div className="flex items-center gap-2">
             <DialogTitle className="text-base font-bold text-slate-900 dark:text-slate-100">
               {mode === 'create' ? 'Create Gallery Section' : 'Edit Gallery Section'}
@@ -184,7 +181,7 @@ export default function GallerySectionModal({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onFormSubmit)} noValidate className="space-y-4 pt-4 overflow-y-auto flex-1 pr-1">
+        <DialogBody className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
@@ -360,35 +357,35 @@ export default function GallerySectionModal({
               </div>
             )}
           </div>
+        </DialogBody>
 
-          <DialogFooter className="pt-3 border-t border-slate-200 dark:border-slate-800">
-            <Button type="button" variant="outline" size="sm" onClick={onClose} disabled={isSubmitting}>
-              Cancel
-            </Button>
-            <Button type="submit" size="sm" disabled={isSubmitting}>
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" />
-                  Saving...
-                </>
-              ) : mode === 'create' ? (
-                'Create Gallery Section'
-              ) : (
-                'Save Changes'
-              )}
-            </Button>
-          </DialogFooter>
-        </form>
+        <DialogFooter>
+          <Button type="button" variant="outline" size="sm" onClick={onClose} disabled={isSubmitting}>
+            Cancel
+          </Button>
+          <Button type="submit" size="sm" disabled={isSubmitting}>
+            {isSubmitting ? (
+              <>
+                <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" />
+                Saving...
+              </>
+            ) : mode === 'create' ? (
+              'Create Gallery Section'
+            ) : (
+              'Save Changes'
+            )}
+          </Button>
+        </DialogFooter>
+      </form>
 
-        <MediaPickerModal
-          isOpen={isMediaPickerOpen}
-          onClose={() => setIsMediaPickerOpen(false)}
-          mode={MediaSelectorMode.MULTIPLE}
-          initialSelectedUrls={selectedMediaItems.map((m) => m.url)}
-          onConfirm={handleMediaConfirmSelection}
-          title="Select Gallery Section Media"
-        />
-      </div>
+      <MediaPickerModal
+        isOpen={isMediaPickerOpen}
+        onClose={() => setIsMediaPickerOpen(false)}
+        mode={MediaSelectorMode.MULTIPLE}
+        initialSelectedUrls={selectedMediaItems.map((m) => m.url)}
+        onConfirm={handleMediaConfirmSelection}
+        title="Select Gallery Section Media"
+      />
     </Dialog>
   );
 }

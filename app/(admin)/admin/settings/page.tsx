@@ -66,15 +66,11 @@ export default function AdminSettingsPage() {
     e.preventDefault();
     if (!validate()) return;
 
-    try {
-      const res = await updateSettings(formData);
-      if (res.success) {
-        toast.success(res.message || 'Contact & Location settings saved');
-      } else {
-        toast.error(res.message || 'Failed to save settings');
-      }
-    } catch (error) {
-      toast.error('Something went wrong');
+    const res = await updateSettings(formData);
+    if (res.success) {
+      toast.success(res.message || 'Contact & Location settings saved');
+    } else {
+      toast.error(res.message || 'Failed to save settings');
     }
   };
 

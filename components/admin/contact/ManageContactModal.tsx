@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Mail, Send, ChevronDown, ChevronUp } from 'lucide-react';
 import { toast } from 'sonner';
 
-import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogBody, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { AdminSelect as Select } from '@/components/admin/common/AdminSelect';
@@ -17,7 +17,7 @@ interface ManageContactModalProps {
   isOpen: boolean;
   onClose: () => void;
   inquiry: GeneralContactInquiry | null;
-  onSave: (updated: GeneralContactInquiry) => void;
+  onSave: (updated: GeneralContactInquiry) => Promise<boolean | void> | void;
 }
 
 export function getStageBadge(status: GeneralContactStatus) {
@@ -54,7 +54,7 @@ export default function ManageContactModal({ isOpen, onClose, inquiry, onSave }:
 
   if (!inquiry) return null;
 
-  const handleSaveChanges = () => {
+  const handleSaveChanges = async () => {
     const timestamp = new Date().toLocaleString('sv-SE').slice(0, 16);
     const logsToAdd: ContactActivityLog[] = [];
 
@@ -98,9 +98,10 @@ export default function ManageContactModal({ isOpen, onClose, inquiry, onSave }:
       history: [...logsToAdd, ...(inquiry.history || [])],
     };
 
-    onSave(updatedInquiry);
-    toast.success('Contact record updated successfully');
-    onClose();
+    const res = await onSave(updatedInquiry);
+    if (res !== false) {
+      onClose();
+    }
   };
 
   return (
@@ -114,7 +115,7 @@ export default function ManageContactModal({ isOpen, onClose, inquiry, onSave }:
         </DialogDescription>
       </DialogHeader>
 
-      <div className="space-y-6 py-4 font-sans max-h-[75vh] overflow-y-auto pr-1">
+      <DialogBody className="space-y-6">
         {/* Guest Header Info */}
         <InquiryCustomerHeader
           name={inquiry.name}
@@ -223,7 +224,7 @@ export default function ManageContactModal({ isOpen, onClose, inquiry, onSave }:
 
         {/* Activity Timeline */}
         <InquiryActivityTimeline history={inquiry.history} />
-      </div>
+      </DialogBody>
 
       {/* Single Unified Action Footer */}
       <DialogFooter>

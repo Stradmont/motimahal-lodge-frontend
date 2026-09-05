@@ -16,18 +16,18 @@ export interface BookingItem {
 
 export const BookingService = {
   async getAll(params?: any): Promise<ApiResponse<BookingItem[]>> {
-    return apiClient.get<BookingItem[]>('/api/v1/bookings', params);
+    return apiClient.get<BookingItem[]>('/api/v1/admin/bookings', params);
   },
   async getById(id: string): Promise<ApiResponse<BookingItem | null>> {
-    return apiClient.get<BookingItem>(`/api/v1/bookings/${id}`);
+    return apiClient.get<BookingItem>(`/api/v1/admin/bookings/${id}`);
   },
   async create(data: Partial<BookingItem>): Promise<ApiResponse<BookingItem>> {
-    return apiClient.post<BookingItem>('/api/v1/bookings', data);
+    return apiClient.post<BookingItem>('/api/v1/public/bookings', data);
   },
   async update(id: string, data: Partial<BookingItem>): Promise<ApiResponse<BookingItem>> {
-    return apiClient.put<BookingItem>(`/api/v1/bookings/${id}`, data);
+    return apiClient.put<BookingItem>(`/api/v1/admin/bookings/${id}`, data);
   },
   async delete(id: string): Promise<ApiResponse<null>> {
-    return apiClient.delete<null>(`/api/v1/bookings/${id}`);
+    return apiClient.delete<null>(`/api/v1/admin/bookings/${id}`);
   },
 };

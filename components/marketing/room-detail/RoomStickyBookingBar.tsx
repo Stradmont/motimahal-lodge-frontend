@@ -3,6 +3,7 @@
 import React from 'react';
 import { Room } from '@/lib/data';
 import { Calendar, Phone } from 'lucide-react';
+import { useContactSettings, DEFAULT_PRIMARY_PHONE } from '@/lib/contact-settings';
 
 interface RoomStickyBookingBarProps {
   room: Room;
@@ -27,6 +28,9 @@ export default function RoomStickyBookingBar({
   estimatedTotal,
   onScrollToEnquiry,
 }: RoomStickyBookingBarProps) {
+  const settings = useContactSettings();
+  const phoneDisplay = settings?.primaryPhone || DEFAULT_PRIMARY_PHONE;
+  const phoneTel = `tel:${phoneDisplay.replace(/[^0-9+]/g, '')}`;
   return (
     <>
       {/* DESKTOP STICKY CARD */}
@@ -89,11 +93,11 @@ export default function RoomStickyBookingBar({
 
           <div className="pt-2 text-center border-t border-brand-border">
             <a
-              href="tel:+9779845179310"
+              href={phoneTel}
               className="inline-flex items-center gap-2 text-sm font-semibold text-brand-green hover:underline"
             >
               <Phone className="h-4 w-4 text-brand-green" />
-              <span>Call +977 98550 12345</span>
+              <span>Call {phoneDisplay}</span>
             </a>
           </div>
         </div>

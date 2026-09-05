@@ -13,18 +13,21 @@ export interface TestimonialItem {
 
 export const TestimonialService = {
   async getAll(params?: any): Promise<ApiResponse<TestimonialItem[]>> {
-    return apiClient.get<TestimonialItem[]>('/api/v1/testimonials', params);
+    return apiClient.get<TestimonialItem[]>('/api/v1/admin/testimonials', params);
+  },
+  async getPublicAll(params?: any): Promise<ApiResponse<TestimonialItem[]>> {
+    return apiClient.get<TestimonialItem[]>('/api/v1/public/testimonials', params);
   },
   async getById(id: string): Promise<ApiResponse<TestimonialItem | null>> {
-    return apiClient.get<TestimonialItem>(`/api/v1/testimonials/${id}`);
+    return apiClient.get<TestimonialItem>(`/api/v1/admin/testimonials/${id}`);
   },
   async create(data: Partial<TestimonialItem>): Promise<ApiResponse<TestimonialItem>> {
-    return apiClient.post<TestimonialItem>('/api/v1/testimonials', data);
+    return apiClient.post<TestimonialItem>('/api/v1/admin/testimonials', data);
   },
   async update(id: string, data: Partial<TestimonialItem>): Promise<ApiResponse<TestimonialItem>> {
-    return apiClient.put<TestimonialItem>(`/api/v1/testimonials/${id}`, data);
+    return apiClient.put<TestimonialItem>(`/api/v1/admin/testimonials/${id}`, data);
   },
   async delete(id: string): Promise<ApiResponse<null>> {
-    return apiClient.delete<null>(`/api/v1/testimonials/${id}`);
+    return apiClient.delete<null>(`/api/v1/admin/testimonials/${id}`);
   },
 };

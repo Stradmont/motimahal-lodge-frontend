@@ -95,7 +95,7 @@ export default function AdminLoginPage() {
     try {
       const res = await verifyOtp(data.otp);
       if (res.success) {
-        router.push('/admin/contact');
+        window.location.replace('/admin');
       } else {
         toast.error(res.message || 'Invalid verification code.');
       }
@@ -128,10 +128,6 @@ export default function AdminLoginPage() {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center p-4 font-sans">
-
-      {/* Subtle top accent bar */}
-      <div className="fixed top-0 left-0 right-0 h-0.5 bg-[#C88A3B]" />
-
       <div className="w-full max-w-[380px]">
 
         {/* Header */}

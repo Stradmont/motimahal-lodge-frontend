@@ -7,6 +7,7 @@ import AdminSidebar from '@/components/admin/layout/AdminSidebar';
 import AdminHeader from '@/components/admin/layout/AdminHeader';
 import { AuthProvider, useAuth } from '@/lib/auth-context';
 import { cn } from '@/lib/utils';
+import AdminProgressProvider from '@/components/admin/layout/AdminProgressProvider';
 
 function AdminProtectedContent({ children }: { children: React.ReactNode }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -40,10 +41,10 @@ function AdminProtectedContent({ children }: { children: React.ReactNode }) {
   // Show loading skeleton during initial session validation
   if (isLoading || !user) {
     return (
-      <div className="admin-theme min-h-screen bg-slate-950 flex flex-col items-center justify-center font-sans antialiased">
-        <div className="flex flex-col items-center gap-3">
-          <div className="w-8 h-8 border-2 border-slate-700 border-t-emerald-400 rounded-full animate-spin" />
-          <p className="text-xs text-slate-400 font-medium tracking-wide">Validating Admin Session...</p>
+      <div className="admin-theme min-h-screen bg-[#F8FAFC] dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col items-center justify-center font-sans antialiased">
+        <div className="flex flex-col items-center gap-3 bg-white dark:bg-slate-900 p-8 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs max-w-xs w-full mx-4 text-center">
+          <div className="w-8 h-8 border-2 border-slate-200 dark:border-slate-700 border-t-slate-900 dark:border-t-slate-100 rounded-full animate-spin" />
+          <p className="text-xs font-semibold text-slate-700 dark:text-slate-300 tracking-tight">Verifying Admin Session...</p>
         </div>
       </div>
     );
@@ -135,7 +136,9 @@ function AdminProtectedContent({ children }: { children: React.ReactNode }) {
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
     <AuthProvider>
-      <AdminProtectedContent>{children}</AdminProtectedContent>
+      <AdminProgressProvider>
+        <AdminProtectedContent>{children}</AdminProtectedContent>
+      </AdminProgressProvider>
     </AuthProvider>
   );
 }

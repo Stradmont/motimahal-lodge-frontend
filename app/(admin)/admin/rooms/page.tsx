@@ -32,7 +32,7 @@ import {
   TableRow,
   TableCell,
 } from '@/components/ui/table';
-import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogBody, DialogFooter } from '@/components/ui/dialog';
 import AdminPageHeader from '@/components/admin/layout/AdminPageHeader';
 import AdminFilterBar from '@/components/admin/layout/AdminFilterBar';
 import ConfirmDeleteDialog from '@/components/admin/common/ConfirmDeleteDialog';
@@ -280,26 +280,22 @@ export default function AdminRoomsPage() {
   };
 
   const handleFormSubmit = async (data: CreateRoomInput) => {
-    try {
-      if (modalMode === 'create') {
-        const res = await createRoom(data);
-        if (res.success) {
-          toast.success(res.message || `Room "${data.name}" created successfully`);
-          setIsFormModalOpen(false);
-        } else {
-          toast.error(res.message || 'Failed to create room');
-        }
-      } else if (selectedRoom) {
-        const res = await updateRoom(selectedRoom.id, data);
-        if (res.success) {
-          toast.success(res.message || `Room "${data.name}" updated successfully`);
-          setIsFormModalOpen(false);
-        } else {
-          toast.error(res.message || 'Failed to update room');
-        }
+    if (modalMode === 'create') {
+      const res = await createRoom(data);
+      if (res.success) {
+        toast.success(res.message || `Room "${data.name}" created successfully`);
+        setIsFormModalOpen(false);
+      } else {
+        toast.error(res.message || 'Failed to create room');
       }
-    } catch (error) {
-      toast.error('Something went wrong');
+    } else if (selectedRoom) {
+      const res = await updateRoom(selectedRoom.id, data);
+      if (res.success) {
+        toast.success(res.message || `Room "${data.name}" updated successfully`);
+        setIsFormModalOpen(false);
+      } else {
+        toast.error(res.message || 'Failed to update room');
+      }
     }
   };
 
@@ -311,31 +307,22 @@ export default function AdminRoomsPage() {
         ? RoomStatus.MAINTENANCE
         : RoomStatus.AVAILABLE;
 
-    try {
-      const res = await updateRoomStatus(room.id, nextStatus);
-      if (res.success) {
-        toast.success(res.message || `Status for "${room.name}" changed to ${nextStatus}`);
-      } else {
-        toast.error(res.message || 'Failed to update room status');
-      }
-    } catch (err: any) {
-      toast.error('Something went wrong updating room status');
+    const res = await updateRoomStatus(room.id, nextStatus);
+    if (res.success) {
+      toast.success(res.message || `Status for "${room.name}" changed to ${nextStatus}`);
+    } else {
+      toast.error(res.message || 'Failed to update room status');
     }
   };
 
   const handleConfirmDeleteRoom = async () => {
     if (!deleteTargetRoom) return;
-    try {
-      const res = await deleteRoom(deleteTargetRoom.id);
-      if (res.success) {
-        toast.success(res.message || `Room "${deleteTargetRoom.name}" deleted`);
-      } else {
-        toast.error(res.message || 'Failed to delete room');
-      }
-    } catch (err: any) {
-      toast.error('Something went wrong deleting room');
-    } finally {
+    const res = await deleteRoom(deleteTargetRoom.id);
+    if (res.success) {
+      toast.success(res.message || `Room "${deleteTargetRoom.name}" deleted`);
       setDeleteTargetRoom(null);
+    } else {
+      toast.error(res.message || 'Failed to delete room');
     }
   };
 
@@ -460,7 +447,7 @@ export default function AdminRoomsPage() {
       {/* Room Details Preview Dialog */}
       <Dialog open={!!previewRoom} onOpenChange={(open) => !open && setPreviewRoom(null)} size="3xl">
         {previewRoom && (
-          <div className="space-y-4 font-sans">
+          <>
             <DialogHeader>
               <div className="flex items-center justify-between">
                 <DialogTitle>{previewRoom.name}</DialogTitle>
@@ -471,90 +458,92 @@ export default function AdminRoomsPage() {
               </DialogDescription>
             </DialogHeader>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="md:col-span-1 space-y-2">
-                <button
-                  type="button"
-                  onClick={() =>
-                    setFullscreenMedia({
-                      src: previewRoom.image?.url || '',
-                      title: previewRoom.name,
-                    })
-                  }
-                  className="relative group w-full rounded overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-900 cursor-pointer focus:outline-none"
-                  title="Click to view full media"
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={previewRoom.image?.url}
-                    alt={previewRoom.name}
-                    className="w-full h-36 object-cover transition-transform duration-200 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1 text-white text-xs font-medium">
-                    <ZoomIn className="w-4 h-4" />
-                    <span>View Full Image</span>
-                  </div>
-                </button>
+            <DialogBody className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="md:col-span-1 space-y-2">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setFullscreenMedia({
+                        src: previewRoom.image?.url || '',
+                        title: previewRoom.name,
+                      })
+                    }
+                    className="relative group w-full rounded overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-900 cursor-pointer focus:outline-none"
+                    title="Click to view full media"
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={previewRoom.image?.url}
+                      alt={previewRoom.name}
+                      className="w-full h-36 object-cover transition-transform duration-200 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1 text-white text-xs font-medium">
+                      <ZoomIn className="w-4 h-4" />
+                      <span>View Full Image</span>
+                    </div>
+                  </button>
 
-                {previewRoom.galleryImages && previewRoom.galleryImages.length > 0 && (
-                  <div className="space-y-1 pt-1">
-                    <span className="text-[11px] font-semibold text-slate-500 block">Gallery Photos</span>
-                    <div className="grid grid-cols-4 gap-1.5">
-                      {previewRoom.galleryImages.map((gMedia, idx) => (
-                        <button
-                          key={idx}
-                          type="button"
-                          onClick={() =>
-                            setFullscreenMedia({
-                              src: gMedia.url,
-                              title: `${previewRoom.name} - Gallery Photo ${idx + 1}`,
-                            })
-                          }
-                          className="relative group aspect-square rounded overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-900 cursor-pointer"
-                        >
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={gMedia.url}
-                            alt=""
-                            className="w-full h-full object-cover group-hover:scale-110 transition-transform"
-                          />
-                          <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                            <ZoomIn className="w-3 h-3 text-white" />
-                          </div>
-                        </button>
+                  {previewRoom.galleryImages && previewRoom.galleryImages.length > 0 && (
+                    <div className="space-y-1 pt-1">
+                      <span className="text-[11px] font-semibold text-slate-500 block">Gallery Photos</span>
+                      <div className="grid grid-cols-4 gap-1.5">
+                        {previewRoom.galleryImages.map((gMedia, idx) => (
+                          <button
+                            key={idx}
+                            type="button"
+                            onClick={() =>
+                              setFullscreenMedia({
+                                src: gMedia.url,
+                                title: `${previewRoom.name} - Gallery Photo ${idx + 1}`,
+                              })
+                            }
+                            className="relative group aspect-square rounded overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-900 cursor-pointer"
+                          >
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={gMedia.url}
+                              alt=""
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform"
+                            />
+                            <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                              <ZoomIn className="w-3 h-3 text-white" />
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="md:col-span-2 space-y-3">
+                  {previewRoom.shortDescription && (
+                    <p className="text-xs text-slate-600 dark:text-slate-400 italic bg-slate-50 dark:bg-slate-900 p-2 rounded border border-slate-200 dark:border-slate-800">
+                      "{previewRoom.shortDescription}"
+                    </p>
+                  )}
+
+                  <div>
+                    <h4 className="text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Amenities</h4>
+                    <div className="flex flex-wrap gap-1">
+                      {previewRoom.amenities.map((a) => (
+                        <Badge key={a} variant="secondary" className="text-xs">
+                          {a}
+                        </Badge>
                       ))}
                     </div>
                   </div>
-                )}
-              </div>
 
-              <div className="md:col-span-2 space-y-3">
-                {previewRoom.shortDescription && (
-                  <p className="text-xs text-slate-600 dark:text-slate-400 italic bg-slate-50 dark:bg-slate-900 p-2 rounded border border-slate-200 dark:border-slate-800">
-                    "{previewRoom.shortDescription}"
-                  </p>
-                )}
-
-                <div>
-                  <h4 className="text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Amenities</h4>
-                  <div className="flex flex-wrap gap-1">
-                    {previewRoom.amenities.map((a) => (
-                      <Badge key={a} variant="secondary" className="text-xs">
-                        {a}
-                      </Badge>
-                    ))}
+                  <div>
+                    <h4 className="text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Full Description</h4>
+                    <div
+                      className="prose dark:prose-invert prose-xs max-w-none bg-slate-50 dark:bg-slate-900 p-3 rounded border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 overflow-y-auto max-h-48"
+                      dangerouslySetInnerHTML={{ __html: previewRoom.description }}
+                    />
                   </div>
                 </div>
-
-                <div>
-                  <h4 className="text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Full Description</h4>
-                  <div
-                    className="prose dark:prose-invert prose-xs max-w-none bg-slate-50 dark:bg-slate-900 p-3 rounded border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 overflow-y-auto max-h-48"
-                    dangerouslySetInnerHTML={{ __html: previewRoom.description }}
-                  />
-                </div>
               </div>
-            </div>
+            </DialogBody>
 
             <DialogFooter>
               <Button size="sm" variant="outline" onClick={() => setPreviewRoom(null)}>
@@ -572,7 +561,7 @@ export default function AdminRoomsPage() {
                 Edit Room
               </Button>
             </DialogFooter>
-          </div>
+          </>
         )}
       </Dialog>
 

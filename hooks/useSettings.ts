@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { SettingsService } from '@/lib/services/settings.service';
-import { ContactSettings } from '@/lib/contact-settings';
+import { ContactSettings, saveContactSettings } from '@/lib/contact-settings';
 import { ApiResponse } from '@/lib/api-client';
 
 export function useSettings() {
@@ -16,6 +16,7 @@ export function useSettings() {
       const res = await SettingsService.getContactSettings();
       if (res.success && res.data) {
         setSettings(res.data);
+        saveContactSettings(res.data);
       }
     } finally {
       setIsLoading(false);
@@ -32,6 +33,7 @@ export function useSettings() {
       const res = await SettingsService.updateContactSettings(payload);
       if (res.success && res.data) {
         setSettings(res.data);
+        saveContactSettings(res.data);
       }
       return res;
     } finally {

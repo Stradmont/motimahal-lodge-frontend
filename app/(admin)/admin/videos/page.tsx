@@ -299,46 +299,36 @@ export default function AdminVideosPage() {
 
   const handleConfirmDelete = async () => {
     if (!deleteTargetVideo) return;
-    try {
-      const res = await deleteVideo(deleteTargetVideo.id);
-      if (res.success) {
-        toast.success(res.message || `Deleted video showcase "${deleteTargetVideo.title}"`);
-      } else {
-        toast.error(res.message || 'Failed to delete video showcase');
-      }
-    } catch (error) {
-      toast.error('Something went wrong');
-    } finally {
+    const res = await deleteVideo(deleteTargetVideo.id);
+    if (res.success) {
+      toast.success(res.message || `Deleted video showcase "${deleteTargetVideo.title}"`);
       setDeleteTargetVideo(null);
+    } else {
+      toast.error(res.message || 'Failed to delete video showcase');
     }
   };
 
   const handleFormSubmit = async (data: VideoFormData) => {
-    try {
-      if (formMode === 'create') {
-        const res = await createVideo(data);
-        if (res.success) {
-          toast.success(res.message || 'Created new video showcase');
-          setIsFormModalOpen(false);
-          return true;
-        } else {
-          toast.error(res.message || 'Failed to create video showcase');
-          return false;
-        }
-      } else if (editingVideo) {
-        const res = await updateVideo(editingVideo.id, data);
-        if (res.success) {
-          toast.success(res.message || 'Updated video showcase details');
-          setIsFormModalOpen(false);
-          return true;
-        } else {
-          toast.error(res.message || 'Failed to update video showcase');
-          return false;
-        }
+    if (formMode === 'create') {
+      const res = await createVideo(data);
+      if (res.success) {
+        toast.success(res.message || 'Created new video showcase');
+        setIsFormModalOpen(false);
+        return true;
+      } else {
+        toast.error(res.message || 'Failed to create video showcase');
+        return false;
       }
-    } catch (error) {
-      toast.error('Something went wrong');
-      return false;
+    } else if (editingVideo) {
+      const res = await updateVideo(editingVideo.id, data);
+      if (res.success) {
+        toast.success(res.message || 'Updated video showcase details');
+        setIsFormModalOpen(false);
+        return true;
+      } else {
+        toast.error(res.message || 'Failed to update video showcase');
+        return false;
+      }
     }
   };
 

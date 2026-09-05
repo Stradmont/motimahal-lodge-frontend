@@ -28,37 +28,29 @@ export default function AdminRoomInquiriesPage() {
   const [deleteTarget, setDeleteTarget] = useState<RoomInquiry | null>(null);
 
   const handleUpdateInquiry = async (updated: RoomInquiry) => {
-    try {
-      const res = await updateInquiry(updated.id, updated);
-      if (res.success) {
-        toast.success(res.message || 'Room inquiry updated successfully');
-        if (managingInquiry?.id === updated.id) {
-          setManagingInquiry(updated);
-        }
-      } else {
-        toast.error(res.message || 'Failed to update room inquiry');
+    const res = await updateInquiry(updated.id, updated);
+    if (res.success) {
+      toast.success(res.message || 'Room inquiry updated successfully');
+      if (managingInquiry?.id === updated.id) {
+        setManagingInquiry(updated);
       }
-    } catch (error) {
-      toast.error('Something went wrong');
+    } else {
+      toast.error(res.message || 'Failed to update room inquiry');
     }
+    return res.success;
   };
 
   const handleConfirmDelete = async () => {
     if (!deleteTarget) return;
-    try {
-      const res = await deleteInquiry(deleteTarget.id);
-      if (res.success) {
-        if (managingInquiry?.id === deleteTarget.id) {
-          setManagingInquiry(null);
-        }
-        toast.success(res.message || 'Deleted room inquiry from records');
-      } else {
-        toast.error(res.message || 'Failed to delete room inquiry');
+    const res = await deleteInquiry(deleteTarget.id);
+    if (res.success) {
+      if (managingInquiry?.id === deleteTarget.id) {
+        setManagingInquiry(null);
       }
-    } catch (error) {
-      toast.error('Something went wrong');
-    } finally {
+      toast.success(res.message || 'Deleted room inquiry from records');
       setDeleteTarget(null);
+    } else {
+      toast.error(res.message || 'Failed to delete room inquiry');
     }
   };
 

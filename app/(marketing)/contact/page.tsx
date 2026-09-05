@@ -3,11 +3,12 @@
 import React, { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { MapPin, Mail, Phone, CheckCircle2, AlertCircle } from 'lucide-react';
+import { MapPin, Mail, Phone, Clock, CheckCircle2, AlertCircle } from 'lucide-react';
 import { FacebookIcon, InstagramIcon } from '@/components/SocialIcons';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { toast } from 'sonner';
 import { useContactSettings } from '@/lib/contact-settings';
 import { ContactService } from '@/lib/services/contact.service';
 
@@ -62,20 +63,21 @@ export default function ContactPage() {
   });
 
   const onSubmit = async (data: ContactFormData) => {
-    try {
-      await ContactService.submit({
-        name: `${data.firstName} ${data.lastName}`.trim(),
-        email: data.email,
-        phone: data.telephone,
-        subject: data.subject,
-        message: data.message,
-      });
-    } catch (e) {
-      console.error('Failed to submit contact message:', e);
+    const res = await ContactService.submit({
+      name: `${data.firstName} ${data.lastName}`.trim(),
+      email: data.email,
+      phone: data.telephone,
+      subject: data.subject,
+      message: data.message,
+    });
+
+    if (res.success) {
+      setSubmittedName(data.firstName);
+      setSubmitted(true);
+      reset();
+    } else {
+      toast.error(res.message || 'Failed to send message. Please try again.');
     }
-    setSubmittedName(data.firstName);
-    setSubmitted(true);
-    reset();
   };
 
   return (
@@ -284,7 +286,7 @@ export default function ContactPage() {
                       <Mail className="h-7 w-7" />
                     </div>
                     <h2 className="font-heading text-lg font-bold text-brand-charcoal tracking-wide">
-                      Email address
+                      Email Address
                     </h2>
                     <a
                       href={`mailto:${contact.email}`}
@@ -292,6 +294,14 @@ export default function ContactPage() {
                     >
                       {contact.email}
                     </a>
+                    {contact.inquiryEmail && contact.inquiryEmail !== contact.email && (
+                      <a
+                        href={`mailto:${contact.inquiryEmail}`}
+                        className="text-stone-600 font-medium text-sm hover:underline block"
+                      >
+                        Inquiries: {contact.inquiryEmail}
+                      </a>
+                    )}
                   </div>
 
                   {/* Telephone */}
@@ -300,7 +310,7 @@ export default function ContactPage() {
                       <Phone className="h-7 w-7" />
                     </div>
                     <h2 className="font-heading text-lg font-bold text-brand-charcoal tracking-wide">
-                      Telephone
+                      Telephone / Phone
                     </h2>
                     <a
                       href={`tel:${contact.primaryPhone.replace(/\s+/g, '')}`}
@@ -308,7 +318,30 @@ export default function ContactPage() {
                     >
                       {contact.primaryPhone}
                     </a>
+                    {contact.secondaryPhone && (
+                      <a
+                        href={`tel:${contact.secondaryPhone.replace(/\s+/g, '')}`}
+                        className="text-stone-600 font-medium text-sm hover:underline block"
+                      >
+                        Secondary: {contact.secondaryPhone}
+                      </a>
+                    )}
                   </div>
+
+                  {/* Opening Hours */}
+                  {contact.openingHours && (
+                    <div className="space-y-2 pt-4 border-t border-brand-border">
+                      <div className="w-10 h-10 rounded-full flex items-center justify-center text-brand-gold">
+                        <Clock className="h-7 w-7" />
+                      </div>
+                      <h2 className="font-heading text-lg font-bold text-brand-charcoal tracking-wide">
+                        Operating Hours
+                      </h2>
+                      <p className="text-stone-700 text-base font-medium">
+                        {contact.openingHours}
+                      </p>
+                    </div>
+                  )}
 
                   {/* Social Media */}
                   <div className="space-y-3 pt-4 border-t border-brand-border">
@@ -316,24 +349,28 @@ export default function ContactPage() {
                       Follow Us
                     </h2>
                     <div className="flex items-center gap-3">
-                      <a
-                        href={contact.facebookUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#1877F2] hover:bg-[#166fe5] text-white rounded-md font-semibold text-xs sm:text-sm shadow-xs transition-colors"
-                      >
-                        <FacebookIcon className="w-4 h-4" />
-                        <span>Facebook</span>
-                      </a>
-                      <a
-                        href={contact.instagramUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] hover:opacity-95 text-white rounded-md font-semibold text-xs sm:text-sm shadow-xs transition-colors"
-                      >
-                        <InstagramIcon className="w-4 h-4" />
-                        <span>Instagram</span>
-                      </a>
+                      {contact.facebookUrl && (
+                        <a
+                          href={contact.facebookUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#1877F2] hover:bg-[#166fe5] text-white rounded-md font-semibold text-xs sm:text-sm shadow-xs transition-colors"
+                        >
+                          <FacebookIcon className="w-4 h-4" />
+                          <span>Facebook</span>
+                        </a>
+                      )}
+                      {contact.instagramUrl && (
+                        <a
+                          href={contact.instagramUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] hover:opacity-95 text-white rounded-md font-semibold text-xs sm:text-sm shadow-xs transition-colors"
+                        >
+                          <InstagramIcon className="w-4 h-4" />
+                          <span>Instagram</span>
+                        </a>
+                      )}
                     </div>
                   </div>
                 </div>

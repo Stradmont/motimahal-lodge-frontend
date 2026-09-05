@@ -17,7 +17,7 @@ import {
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogBody, DialogFooter } from '@/components/ui/dialog';
 import AdminPageHeader from '@/components/admin/layout/AdminPageHeader';
 import AdminFilterBar from '@/components/admin/layout/AdminFilterBar';
 import ConfirmDeleteDialog from '@/components/admin/common/ConfirmDeleteDialog';
@@ -86,20 +86,15 @@ export default function AdminMediaPage() {
 
   const handleConfirmDelete = async () => {
     if (!deleteTargetMedia) return;
-    try {
-      const res = await deleteMedia(deleteTargetMedia.id);
-      if (res.success) {
-        toast.success(res.message || `Media asset ${deleteTargetMedia.name} deleted`);
-        if (selectedMedia?.id === deleteTargetMedia.id) {
-          setSelectedMedia(null);
-        }
-      } else {
-        toast.error(res.message || 'Failed to delete media asset');
+    const res = await deleteMedia(deleteTargetMedia.id);
+    if (res.success) {
+      toast.success(res.message || `Media asset ${deleteTargetMedia.name} deleted`);
+      if (selectedMedia?.id === deleteTargetMedia.id) {
+        setSelectedMedia(null);
       }
-    } catch (err) {
-      toast.error('Failed to delete media asset');
-    } finally {
       setDeleteTargetMedia(null);
+    } else {
+      toast.error(res.message || 'Failed to delete media asset');
     }
   };
 
@@ -272,7 +267,7 @@ export default function AdminMediaPage() {
         size="2xl"
       >
         {selectedMedia && (
-          <div className="space-y-4 font-sans select-none">
+          <>
             <DialogHeader>
               <div className="flex items-center justify-between">
                 <DialogTitle className="truncate pr-4">{selectedMedia.name}</DialogTitle>
@@ -285,64 +280,66 @@ export default function AdminMediaPage() {
               </DialogDescription>
             </DialogHeader>
 
-            {/* Media Asset Preview Box */}
-            <div className="relative aspect-video rounded-md border border-slate-200 dark:border-slate-800 bg-slate-900 overflow-hidden flex items-center justify-center">
-              {selectedMedia.documentType === MediaDocumentType.IMAGE ? (
-                /* eslint-disable-next-line @next/next/no-img-element */
-                <img
-                  src={selectedMedia.url}
-                  alt={selectedMedia.name}
-                  className="max-h-full max-w-full object-contain"
-                />
-              ) : (
-                <video src={selectedMedia.url} controls className="max-h-full max-w-full" />
-              )}
-            </div>
-
-            {/* Metadata & Usage Info */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-              <div className="p-3 border border-slate-200 dark:border-slate-800 rounded-md bg-slate-50/50 dark:bg-slate-900/50 space-y-1.5">
-                <h4 className="font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
-                  <Info className="w-3.5 h-3.5 text-slate-500" />
-                  Asset Metadata
-                </h4>
-                <div className="space-y-1 text-slate-600 dark:text-slate-400 font-mono text-[11px]">
-                  <p>MIME Type: {selectedMedia.mimeType}</p>
-                  <p>File Size: {formatFileSize(selectedMedia.sizeBytes)}</p>
-                  {selectedMedia.widthPx && <p>Dimensions: {selectedMedia.widthPx} x {selectedMedia.heightPx} px</p>}
-                  <p>Original Name: {selectedMedia.originalFileName}</p>
-                </div>
-              </div>
-
-              <div className="p-3 border border-slate-200 dark:border-slate-800 rounded-md bg-slate-50/50 dark:bg-slate-900/50 space-y-1.5">
-                <h4 className="font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
-                  <Building2 className="w-3.5 h-3.5 text-slate-500" />
-                  Active Usage References
-                </h4>
-                {mediaUsageRefs.length === 0 ? (
-                  <p className="text-xs text-slate-500 italic pt-1">
-                    Not currently referenced by any rooms or content.
-                  </p>
+            <DialogBody className="space-y-4 select-none">
+              {/* Media Asset Preview Box */}
+              <div className="relative aspect-video rounded-md border border-slate-200 dark:border-slate-800 bg-slate-900 overflow-hidden flex items-center justify-center">
+                {selectedMedia.documentType === MediaDocumentType.IMAGE ? (
+                  /* eslint-disable-next-line @next/next/no-img-element */
+                  <img
+                    src={selectedMedia.url}
+                    alt={selectedMedia.name}
+                    className="max-h-full max-w-full object-contain"
+                  />
                 ) : (
-                  <div className="space-y-1 pt-0.5">
-                    {mediaUsageRefs.map((ref, idx) => (
-                      <div
-                        key={idx}
-                        className="flex items-center justify-between text-xs p-1.5 rounded bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800"
-                      >
-                        <span className="font-semibold text-slate-900 dark:text-slate-100 truncate">
-                          {ref.entityType}: {ref.entityTitle}
-                        </span>
-                        <span className="text-[10px] text-slate-400 font-mono shrink-0 ml-2">{ref.entityId}</span>
-                      </div>
-                    ))}
-                  </div>
+                  <video src={selectedMedia.url} controls className="max-h-full max-w-full" />
                 )}
               </div>
-            </div>
+
+              {/* Metadata & Usage Info */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <div className="p-3 border border-slate-200 dark:border-slate-800 rounded-md bg-slate-50/50 dark:bg-slate-900/50 space-y-1.5">
+                  <h4 className="font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+                    <Info className="w-3.5 h-3.5 text-slate-500" />
+                    Asset Metadata
+                  </h4>
+                  <div className="space-y-1 text-slate-600 dark:text-slate-400 font-mono text-[11px]">
+                    <p>MIME Type: {selectedMedia.mimeType}</p>
+                    <p>File Size: {formatFileSize(selectedMedia.sizeBytes)}</p>
+                    {selectedMedia.widthPx && <p>Dimensions: {selectedMedia.widthPx} x {selectedMedia.heightPx} px</p>}
+                    <p>Original Name: {selectedMedia.originalFileName}</p>
+                  </div>
+                </div>
+
+                <div className="p-3 border border-slate-200 dark:border-slate-800 rounded-md bg-slate-50/50 dark:bg-slate-900/50 space-y-1.5">
+                  <h4 className="font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+                    <Building2 className="w-3.5 h-3.5 text-slate-500" />
+                    Active Usage References
+                  </h4>
+                  {mediaUsageRefs.length === 0 ? (
+                    <p className="text-xs text-slate-500 italic pt-1">
+                      Not currently referenced by any rooms or content.
+                    </p>
+                  ) : (
+                    <div className="space-y-1 pt-0.5">
+                      {mediaUsageRefs.map((ref, idx) => (
+                        <div
+                          key={idx}
+                          className="flex items-center justify-between text-xs p-1.5 rounded bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800"
+                        >
+                          <span className="font-semibold text-slate-900 dark:text-slate-100 truncate">
+                            {ref.entityType}: {ref.entityTitle}
+                          </span>
+                          <span className="text-[10px] text-slate-400 font-mono shrink-0 ml-2">{ref.entityId}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </DialogBody>
 
             {/* Actions Footer */}
-            <DialogFooter className="flex flex-col sm:flex-row items-center justify-between gap-2 pt-3 border-t border-slate-200 dark:border-slate-800">
+            <DialogFooter className="flex flex-col sm:flex-row items-center justify-between gap-2">
               <div className="flex items-center gap-2 w-full sm:w-auto">
                 <Button
                   type="button"
@@ -358,26 +355,39 @@ export default function AdminMediaPage() {
                   href={selectedMedia.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center px-3 py-1.5 text-xs font-medium rounded-md border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                  className="w-full sm:w-auto"
                 >
-                  <ExternalLink className="w-3.5 h-3.5 mr-1.5" />
-                  View Original
+                  <Button type="button" variant="outline" size="sm" className="w-full">
+                    <ExternalLink className="w-3.5 h-3.5 mr-1.5" />
+                    Open File
+                  </Button>
                 </a>
               </div>
 
               <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
                 <Button
                   type="button"
-                  variant="destructive"
-                  size="icon"
-                  onClick={() => setDeleteTargetMedia(selectedMedia)}
-                  title="Delete media asset"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setSelectedMedia(null)}
                 >
-                  <Trash2 className="w-4 h-4" />
+                  Close
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  onClick={() => {
+                    const target = selectedMedia;
+                    setSelectedMedia(null);
+                    setEditMedia(target);
+                  }}
+                >
+                  <Pencil className="w-3.5 h-3.5 mr-1.5" />
+                  Edit Media Asset
                 </Button>
               </div>
             </DialogFooter>
-          </div>
+          </>
         )}
       </Dialog>
 

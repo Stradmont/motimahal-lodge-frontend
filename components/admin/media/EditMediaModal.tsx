@@ -12,7 +12,7 @@ import {
   Building2,
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogBody, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { AdminInput as Input } from '@/components/admin/common/AdminInput';
 import { Badge } from '@/components/ui/badge';
@@ -117,57 +117,57 @@ export default function EditMediaModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && !isSavingMetadata && !isReplacingFile && onClose()} size="3xl">
-      <div className="space-y-4 font-sans">
-        <DialogHeader className="border-b border-slate-200 dark:border-slate-800 pb-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <DialogTitle className="text-base font-bold text-slate-900 dark:text-slate-100">
-                Edit Media Asset
-              </DialogTitle>
-              <Badge variant="outline" className="text-[10px] font-mono">
-                {media.id}
-              </Badge>
-            </div>
-            <Badge variant="secondary" className="text-xs">
-              {media.documentType}
+      <DialogHeader>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <DialogTitle className="text-base font-bold text-slate-900 dark:text-slate-100">
+              Edit Media Asset
+            </DialogTitle>
+            <Badge variant="outline" className="text-[10px] font-mono">
+              {media.id}
             </Badge>
           </div>
-          <DialogDescription className="text-xs text-slate-500 mt-0.5">
-            Update asset metadata attributes or replace the underlying media file while preserving references.
-          </DialogDescription>
-        </DialogHeader>
-
-        {/* Tab Selector Bar */}
-        <div className="flex border-b border-slate-200 dark:border-slate-800">
-          <button
-            type="button"
-            onClick={() => setActiveTab('metadata')}
-            className={`px-4 py-2 text-xs font-semibold border-b-2 transition-colors cursor-pointer ${
-              activeTab === 'metadata'
-                ? 'border-slate-900 dark:border-slate-100 text-slate-900 dark:text-slate-100'
-                : 'border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
-            }`}
-          >
-            <Pencil className="w-3.5 h-3.5 inline mr-1.5" />
-            Metadata & Details
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab('replace')}
-            className={`px-4 py-2 text-xs font-semibold border-b-2 transition-colors cursor-pointer ${
-              activeTab === 'replace'
-                ? 'border-slate-900 dark:border-slate-100 text-slate-900 dark:text-slate-100'
-                : 'border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
-            }`}
-          >
-            <RefreshCw className="w-3.5 h-3.5 inline mr-1.5" />
-            Replace Media File
-          </button>
+          <Badge variant="secondary" className="text-xs">
+            {media.documentType}
+          </Badge>
         </div>
+        <DialogDescription className="text-xs text-slate-500 mt-0.5">
+          Update asset metadata attributes or replace the underlying media file while preserving references.
+        </DialogDescription>
+      </DialogHeader>
 
-        {/* Tab 1: Metadata Form & Information */}
-        {activeTab === 'metadata' && (
-          <form onSubmit={handleSaveMetadata} className="space-y-4">
+      {/* Tab Selector Bar */}
+      <div className="flex border-b border-slate-200 dark:border-slate-800 px-6 shrink-0 bg-white dark:bg-slate-950">
+        <button
+          type="button"
+          onClick={() => setActiveTab('metadata')}
+          className={`px-4 py-2 text-xs font-semibold border-b-2 transition-colors cursor-pointer ${
+            activeTab === 'metadata'
+              ? 'border-slate-900 dark:border-slate-100 text-slate-900 dark:text-slate-100'
+              : 'border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
+          }`}
+        >
+          <Pencil className="w-3.5 h-3.5 inline mr-1.5" />
+          Metadata & Details
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab('replace')}
+          className={`px-4 py-2 text-xs font-semibold border-b-2 transition-colors cursor-pointer ${
+            activeTab === 'replace'
+              ? 'border-slate-900 dark:border-slate-100 text-slate-900 dark:text-slate-100'
+              : 'border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
+          }`}
+        >
+          <RefreshCw className="w-3.5 h-3.5 inline mr-1.5" />
+          Replace Media File
+        </button>
+      </div>
+
+      {/* Tab 1: Metadata Form & Information */}
+      {activeTab === 'metadata' && (
+        <form onSubmit={handleSaveMetadata} className="flex flex-col flex-1 min-h-0 overflow-hidden">
+          <DialogBody className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {/* Media Preview Box */}
               <div className="md:col-span-1 space-y-2">
@@ -214,8 +214,6 @@ export default function EditMediaModal({
                   />
                 </div>
 
-
-
                 {/* Active Usage List */}
                 {usageRefs.length > 0 && (
                   <div className="p-2.5 rounded border border-amber-200 dark:border-amber-950/60 bg-amber-50/50 dark:bg-amber-950/20 text-xs text-amber-800 dark:text-amber-300 space-y-1">
@@ -234,43 +232,45 @@ export default function EditMediaModal({
                 )}
               </div>
             </div>
+          </DialogBody>
 
-            <DialogFooter className="pt-3 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
-              <Button
-                type="button"
-                variant="destructive"
-                size="icon"
-                onClick={() => {
-                  onClose();
-                  onDeleteRequested(media);
-                }}
-                title="Delete media asset"
-              >
-                <Trash2 className="w-4 h-4" />
+          <DialogFooter className="flex items-center justify-between">
+            <Button
+              type="button"
+              variant="destructive"
+              size="icon"
+              onClick={() => {
+                onClose();
+                onDeleteRequested(media);
+              }}
+              title="Delete media asset"
+            >
+              <Trash2 className="w-4 h-4" />
+            </Button>
+
+            <div className="flex items-center gap-2">
+              <Button type="button" variant="outline" size="sm" onClick={onClose} disabled={isSavingMetadata}>
+                Cancel
               </Button>
+              <Button type="submit" size="sm" disabled={isSavingMetadata}>
+                {isSavingMetadata ? (
+                  <>
+                    <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" />
+                    Saving...
+                  </>
+                ) : (
+                  'Save Metadata'
+                )}
+              </Button>
+            </div>
+          </DialogFooter>
+        </form>
+      )}
 
-              <div className="flex items-center gap-2">
-                <Button type="button" variant="outline" size="sm" onClick={onClose} disabled={isSavingMetadata}>
-                  Cancel
-                </Button>
-                <Button type="submit" size="sm" disabled={isSavingMetadata}>
-                  {isSavingMetadata ? (
-                    <>
-                      <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" />
-                      Saving...
-                    </>
-                  ) : (
-                    'Save Metadata'
-                  )}
-                </Button>
-              </div>
-            </DialogFooter>
-          </form>
-        )}
-
-        {/* Tab 2: Replace Media File */}
-        {activeTab === 'replace' && (
-          <div className="space-y-4">
+      {/* Tab 2: Replace Media File */}
+      {activeTab === 'replace' && (
+        <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
+          <DialogBody className="space-y-4">
             <div className="p-3 rounded border border-blue-200 dark:border-blue-900/40 bg-blue-50/50 dark:bg-blue-950/20 text-xs text-blue-900 dark:text-blue-200 space-y-1">
               <p className="font-semibold flex items-center gap-1.5">
                 <Info className="w-4 h-4 text-blue-600 shrink-0" />
@@ -378,15 +378,15 @@ export default function EditMediaModal({
                 </div>
               </div>
             )}
+          </DialogBody>
 
-            <DialogFooter className="pt-3 border-t border-slate-200 dark:border-slate-800">
-              <Button type="button" variant="outline" size="sm" onClick={onClose} disabled={isReplacingFile}>
-                Cancel
-              </Button>
-            </DialogFooter>
-          </div>
-        )}
-      </div>
+          <DialogFooter>
+            <Button type="button" variant="outline" size="sm" onClick={onClose} disabled={isReplacingFile}>
+              Cancel
+            </Button>
+          </DialogFooter>
+        </div>
+      )}
     </Dialog>
   );
 }

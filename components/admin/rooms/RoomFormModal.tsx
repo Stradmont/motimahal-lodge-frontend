@@ -9,7 +9,7 @@ import {
   Loader2,
   Check,
 } from 'lucide-react';
-import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogBody, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { AdminInput as Input } from '@/components/admin/common/AdminInput';
 import AdminRichTextEditor from '@/components/admin/common/AdminRichTextEditor';
@@ -167,9 +167,6 @@ export default function RoomFormModal({
       };
 
       await onSubmit(payload);
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Failed to save room details.';
-      toast.error(message);
     } finally {
       setIsSubmitting(false);
     }
@@ -181,8 +178,12 @@ export default function RoomFormModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && !isSubmitting && onClose()} size="4xl">
-      <div className="font-sans max-h-[85vh] flex flex-col">
-        <DialogHeader className="px-1 pb-3 border-b border-slate-200 dark:border-slate-800">
+      <form
+        onSubmit={handleSubmit(onFormSubmit, onInvalidSubmit)}
+        noValidate
+        className="flex flex-col flex-1 min-h-0 overflow-hidden"
+      >
+        <DialogHeader>
           <DialogTitle className="text-base font-bold text-slate-900 dark:text-slate-100">
             {mode === 'create' ? 'Add Room Category' : `Edit Room: ${initialData?.name}`}
           </DialogTitle>
@@ -191,11 +192,7 @@ export default function RoomFormModal({
           </DialogDescription>
         </DialogHeader>
 
-        <form
-          onSubmit={handleSubmit(onFormSubmit, onInvalidSubmit)}
-          noValidate
-          className="flex-1 overflow-y-auto py-4 space-y-6 px-1 pr-2"
-        >
+        <DialogBody className="space-y-6">
           {/* Section 1: Basic Specifications */}
           <div className="space-y-3">
             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200 dark:border-slate-800 pb-1">
@@ -502,32 +499,32 @@ export default function RoomFormModal({
               </div>
             </div>
           </div>
+        </DialogBody>
 
-          <DialogFooter className="pt-4 border-t border-slate-200 dark:border-slate-800">
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={onClose}
-              disabled={isSubmitting}
-            >
-              Cancel
-            </Button>
-            <Button type="submit" size="sm" disabled={isSubmitting}>
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" />
-                  Saving...
-                </>
-              ) : mode === 'create' ? (
-                'Create Room'
-              ) : (
-                'Save Changes'
-              )}
-            </Button>
-          </DialogFooter>
-        </form>
-      </div>
+        <DialogFooter>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={onClose}
+            disabled={isSubmitting}
+          >
+            Cancel
+          </Button>
+          <Button type="submit" size="sm" disabled={isSubmitting}>
+            {isSubmitting ? (
+              <>
+                <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" />
+                Saving...
+              </>
+            ) : mode === 'create' ? (
+              'Create Room'
+            ) : (
+              'Save Changes'
+            )}
+          </Button>
+        </DialogFooter>
+      </form>
     </Dialog>
   );
 }

@@ -32,7 +32,7 @@ export function Dialog({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 font-sans">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 font-sans">
       {/* Overlay */}
       <div
         className="fixed inset-0 bg-slate-950/60 backdrop-blur-2xs transition-opacity"
@@ -41,7 +41,7 @@ export function Dialog({
       {/* Dialog box */}
       <div
         className={cn(
-          'relative z-50 w-full rounded-md sm:rounded-lg border border-slate-200 bg-white p-6 shadow-xl dark:border-slate-800 dark:bg-slate-950 text-slate-900 dark:text-slate-100',
+          'relative z-50 w-full rounded-xl border border-slate-200 bg-white shadow-xl dark:border-slate-800 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col max-h-[calc(100vh-2rem)] sm:max-h-[calc(100vh-3.5rem)] overflow-hidden',
           sizeClasses[size] || 'max-w-2xl',
           className
         )}
@@ -58,7 +58,10 @@ export function DialogHeader({
 }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn('flex flex-col space-y-1 border-b border-slate-200 dark:border-slate-800 pb-3 text-left', className)}
+      className={cn(
+        'shrink-0 flex flex-col space-y-1 border-b border-slate-200 dark:border-slate-800 px-6 py-4 bg-white dark:bg-slate-950 text-left z-10',
+        className
+      )}
       {...props}
     />
   );
@@ -88,13 +91,30 @@ export function DialogDescription({
   );
 }
 
+export function DialogBody({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      className={cn('flex-1 overflow-y-auto p-6 min-h-0 space-y-4 text-slate-900 dark:text-slate-100', className)}
+      {...props}
+    />
+  );
+}
+
+export const DialogContent = DialogBody;
+
 export function DialogFooter({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn('flex items-center justify-end space-x-2 pt-4 border-t border-slate-200 dark:border-slate-800 mt-4', className)}
+      className={cn(
+        'shrink-0 flex items-center justify-end space-x-2.5 px-6 py-3.5 border-t border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-xs z-10 mt-auto',
+        className
+      )}
       {...props}
     />
   );

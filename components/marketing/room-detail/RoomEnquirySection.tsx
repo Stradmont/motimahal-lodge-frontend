@@ -2,12 +2,13 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Room, ROOMS_DATA } from '@/lib/data';
-import { useContactSettings } from '@/lib/contact-settings';
+import { useContactSettings, DEFAULT_PRIMARY_PHONE } from '@/lib/contact-settings';
 import { Phone, Mail, Minus, Plus, CheckCircle2, MessageSquare, AlertCircle, ChevronDown, Check } from 'lucide-react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { InquiryService } from '@/lib/services/inquiry.service';
+import { toast } from 'sonner';
 
 const enquirySchema = z.object({
   fullName: z
@@ -93,22 +94,23 @@ export default function RoomEnquirySection({
   });
 
   const onEnquirySubmit = async (data: EnquiryFormData) => {
-    try {
-      await InquiryService.create({
-        roomType: activeBookingRoom.name,
-        guestName: data.fullName,
-        phone: data.whatsappNumber,
-        checkIn: data.checkIn,
-        checkOut: data.checkOut,
-        guestsCount: adultsCount + childrenCount,
-      });
-    } catch (e) {
-      console.error('Failed to submit room inquiry:', e);
+    const res = await InquiryService.create({
+      roomType: activeBookingRoom.name,
+      guestName: data.fullName,
+      phone: data.whatsappNumber,
+      checkIn: data.checkIn,
+      checkOut: data.checkOut,
+      guestsCount: adultsCount + childrenCount,
+    });
+
+    if (res.success) {
+      setSubmittedData({ name: data.fullName, whatsapp: data.whatsappNumber });
+      setCheckIn(data.checkIn);
+      setCheckOut(data.checkOut);
+      setSubmitted(true);
+    } else {
+      toast.error(res.message || 'Failed to submit room inquiry. Please try again.');
     }
-    setSubmittedData({ name: data.fullName, whatsapp: data.whatsappNumber });
-    setCheckIn(data.checkIn);
-    setCheckOut(data.checkOut);
-    setSubmitted(true);
   };
 
   const whatsappCleanNumber = contact.whatsappNumber.replace(/[^0-9]/g, '');
@@ -239,7 +241,9 @@ export default function RoomEnquirySection({
                 {/* Full Name & WhatsApp Number Inputs */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div>
-                    <label className="block text-sm font-semibold text-stone-800 mb-1.5">Full name</label>
+                    <label className="block text-sm font-semibold text-stone-800 mb-1.5">
+                      Full name <span className="text-red-500">*</span>
+                    </label>
                     <input
                       type="text"
                       placeholder="e.g. Ram Bahadur Shrestha"
@@ -257,10 +261,12 @@ export default function RoomEnquirySection({
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-stone-800 mb-1.5">WhatsApp / Phone number</label>
+                    <label className="block text-sm font-semibold text-stone-800 mb-1.5">
+                      WhatsApp / Phone number <span className="text-red-500">*</span>
+                    </label>
                     <input
                       type="tel"
-                      placeholder="e.g. +977 98550 12345"
+                      placeholder={`e.g. ${DEFAULT_PRIMARY_PHONE}`}
                       {...register('whatsappNumber')}
                       className={`w-full bg-brand-surface border ${
                         errors.whatsappNumber ? 'border-red-500 focus:border-red-600' : 'border-brand-border focus:border-brand-green'
@@ -278,7 +284,9 @@ export default function RoomEnquirySection({
                 {/* Date Controls */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div>
-                    <label className="block text-sm font-semibold text-stone-800 mb-1.5">Check-in date</label>
+                    <label className="block text-sm font-semibold text-stone-800 mb-1.5">
+                      Check-in date <span className="text-red-500">*</span>
+                    </label>
                     <input
                       type="date"
                       min={todayStr}
@@ -298,7 +306,9 @@ export default function RoomEnquirySection({
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-stone-800 mb-1.5">Check-out date</label>
+                    <label className="block text-sm font-semibold text-stone-800 mb-1.5">
+                      Check-out date <span className="text-red-500">*</span>
+                    </label>
                     <input
                       type="date"
                       min={checkIn || todayStr}
@@ -321,7 +331,7 @@ export default function RoomEnquirySection({
                 {/* Custom Smooth Room Select Dropdown */}
                 <div className="relative" ref={dropdownRef}>
                   <label className="block text-sm font-semibold text-stone-800 mb-1.5">
-                    Select Room
+                    Select Room <span className="text-red-500">*</span>
                   </label>
                   <button
                     type="button"

@@ -4,7 +4,7 @@ import React from 'react';
 import { ExternalLink, Play, Tag, Globe, Copy, Check } from 'lucide-react';
 import { toast } from 'sonner';
 
-import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogBody, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { VideoItem, VideoPlatform, VideoStatus } from '@/lib/types/video';
@@ -92,7 +92,7 @@ export default function VideoPreviewModal({ isOpen, onClose, video }: VideoPrevi
         </DialogTitle>
       </DialogHeader>
 
-      <div className="space-y-4 py-2 font-sans">
+      <DialogBody className="space-y-4">
         {/* Video Player / Embedded Container or Thumbnail Showcase */}
         <div className="relative aspect-video w-full rounded-lg overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-950 flex items-center justify-center">
           {embedUrl ? (
@@ -185,7 +185,7 @@ export default function VideoPreviewModal({ isOpen, onClose, video }: VideoPrevi
             </a>
           </div>
         </div>
-      </div>
+      </DialogBody>
 
       <DialogFooter>
         <Button type="button" variant="outline" size="sm" onClick={onClose}>

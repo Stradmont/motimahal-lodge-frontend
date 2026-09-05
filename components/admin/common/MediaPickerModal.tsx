@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Search, Upload, Check, Loader2, Image as ImageIcon, Video, FileText } from 'lucide-react';
 import { toast } from 'sonner';
-import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogBody, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { AdminInput as Input } from '@/components/admin/common/AdminInput';
 import { AdminSelect as Select } from '@/components/admin/common/AdminSelect';
@@ -121,43 +121,44 @@ export default function MediaPickerModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()} size="4xl">
-      <div className="space-y-4 font-sans select-none">
-        <DialogHeader>
-          <div className="flex items-center justify-between">
-            <DialogTitle>{title}</DialogTitle>
-            <div className="flex items-center p-0.5 bg-slate-100 dark:bg-slate-900 rounded-md border border-slate-200 dark:border-slate-800 text-xs font-medium">
-              <button
-                type="button"
-                onClick={() => setActiveTab('library')}
-                className={cn(
-                  'px-3 py-1 rounded-sm transition-colors cursor-pointer',
-                  activeTab === 'library'
-                    ? 'bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-semibold shadow-2xs'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
-                )}
-              >
-                Media Library
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveTab('upload')}
-                className={cn(
-                  'px-3 py-1 rounded-sm transition-colors cursor-pointer',
-                  activeTab === 'upload'
-                    ? 'bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-semibold shadow-2xs'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
-                )}
-              >
-                Upload File
-              </button>
-            </div>
+      <DialogHeader>
+        <div className="flex items-center justify-between">
+          <DialogTitle>{title}</DialogTitle>
+          <div className="flex items-center p-0.5 bg-slate-100 dark:bg-slate-900 rounded-md border border-slate-200 dark:border-slate-800 text-xs font-medium">
+            <button
+              type="button"
+              onClick={() => setActiveTab('library')}
+              className={cn(
+                'px-3 py-1 rounded-sm transition-colors cursor-pointer',
+                activeTab === 'library'
+                  ? 'bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-semibold shadow-2xs'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
+              )}
+            >
+              Media Library
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('upload')}
+              className={cn(
+                'px-3 py-1 rounded-sm transition-colors cursor-pointer',
+                activeTab === 'upload'
+                  ? 'bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-semibold shadow-2xs'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
+              )}
+            >
+              Upload File
+            </button>
           </div>
-          <DialogDescription>
-            {activeTab === 'library'
-              ? 'Choose existing uploaded media asset from the centralized CMS library.'
-              : 'Upload a new photo or video asset directly to the centralized CMS media library.'}
-          </DialogDescription>
-        </DialogHeader>
+        </div>
+        <DialogDescription>
+          {activeTab === 'library'
+            ? 'Choose existing uploaded media asset from the centralized CMS library.'
+            : 'Upload a new photo or video asset directly to the centralized CMS media library.'}
+        </DialogDescription>
+      </DialogHeader>
+
+      <DialogBody className="space-y-4 select-none">
 
         {activeTab === 'library' ? (
           <div className="space-y-3">
@@ -293,26 +294,26 @@ export default function MediaPickerModal({
             )}
           </div>
         )}
+      </DialogBody>
 
-        <DialogFooter className="flex items-center justify-between pt-3 border-t border-slate-200 dark:border-slate-800">
-          <span className="text-xs font-medium text-slate-500">
-            {selectedItems.length} {selectedItems.length === 1 ? 'item' : 'items'} selected
-          </span>
-          <div className="flex items-center gap-2">
-            <Button type="button" variant="outline" size="sm" onClick={onClose}>
-              Cancel
-            </Button>
-            <Button
-              type="button"
-              size="sm"
-              disabled={selectedItems.length === 0}
-              onClick={handleConfirmSelection}
-            >
-              Use Selected Media ({selectedItems.length})
-            </Button>
-          </div>
-        </DialogFooter>
-      </div>
+      <DialogFooter className="flex items-center justify-between">
+        <span className="text-xs font-medium text-slate-500">
+          {selectedItems.length} {selectedItems.length === 1 ? 'item' : 'items'} selected
+        </span>
+        <div className="flex items-center gap-2">
+          <Button type="button" variant="outline" size="sm" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button
+            type="button"
+            size="sm"
+            disabled={selectedItems.length === 0}
+            onClick={handleConfirmSelection}
+          >
+            Use Selected Media ({selectedItems.length})
+          </Button>
+        </div>
+      </DialogFooter>
     </Dialog>
   );
 }
