@@ -1,0 +1,34 @@
+{
+  "repo_id": "repo_01a070da-073d-71e0-8e1c-3325dad0cf53",
+  "type": "git",
+  "init_at": "2026-09-05T09:15:32Z",
+  "init_by_email": "iamsujanbudhathoki@gmail.com",
+  "init_by_name": "श्री Sujan Budhathoki",
+  "repo_salt": "e26fab8083d470fcefad9dbe5f4ac8f3c57c3560",
+  "endpoint": "https://sageox.ai",
+  "fingerprint": {
+    "first_commit": "e26fab8083d470fcefad9dbe5f4ac8f3c57c3560",
+    "monthly_checkpoints": {
+      "2026-05": "e26fab8083d470fcefad9dbe5f4ac8f3c57c3560",
+      "2026-06": "89c57961cc804322268703700315606deb3f8318",
+      "2026-09": "a6df5e13d59284302cb3256cfa6e116466ab0809"
+    },
+    "ancestry_samples": [
+      "e26fab8083d470fcefad9dbe5f4ac8f3c57c3560",
+      "8f268b218ce306ec4dfec23b752ed32cf468b9eb",
+      "89c57961cc804322268703700315606deb3f8318",
+      "6e0e242c0cca8b01d9c1cb336e7945b2d4a6fefe",
+      "6ed4f61fd24c30824a64a17e781710e8f8ddf287",
+      "9b8302242381dff0dd8bc44956bea048f7fb5570"
+    ],
+    "remote_hashes": [
+      "sha256:93467306ab200bd6b1690239d5c0c51346021019454d9e058d759adbb0e0dd3a"
+    ]
+  },
+  "team_urls": {
+    "test": "https://git.sageox.ai/sageox-team_zzbofso8cb/team-context.git"
+  },
+  "urls_cached_at": "2026-09-05T09:15:38Z",
+  "version": "0.14.3",
+  "updated_at": "2026-09-05T09:15:38Z"
+}

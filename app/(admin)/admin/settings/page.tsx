@@ -151,7 +151,7 @@ export default function AdminSettingsPage() {
                   type="text"
                   value={formData.secondaryPhone}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange('secondaryPhone', e.target.value)}
-                  placeholder="+977 9855012345"
+                  placeholder="+977 9845179310"
                 />
               </div>
             </div>

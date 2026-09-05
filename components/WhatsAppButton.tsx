@@ -14,7 +14,7 @@ export default function WhatsAppButton() {
 
   // Motimahal Lodge WhatsApp direct contact URL
   const whatsappUrl =
-    'https://wa.me/9779855012345?text=Hello%20Motimahal%20Lodge!%20I%20would%20like%20to%20inquire%20about%20a%20room%20booking.';
+    'https://wa.me/9779845179310?text=Hello%20Motimahal%20Lodge!%20I%20would%20like%20to%20inquire%20about%20a%20room%20booking.';
 
   return (
     <div className="fixed bottom-6 left-6 z-50 flex items-center gap-3">
@@ -39,9 +39,8 @@ export default function WhatsAppButton() {
 
       {/* Tooltip Pill Badge */}
       <span
-        className={`hidden sm:inline-block px-3.5 py-1.5 rounded-full bg-stone-900/90 backdrop-blur-md text-white text-xs font-medium tracking-wide shadow-lg border border-stone-700/50 transition-all duration-300 pointer-events-none ${
-          isHovered ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2'
-        }`}
+        className={`hidden sm:inline-block px-3.5 py-1.5 rounded-full bg-stone-900/90 backdrop-blur-md text-white text-xs font-medium tracking-wide shadow-lg border border-stone-700/50 transition-all duration-300 pointer-events-none ${isHovered ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2'
+          }`}
       >
         Chat with Motimahal on WhatsApp
       </span>

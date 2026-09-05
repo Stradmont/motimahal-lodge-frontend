@@ -89,7 +89,7 @@ export default function RoomStickyBookingBar({
 
           <div className="pt-2 text-center border-t border-brand-border">
             <a
-              href="tel:+9779855012345"
+              href="tel:+9779845179310"
               className="inline-flex items-center gap-2 text-sm font-semibold text-brand-green hover:underline"
             >
               <Phone className="h-4 w-4 text-brand-green" />
