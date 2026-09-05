@@ -11,7 +11,6 @@ import {
   ArrowUpRight,
   Mail,
   Phone,
-  CalendarCheck,
   CheckCircle2,
   Clock,
   AlertCircle,
@@ -52,10 +51,7 @@ export default function AdminDashboardOverview() {
       subtext: `${submissions.length} Total Received`,
       href: '/admin/contact',
       icon: MessageSquare,
-      color: 'amber',
-      bgClass: 'bg-amber-50/70 dark:bg-amber-950/30 border-amber-200/80 dark:border-amber-900/50',
-      iconBgClass: 'bg-amber-500 text-white shadow-xs',
-      valueClass: 'text-amber-700 dark:text-amber-400',
+      accent: newInquiriesCount > 0,
     },
     {
       title: 'Rooms & Rates',
@@ -63,10 +59,7 @@ export default function AdminDashboardOverview() {
       subtext: `${rooms.reduce((acc, r) => acc + (r.totalUnits || 1), 0)} Total Units`,
       href: '/admin/rooms',
       icon: Bed,
-      color: 'emerald',
-      bgClass: 'bg-emerald-50/70 dark:bg-emerald-950/30 border-emerald-200/80 dark:border-emerald-900/50',
-      iconBgClass: 'bg-emerald-600 text-white shadow-xs',
-      valueClass: 'text-emerald-700 dark:text-emerald-400',
+      accent: false,
     },
     {
       title: 'Gallery Showcase',
@@ -74,10 +67,7 @@ export default function AdminDashboardOverview() {
       subtext: 'Active Photo Media',
       href: '/admin/gallery',
       icon: ImageIcon,
-      color: 'indigo',
-      bgClass: 'bg-indigo-50/70 dark:bg-indigo-950/30 border-indigo-200/80 dark:border-indigo-900/50',
-      iconBgClass: 'bg-indigo-600 text-white shadow-xs',
-      valueClass: 'text-indigo-700 dark:text-indigo-400',
+      accent: false,
     },
     {
       title: 'Video Tours',
@@ -85,10 +75,7 @@ export default function AdminDashboardOverview() {
       subtext: 'Published Virtual Tours',
       href: '/admin/videos',
       icon: Video,
-      color: 'purple',
-      bgClass: 'bg-purple-50/70 dark:bg-purple-950/30 border-purple-200/80 dark:border-purple-900/50',
-      iconBgClass: 'bg-purple-600 text-white shadow-xs',
-      valueClass: 'text-purple-700 dark:text-purple-400',
+      accent: false,
     },
   ];
 
@@ -177,8 +164,8 @@ export default function AdminDashboardOverview() {
       header: 'Action',
       align: 'right',
       width: '90px',
-      render: (item) => (
-        <Link href={`/admin/contact`}>
+      render: () => (
+        <Link href="/admin/contact">
           <Button variant="ghost" size="sm" className="h-7 px-2 text-xs gap-1 cursor-pointer">
             <Eye className="w-3.5 h-3.5" />
             View
@@ -193,7 +180,7 @@ export default function AdminDashboardOverview() {
       {/* Page Header */}
       <AdminPageHeader
         title="Dashboard Overview"
-        description="Moti Mahal Lodge & Restaurant administrative management portal."
+        description="Moti Mahal Lodge & Restaurant administrative portal."
         action={
           <div className="flex items-center gap-2.5">
             <Button
@@ -215,26 +202,30 @@ export default function AdminDashboardOverview() {
         }
       />
 
-      {/* Colorful Summary Stat Cards */}
+      {/* Clean Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {metrics.map((m) => {
           const Icon = m.icon;
           return (
             <Link key={m.href} href={m.href} className="group">
-              <div className={`p-4 rounded-xl border transition-all duration-200 hover:shadow-sm ${m.bgClass} flex items-center justify-between`}>
-                <div className="space-y-0.5">
-                  <span className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">
+              <div className="p-4 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 hover:border-slate-300 dark:hover:border-slate-700 transition-colors flex items-center justify-between shadow-2xs">
+                <div className="space-y-1">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
                     {m.title}
                   </span>
-                  <div className={`text-2xl font-extrabold tracking-tight ${m.valueClass}`}>
+                  <div className="text-xl font-bold text-slate-900 dark:text-slate-100">
                     {m.value}
                   </div>
-                  <span className="text-[11px] text-slate-500 dark:text-slate-400 font-medium block">
+                  <span className="text-[11px] text-slate-500 font-normal block">
                     {m.subtext}
                   </span>
                 </div>
-                <div className={`w-11 h-11 rounded-lg flex items-center justify-center shrink-0 transition-transform duration-200 group-hover:scale-105 ${m.iconBgClass}`}>
-                  <Icon className="w-5.5 h-5.5" />
+                <div className={`w-10 h-10 rounded-md flex items-center justify-center shrink-0 border transition-colors ${
+                  m.accent
+                    ? 'bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-900/60'
+                    : 'bg-slate-50 dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 group-hover:bg-slate-900 group-hover:text-white dark:group-hover:bg-slate-100 dark:group-hover:text-slate-900'
+                }`}>
+                  <Icon className="w-4 h-4" />
                 </div>
               </div>
             </Link>
@@ -242,16 +233,16 @@ export default function AdminDashboardOverview() {
         })}
       </div>
 
-      {/* Recent Guest Inquiries Section (Full Width Table) */}
-      <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 p-5 space-y-4 shadow-2xs">
+      {/* Guest Inquiries Section */}
+      <div className="rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 p-5 space-y-4 shadow-2xs">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-4">
           <div>
             <h2 className="text-base font-bold text-slate-900 dark:text-slate-100 tracking-tight flex items-center gap-2">
               <MessageSquare className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-              Guest Contact Inquiries & Submissions
+              Guest Contact Inquiries
             </h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-              Recent messages sent by guests through the website contact form.
+            <p className="text-xs text-slate-500 mt-0.5">
+              Recent guest messages and contact form submissions.
             </p>
           </div>
 
