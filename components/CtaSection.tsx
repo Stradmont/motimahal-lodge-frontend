@@ -22,29 +22,29 @@ export default function CtaSection({
 }: CtaSectionProps) {
   return (
     <section
-      className={`py-20 sm:py-28 text-brand-charcoal text-center border-t border-brand-border relative overflow-hidden ${
+      className={`py-12 sm:py-28 text-brand-charcoal text-center border-t border-brand-border relative overflow-hidden ${
         bgTexture ? 'bg-texture' : 'bg-brand-surface'
       } ${className}`}
     >
-      <div className="mx-auto max-w-4xl px-6 space-y-6">
+      <div className="mx-auto max-w-4xl px-4 sm:px-6 space-y-4 sm:space-y-6">
         {subtitle && (
           <span className="text-brand-green text-xs sm:text-sm font-semibold uppercase tracking-[0.2em] block">
             {subtitle}
           </span>
         )}
 
-        <h2 className="font-heading text-3xl sm:text-5xl font-bold text-brand-charcoal">
+        <h2 className="font-heading text-2xl sm:text-4xl lg:text-5xl font-bold text-brand-charcoal">
           {title}
         </h2>
 
-        <p className="text-stone-600 text-base sm:text-lg lg:text-xl max-w-xl mx-auto leading-relaxed">
+        <p className="text-stone-600 text-sm sm:text-lg lg:text-xl max-w-xl mx-auto leading-relaxed">
           {description}
         </p>
 
         <div className="pt-2">
           <Link
             href={buttonHref}
-            className="inline-flex items-center justify-center bg-brand-green hover:bg-brand-green-dark border border-footer-border text-white font-semibold text-sm sm:text-base py-4 px-9 rounded-md transition-colors cursor-pointer shadow-xs"
+            className="w-full sm:w-auto inline-flex items-center justify-center bg-brand-green hover:bg-brand-green-dark border border-footer-border text-white font-semibold text-sm sm:text-base py-3.5 sm:py-4 px-6 sm:px-9 rounded-md transition-colors cursor-pointer shadow-xs"
           >
             <span>{buttonText}</span>
           </Link>

@@ -162,7 +162,7 @@ export default function AdminLoginPage() {
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <label className="text-xs font-medium text-[#334155]">
-                    Verification Code
+                    Verification Code <span className="text-rose-500">*</span>
                   </label>
                   <span className="text-[11px] text-[#94A3B8]">6 digits · expires in 5 min</span>
                 </div>
@@ -240,7 +240,7 @@ export default function AdminLoginPage() {
               {/* Email */}
               <div>
                 <label className="block text-xs font-medium text-[#334155] mb-1.5">
-                  Email address
+                  Email address <span className="text-rose-500">*</span>
                 </label>
                 <input
                   type="email"
@@ -262,7 +262,7 @@ export default function AdminLoginPage() {
               {/* Password */}
               <div>
                 <label className="block text-xs font-medium text-[#334155] mb-1.5">
-                  Password
+                  Password <span className="text-rose-500">*</span>
                 </label>
                 <input
                   type="password"

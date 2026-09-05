@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { FileImage, Plus, X, Pencil } from 'lucide-react';
+import { FileImage, Plus, X, Pencil, ZoomIn } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import MediaPickerModal from './MediaPickerModal';
+import FullMediaPreviewModal from './FullMediaPreviewModal';
 import { MediaItem, MediaSelectorMode } from '@/lib/types/media';
 import { fetchMediaList } from '@/lib/api/media';
 import { cn } from '@/lib/utils';
@@ -33,6 +34,7 @@ export type MediaSelectorProps = MediaSelectorSingleProps | MediaSelectorMultipl
 export function MediaSelector(props: MediaSelectorProps) {
   const { mode = MediaSelectorMode.SINGLE, label, placeholder = 'Select image from Media Library', className } = props;
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [fullscreenSrc, setFullscreenSrc] = useState<string | null>(null);
   const [mediaCache, setMediaCache] = useState<Record<string, MediaItem>>({});
 
   const cacheMediaItems = useCallback((items: MediaItem[]) => {
@@ -124,13 +126,24 @@ export function MediaSelector(props: MediaSelectorProps) {
         {value ? (
           <div className="relative group flex items-center gap-3 p-2 rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950">
             {/* Thumbnail Preview */}
-            <div className="w-14 h-14 rounded overflow-hidden bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shrink-0">
+            <div
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (displayUrl) setFullscreenSrc(displayUrl);
+              }}
+              className="w-14 h-14 rounded overflow-hidden bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shrink-0 relative group/thumb cursor-pointer"
+              title="Click to view full image"
+            >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={displayUrl}
                 alt="Selected media asset"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover transition-transform duration-200 group-hover/thumb:scale-110"
               />
+              <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover/thumb:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+                <ZoomIn className="w-4 h-4 text-white" />
+              </div>
             </div>
 
             <div className="flex-1 min-w-0">
@@ -192,6 +205,13 @@ export function MediaSelector(props: MediaSelectorProps) {
           onConfirm={handleConfirm}
           title="Select Media Asset"
         />
+
+        <FullMediaPreviewModal
+          isOpen={!!fullscreenSrc}
+          onClose={() => setFullscreenSrc(null)}
+          src={fullscreenSrc}
+          title={getFileName(value || '')}
+        />
       </div>
     );
   }
@@ -222,22 +242,35 @@ export function MediaSelector(props: MediaSelectorProps) {
       )}
 
       <div className="grid grid-cols-3 sm:grid-cols-5 gap-2.5 p-2 rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950">
-        {value.map((idOrUrl, idx) => (
-          <div
-            key={idx}
-            className="group relative aspect-square rounded overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-900"
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={getDisplayUrl(idOrUrl)} alt={`Gallery media ${idx}`} className="w-full h-full object-cover" />
-            <button
-              type="button"
-              onClick={(e) => handleRemoveItem(e, idx)}
-              className="absolute top-1 right-1 w-5 h-5 rounded-full bg-slate-950/80 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+        {value.map((idOrUrl, idx) => {
+          const url = getDisplayUrl(idOrUrl);
+          return (
+            <div
+              key={idx}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (url) setFullscreenSrc(url);
+              }}
+              className="group relative aspect-square rounded overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-900 cursor-pointer"
+              title="Click to view full image"
             >
-              <X className="w-3 h-3" />
-            </button>
-          </div>
-        ))}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={url} alt={`Gallery media ${idx}`} className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105" />
+              <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+                <ZoomIn className="w-4 h-4 text-white" />
+              </div>
+              <button
+                type="button"
+                onClick={(e) => handleRemoveItem(e, idx)}
+                className="absolute top-1 right-1 w-5 h-5 rounded-full bg-slate-950/80 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer z-10"
+                title="Remove item"
+              >
+                <X className="w-3 h-3" />
+              </button>
+            </div>
+          );
+        })}
 
         <button
           type="button"
@@ -260,6 +293,13 @@ export function MediaSelector(props: MediaSelectorProps) {
         initialSelectedUrls={value}
         onConfirm={handleConfirmMultiple}
         title="Select Media Assets"
+      />
+
+      <FullMediaPreviewModal
+        isOpen={!!fullscreenSrc}
+        onClose={() => setFullscreenSrc(null)}
+        src={fullscreenSrc}
+        title="Media Preview"
       />
     </div>
   );

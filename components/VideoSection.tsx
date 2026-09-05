@@ -86,13 +86,13 @@ export default function VideoSection() {
           </h2>
         </div>
 
-        {/* Video Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 justify-center max-w-6xl mx-auto">
+        {/* Video Cards Container: Horizontal Scroll on Mobile, Grid on Desktop */}
+        <div className="flex sm:grid sm:grid-cols-2 lg:grid-cols-3 overflow-x-auto sm:overflow-visible snap-x snap-mandatory gap-5 sm:gap-8 max-w-6xl mx-auto pb-4 sm:pb-0 -mx-4 px-4 sm:mx-auto sm:px-0 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
           {INSTAGRAM_REELS.map((video) => (
             <div
               key={video.id}
               onClick={() => setActiveVideo(video)}
-              className="group cursor-pointer flex flex-col items-center space-y-3 focus:outline-none"
+              className="group cursor-pointer flex flex-col items-center space-y-3 focus:outline-none w-[80vw] max-w-[320px] sm:w-full sm:max-w-none shrink-0 sm:shrink snap-start"
               role="button"
               tabIndex={0}
               onKeyDown={(e) => {

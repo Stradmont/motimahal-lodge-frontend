@@ -1,20 +1,8 @@
 import { apiClient, ApiResponse } from '@/lib/api-client';
-
-export interface BlogItem {
-  id: string;
-  title: string;
-  slug: string;
-  excerpt?: string;
-  content: string;
-  categoryId?: string;
-  authorName?: string;
-  imageUrl?: string;
-  status: 'PUBLISHED' | 'DRAFT';
-  createdAt: string;
-}
+import { BlogItem, BlogQueryParams } from '@/lib/types/blog';
 
 export const AdminBlogService = {
-  async getAll(params?: any): Promise<ApiResponse<BlogItem[]>> {
+  async getAll(params?: BlogQueryParams): Promise<ApiResponse<BlogItem[]>> {
     return apiClient.get<BlogItem[]>('/api/v1/admin/blogs', params);
   },
   async getById(id: string): Promise<ApiResponse<BlogItem | null>> {
@@ -32,7 +20,7 @@ export const AdminBlogService = {
 };
 
 export const PublicBlogService = {
-  async getAll(params?: any): Promise<ApiResponse<BlogItem[]>> {
+  async getAll(params?: BlogQueryParams): Promise<ApiResponse<BlogItem[]>> {
     return apiClient.get<BlogItem[]>('/api/v1/public/blogs', params);
   },
   async getBySlug(slug: string): Promise<ApiResponse<BlogItem>> {

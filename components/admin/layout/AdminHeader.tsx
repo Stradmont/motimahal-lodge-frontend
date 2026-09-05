@@ -2,7 +2,13 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Menu, Settings, LogOut, ChevronDown, AlertTriangle } from 'lucide-react';
+import {
+  Menu,
+  Settings,
+  LogOut,
+  ChevronDown,
+  AlertTriangle,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import {
@@ -12,6 +18,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from '@/components/ui/dialog';
+import AdminNotificationBell from '@/components/admin/notifications/AdminNotificationBell';
 
 interface AdminHeaderProps {
   onOpenMobileSidebar: () => void;
@@ -68,86 +75,91 @@ export default function AdminHeader({
             <Menu className="w-4 h-4" />
           </Button>
 
-          <span className="text-xs font-semibold ">
+          <span className="text-xs font-semibold">
             Admin Portal / {title || 'Dashboard'}
           </span>
         </div>
 
-        {/* Profile Dropdown Area */}
-        <div className="relative" ref={dropdownRef}>
-          <button
-            type="button"
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            aria-expanded={isDropdownOpen}
-            aria-haspopup="true"
-            aria-label="User navigation menu"
-            className={cn(
-              'flex items-center gap-2 p-1.5 rounded-md transition-all cursor-pointer border border-transparent hover:bg-slate-100 dark:hover:bg-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-300 dark:focus:ring-slate-700',
-              isDropdownOpen && 'bg-slate-100 dark:bg-slate-900 border-slate-200 dark:border-slate-800'
-            )}
-          >
-            <div className="w-7 h-7 rounded bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-950 flex items-center justify-center font-bold text-xs select-none shadow-2xs">
-              M
-            </div>
-            <div className="hidden sm:flex flex-col text-left">
-              <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 leading-tight">
-                Manager
-              </span>
-              <span className="text-[10px] text-slate-500 font-medium">
-                Portal Admin
-              </span>
-            </div>
-            <ChevronDown
+        <div className="flex items-center gap-2">
+          {/* Dedicated Notification Bell Component */}
+          <AdminNotificationBell />
+
+          {/* Profile Dropdown Area */}
+          <div className="relative" ref={dropdownRef}>
+            <button
+              type="button"
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              aria-expanded={isDropdownOpen}
+              aria-haspopup="true"
+              aria-label="User navigation menu"
               className={cn(
-                'w-3.5 h-3.5 text-slate-400 transition-transform duration-150 ml-0.5',
-                isDropdownOpen && 'rotate-180 text-slate-700 dark:text-slate-200'
+                'flex items-center gap-2 p-1.5 rounded-md transition-all cursor-pointer border border-transparent hover:bg-slate-100 dark:hover:bg-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-300 dark:focus:ring-slate-700',
+                isDropdownOpen && 'bg-slate-100 dark:bg-slate-900 border-slate-200 dark:border-slate-800'
               )}
-            />
-          </button>
-
-          {/* Profile Dropdown Menu */}
-          {isDropdownOpen && (
-            <div
-              role="menu"
-              aria-orientation="vertical"
-              className="absolute right-0 mt-1.5 w-48 rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 p-1 shadow-md z-50 animate-in fade-in-50 zoom-in-95 duration-100 font-sans"
             >
-              <div className="px-2.5 py-1.5 border-b border-slate-100 dark:border-slate-800/80 mb-1">
-                <p className="text-xs font-semibold text-slate-900 dark:text-slate-100">
-                  Moti Mahal Manager
-                </p>
-                <p className="text-[10px] text-slate-500 font-mono truncate">
-                  manager@motimahal.com
-                </p>
+              <div className="w-7 h-7 rounded bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-950 flex items-center justify-center font-bold text-xs select-none shadow-2xs">
+                M
               </div>
+              <div className="hidden sm:flex flex-col text-left">
+                <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 leading-tight">
+                  Manager
+                </span>
+                <span className="text-[10px] text-slate-500 font-medium">
+                  Portal Admin
+                </span>
+              </div>
+              <ChevronDown
+                className={cn(
+                  'w-3.5 h-3.5 text-slate-400 transition-transform duration-150 ml-0.5',
+                  isDropdownOpen && 'rotate-180 text-slate-700 dark:text-slate-200'
+                )}
+              />
+            </button>
 
-              <button
-                type="button"
-                role="menuitem"
-                onClick={() => {
-                  setIsDropdownOpen(false);
-                  router.push('/admin/settings');
-                }}
-                className="w-full flex items-center gap-2.5 px-2.5 py-1.5 text-xs font-medium rounded text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-900 hover:text-slate-900 dark:hover:text-slate-100 transition-colors text-left cursor-pointer"
+            {/* Profile Dropdown Menu */}
+            {isDropdownOpen && (
+              <div
+                role="menu"
+                aria-orientation="vertical"
+                className="absolute right-0 mt-1.5 w-48 rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 p-1 shadow-md z-50 animate-in fade-in-50 zoom-in-95 duration-100 font-sans"
               >
-                <Settings className="w-3.5 h-3.5 text-slate-500 shrink-0" />
-                <span>Settings</span>
-              </button>
+                <div className="px-2.5 py-1.5 border-b border-slate-100 dark:border-slate-800/80 mb-1">
+                  <p className="text-xs font-semibold text-slate-900 dark:text-slate-100">
+                    Moti Mahal Manager
+                  </p>
+                  <p className="text-[10px] text-slate-500 font-mono truncate">
+                    manager@motimahal.com
+                  </p>
+                </div>
 
-              <button
-                type="button"
-                role="menuitem"
-                onClick={() => {
-                  setIsDropdownOpen(false);
-                  setShowLogoutConfirm(true);
-                }}
-                className="w-full flex items-center gap-2.5 px-2.5 py-1.5 text-xs font-medium rounded text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors text-left cursor-pointer mt-0.5"
-              >
-                <LogOut className="w-3.5 h-3.5 shrink-0" />
-                <span>Logout</span>
-              </button>
-            </div>
-          )}
+                <button
+                  type="button"
+                  role="menuitem"
+                  onClick={() => {
+                    setIsDropdownOpen(false);
+                    router.push('/admin/settings');
+                  }}
+                  className="w-full flex items-center gap-2.5 px-2.5 py-1.5 text-xs font-medium rounded text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-900 hover:text-slate-900 dark:hover:text-slate-100 transition-colors text-left cursor-pointer"
+                >
+                  <Settings className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+                  <span>Settings</span>
+                </button>
+
+                <button
+                  type="button"
+                  role="menuitem"
+                  onClick={() => {
+                    setIsDropdownOpen(false);
+                    setShowLogoutConfirm(true);
+                  }}
+                  className="w-full flex items-center gap-2.5 px-2.5 py-1.5 text-xs font-medium rounded text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors text-left cursor-pointer mt-0.5"
+                >
+                  <LogOut className="w-3.5 h-3.5 shrink-0" />
+                  <span>Logout</span>
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </header>
 
@@ -194,4 +206,3 @@ export default function AdminHeader({
     </>
   );
 }
-

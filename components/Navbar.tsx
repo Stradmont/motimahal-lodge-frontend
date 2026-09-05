@@ -24,10 +24,15 @@ export default function Navbar() {
   useEffect(() => {
     let lastScrollY = window.scrollY;
 
+    // Sync initial state on mount
+    if (window.scrollY > 20) {
+      setIsScrolled(true);
+    }
+
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
-      if (currentScrollY > 40) {
+      if (currentScrollY > 20) {
         setIsScrolled(true);
       } else {
         setIsScrolled(false);
@@ -38,9 +43,9 @@ export default function Navbar() {
 
       if (currentScrollY <= 80) {
         setIsVisible(true);
-      } else if (diff > 0) {
+      } else if (diff > 12 && currentScrollY > 120) {
         setIsVisible(false);
-      } else {
+      } else if (diff < -8) {
         setIsVisible(true);
       }
 
@@ -54,10 +59,10 @@ export default function Navbar() {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-40 w-full transition-all duration-300 ease-in-out ${isVisible ? 'translate-y-0' : '-translate-y-full'
+        className={`fixed top-0 left-0 right-0 z-40 w-full transition-[transform,background-color,border-color,box-shadow] duration-300 ease-in-out border-b ${isVisible ? 'translate-y-0' : '-translate-y-full'
           } ${isScrolled
-            ? 'bg-brand-green-dark/95 backdrop-blur-md border-b border-footer-border/40 py-3.5 sm:py-4 px-4 sm:px-8 lg:px-12 shadow-sm text-white'
-            : 'bg-transparent text-white py-5 sm:py-6 px-4 sm:px-8 lg:px-12'
+            ? 'bg-brand-green-dark/95 backdrop-blur-md border-footer-border/40 py-3.5 sm:py-4 px-4 sm:px-8 lg:px-12 shadow-sm text-white'
+            : 'bg-transparent border-transparent py-4 sm:py-5 px-4 sm:px-8 lg:px-12 text-white'
           }`}
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between">

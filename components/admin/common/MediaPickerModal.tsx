@@ -20,11 +20,13 @@ interface MediaPickerModalProps {
   title?: string;
 }
 
+const DEFAULT_INITIAL_SELECTED_URLS: string[] = [];
+
 export default function MediaPickerModal({
   isOpen,
   onClose,
   mode = MediaSelectorMode.SINGLE,
-  initialSelectedUrls = [],
+  initialSelectedUrls = DEFAULT_INITIAL_SELECTED_URLS,
   onConfirm,
   title = 'Select Media Asset',
 }: MediaPickerModalProps) {
@@ -56,13 +58,24 @@ export default function MediaPickerModal({
     }
   }, [isOpen, loadMedia]);
 
+  const initialUrlsKey = initialSelectedUrls.join(',');
+
   useEffect(() => {
     if (isOpen && mediaList.length > 0) {
       // Sync initial selected items by URL or ID match
-      const preselected = mediaList.filter((m) => initialSelectedUrls.includes(m.url) || initialSelectedUrls.includes(m.id));
-      setSelectedItems(preselected);
+      const preselected = mediaList.filter(
+        (m) => initialSelectedUrls.includes(m.url) || initialSelectedUrls.includes(m.id)
+      );
+      setSelectedItems((prev) => {
+        const prevIds = prev.map((i) => i.id).sort().join(',');
+        const newIds = preselected.map((i) => i.id).sort().join(',');
+        if (prevIds !== newIds) {
+          return preselected;
+        }
+        return prev;
+      });
     }
-  }, [isOpen, mediaList, initialSelectedUrls]);
+  }, [isOpen, mediaList, initialUrlsKey]);
 
   useEffect(() => {
     window.addEventListener(MEDIA_UPDATED_EVENT, loadMedia);

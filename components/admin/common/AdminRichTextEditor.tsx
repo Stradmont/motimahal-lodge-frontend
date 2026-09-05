@@ -1,16 +1,18 @@
+'use client';
 
-import { cn } from '@/lib/utils'
-import Link from '@tiptap/extension-link'
-import Placeholder from '@tiptap/extension-placeholder'
-import { Table } from '@tiptap/extension-table'
-import { TableCell } from '@tiptap/extension-table-cell'
-import { TableHeader } from '@tiptap/extension-table-header'
-import { TableRow } from '@tiptap/extension-table-row'
-import TextAlign from '@tiptap/extension-text-align'
-import Underline from '@tiptap/extension-underline'
-import { EditorContent, useEditor, type Editor } from '@tiptap/react'
-import StarterKit from '@tiptap/starter-kit'
-import { Button, Dropdown, Input, Tooltip } from 'antd'
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { cn } from '@/lib/utils';
+import Link from '@tiptap/extension-link';
+import Placeholder from '@tiptap/extension-placeholder';
+import { Table } from '@tiptap/extension-table';
+import { TableCell } from '@tiptap/extension-table-cell';
+import { TableHeader } from '@tiptap/extension-table-header';
+import { TableRow } from '@tiptap/extension-table-row';
+import TextAlign from '@tiptap/extension-text-align';
+import Underline from '@tiptap/extension-underline';
+import { EditorContent, useEditor, type Editor } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import { Button, Dropdown, Input, Tooltip } from 'antd';
 import {
   AlignCenter,
   AlignLeft,
@@ -18,7 +20,6 @@ import {
   Bold,
   Check,
   ChevronDown,
-  Globe,
   Heading1,
   Heading2,
   Heading3,
@@ -27,245 +28,220 @@ import {
   Link as LinkIcon,
   List,
   ListOrdered,
-  Loader2,
-  Plus,
+  Quote,
   Table as TableIcon,
   Trash2,
   Underline as UnderlineIcon,
-  Upload
-} from 'lucide-react'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
-import ImageResize from 'tiptap-extension-resize-image'
+} from 'lucide-react';
+import ImageResize from 'tiptap-extension-resize-image';
+import MediaPickerModal from '@/components/admin/common/MediaPickerModal';
+import { MediaItem, MediaSelectorMode } from '@/lib/types/media';
 
 interface MenuBarProps {
-  editor: Editor | null
-  onMediaUpload?: (file: File) => Promise<string>
-  showMediaUpload?: boolean
+  editor: Editor | null;
+  showMediaUpload?: boolean;
 }
 
-const MenuBar: React.FC<MenuBarProps> = ({ editor, onMediaUpload, showMediaUpload = false }) => {
-  const ec = () => editor!.chain().focus()
-  const [isUploading, setIsUploading] = useState(false)
-  const [isImageMenuOpen, setIsImageMenuOpen] = useState(false)
-  const [isLinkMenuOpen, setIsLinkMenuOpen] = useState(false)
-  const [imageUrl, setImageUrl] = useState('')
-  const [linkUrl, setLinkUrl] = useState('')
-  const imageMenuRef = useRef<HTMLDivElement>(null)
-  const linkMenuRef = useRef<HTMLDivElement>(null)
+const MenuBar: React.FC<MenuBarProps> = ({ editor, showMediaUpload = true }) => {
+  const ec = () => editor!.chain().focus();
+  const [isLinkMenuOpen, setIsLinkMenuOpen] = useState(false);
+  const [linkUrl, setLinkUrl] = useState('');
+  const [isMediaPickerOpen, setIsMediaPickerOpen] = useState(false);
+  const linkMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (imageMenuRef.current && !imageMenuRef.current.contains(event.target as Node)) {
-        setIsImageMenuOpen(false)
-      }
       if (linkMenuRef.current && !linkMenuRef.current.contains(event.target as Node)) {
-        setIsLinkMenuOpen(false)
+        setIsLinkMenuOpen(false);
       }
+    };
+    if (isLinkMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
     }
-    if (isImageMenuOpen || isLinkMenuOpen) {
-      document.addEventListener('mousedown', handleClickOutside)
-    }
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [isImageMenuOpen, isLinkMenuOpen])
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isLinkMenuOpen]);
 
-  if (!editor) return null
+  if (!editor) return null;
 
   const handleLinkSubmit = (e?: React.FormEvent) => {
-    if (e) e.preventDefault()
+    if (e) e.preventDefault();
     if (linkUrl) {
-      editor.chain().focus().setLink({ href: linkUrl }).run()
-      setLinkUrl('')
-      setIsLinkMenuOpen(false)
+      editor.chain().focus().setLink({ href: linkUrl }).run();
+      setLinkUrl('');
+      setIsLinkMenuOpen(false);
     }
-  }
+  };
 
   const handleRemoveLink = () => {
-    editor.chain().focus().unsetLink().run()
-    setIsLinkMenuOpen(false)
-  }
+    editor.chain().focus().unsetLink().run();
+    setIsLinkMenuOpen(false);
+  };
 
-  const handleImageUpload = () => {
-    const input = document.createElement('input')
-    input.type = 'file'
-    input.accept = 'image/*'
-    input.onchange = async () => {
-      if (input.files?.length) {
-        const file = input.files[0]
-        setIsImageMenuOpen(false)
-        if (onMediaUpload) {
-          setIsUploading(true)
-          try {
-            const url = await onMediaUpload(file)
-            if (url) {
-              ec().setImage({ src: url }).run()
-            }
-          } catch (error) {
-            console.error('Image upload failed:', error)
-          } finally {
-            setIsUploading(false)
-          }
-        } else {
-          const reader = new FileReader()
-          reader.onload = (e) => {
-            const result = e.target?.result
-            if (typeof result === 'string') {
-              ec().setImage({ src: result }).run()
-            }
-          }
-          reader.readAsDataURL(file)
-        }
+  // Called when media is selected in reusable MediaPickerModal
+  const handleMediaConfirm = (selectedItems: MediaItem[]) => {
+    if (selectedItems && selectedItems.length > 0) {
+      const mediaUrl = selectedItems[0].url;
+      if (mediaUrl && editor) {
+        editor.chain().focus().setImage({ src: mediaUrl }).run();
       }
     }
-    input.click()
-  }
+    setIsMediaPickerOpen(false);
+  };
 
-  const handleImageUrlSubmit = (e?: React.FormEvent) => {
-    if (e) e.preventDefault()
-    if (imageUrl) {
-      ec().setImage({ src: imageUrl }).run()
-      setImageUrl('')
-      setIsImageMenuOpen(false)
-    }
-  }
-
-  const ToolbarButton = ({ 
-    onClick, 
-    active = false, 
-    disabled = false, 
-    children, 
-    title 
-  }: { 
-    onClick: () => void; 
-    active?: boolean; 
-    disabled?: boolean; 
-    children: React.ReactNode; 
-    title?: string 
+  const ToolbarButton = ({
+    onClick,
+    active = false,
+    children,
+    title,
+    disabled = false,
+  }: {
+    onClick: () => void;
+    active?: boolean;
+    children: React.ReactNode;
+    title?: string;
+    disabled?: boolean;
   }) => (
-    <Tooltip title={title} mouseEnterDelay={0.5}>
+    <Tooltip title={title} placement="bottom" mouseEnterDelay={0.4}>
       <button
         type="button"
         onClick={onClick}
         disabled={disabled}
         className={cn(
-          "h-8 w-8 flex items-center justify-center rounded-md transition-all duration-200",
-          "hover:bg-secondary text-muted-foreground",
-          active && "bg-primary text-white hover:bg-primary/90 shadow-sm",
-          disabled && "opacity-50 cursor-not-allowed"
+          'h-7 w-7 flex items-center justify-center rounded-md transition-all text-xs font-semibold select-none cursor-pointer',
+          active
+            ? 'bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-950 font-bold shadow-2xs'
+            : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100',
+          disabled && 'opacity-30 cursor-not-allowed'
         )}
       >
         {children}
       </button>
     </Tooltip>
-  )
+  );
 
   return (
-    <div className="flex flex-wrap items-center gap-2">
-      {/* Basic Formatting */}
-      <div className="flex items-center gap-0.5 bg-card border border-border/50 rounded-lg p-0.5 shadow-sm">
+    <div className="flex flex-wrap items-center gap-1.5 p-2 bg-slate-50 dark:bg-slate-900/60 border-b border-slate-200 dark:border-slate-800 font-sans">
+      {/* Headings */}
+      <div className="flex items-center gap-0.5 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-md p-0.5 shadow-2xs">
         <ToolbarButton
-          onClick={() => editor.chain().focus().toggleBold().run()}
+          onClick={() => ec().toggleHeading({ level: 1 }).run()}
+          active={editor.isActive('heading', { level: 1 })}
+          title="Heading 1"
+        >
+          <Heading1 className="h-3.5 w-3.5" />
+        </ToolbarButton>
+        <ToolbarButton
+          onClick={() => ec().toggleHeading({ level: 2 }).run()}
+          active={editor.isActive('heading', { level: 2 })}
+          title="Heading 2"
+        >
+          <Heading2 className="h-3.5 w-3.5" />
+        </ToolbarButton>
+        <ToolbarButton
+          onClick={() => ec().toggleHeading({ level: 3 }).run()}
+          active={editor.isActive('heading', { level: 3 })}
+          title="Heading 3"
+        >
+          <Heading3 className="h-3.5 w-3.5" />
+        </ToolbarButton>
+      </div>
+
+      {/* Formatting */}
+      <div className="flex items-center gap-0.5 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-md p-0.5 shadow-2xs">
+        <ToolbarButton
+          onClick={() => ec().toggleBold().run()}
           active={editor.isActive('bold')}
           title="Bold"
         >
-          <Bold className="h-4 w-4" />
+          <Bold className="h-3.5 w-3.5" />
         </ToolbarButton>
         <ToolbarButton
-          onClick={() => editor.chain().focus().toggleItalic().run()}
+          onClick={() => ec().toggleItalic().run()}
           active={editor.isActive('italic')}
           title="Italic"
         >
-          <Italic className="h-4 w-4" />
+          <Italic className="h-3.5 w-3.5" />
         </ToolbarButton>
         <ToolbarButton
-          onClick={() => editor.chain().focus().toggleUnderline().run()}
+          onClick={() => ec().toggleUnderline().run()}
           active={editor.isActive('underline')}
           title="Underline"
         >
-          <UnderlineIcon className="h-4 w-4" />
+          <UnderlineIcon className="h-3.5 w-3.5" />
         </ToolbarButton>
-      </div>
-
-      {/* Headings */}
-      <div className="flex items-center gap-0.5 bg-card border border-border/50 rounded-lg p-0.5 shadow-sm">
-        {[1, 2, 3].map((level) => {
-          const Icon = { 1: Heading1, 2: Heading2, 3: Heading3 }[level as 1|2|3]
-          return (
-            <ToolbarButton
-              key={level}
-              onClick={() => editor.chain().focus().toggleHeading({ level: level as 1|2|3 }).run()}
-              active={editor.isActive('heading', { level })}
-              title={`Heading ${level}`}
-            >
-              <Icon className="h-4 w-4" />
-            </ToolbarButton>
-          )
-        })}
+        <ToolbarButton
+          onClick={() => ec().toggleBlockquote().run()}
+          active={editor.isActive('blockquote')}
+          title="Blockquote"
+        >
+          <Quote className="h-3.5 w-3.5" />
+        </ToolbarButton>
       </div>
 
       {/* Lists */}
-      <div className="flex items-center gap-0.5 bg-card border border-border/50 rounded-lg p-0.5 shadow-sm">
+      <div className="flex items-center gap-0.5 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-md p-0.5 shadow-2xs">
         <ToolbarButton
-          onClick={() => editor.chain().focus().toggleBulletList().run()}
+          onClick={() => ec().toggleBulletList().run()}
           active={editor.isActive('bulletList')}
           title="Bullet List"
         >
-          <List className="h-4 w-4" />
+          <List className="h-3.5 w-3.5" />
         </ToolbarButton>
         <ToolbarButton
-          onClick={() => editor.chain().focus().toggleOrderedList().run()}
+          onClick={() => ec().toggleOrderedList().run()}
           active={editor.isActive('orderedList')}
           title="Ordered List"
         >
-          <ListOrdered className="h-4 w-4" />
+          <ListOrdered className="h-3.5 w-3.5" />
         </ToolbarButton>
       </div>
 
       {/* Alignment */}
-      <div className="flex items-center gap-0.5 bg-card border border-border/50 rounded-lg p-0.5 shadow-sm">
+      <div className="flex items-center gap-0.5 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-md p-0.5 shadow-2xs">
         <ToolbarButton
-          onClick={() => editor.chain().focus().setTextAlign('left').run()}
+          onClick={() => ec().setTextAlign('left').run()}
           active={editor.isActive({ textAlign: 'left' })}
           title="Align Left"
         >
-          <AlignLeft className="h-4 w-4" />
+          <AlignLeft className="h-3.5 w-3.5" />
         </ToolbarButton>
         <ToolbarButton
-          onClick={() => editor.chain().focus().setTextAlign('center').run()}
+          onClick={() => ec().setTextAlign('center').run()}
           active={editor.isActive({ textAlign: 'center' })}
           title="Align Center"
         >
-          <AlignCenter className="h-4 w-4" />
+          <AlignCenter className="h-3.5 w-3.5" />
         </ToolbarButton>
         <ToolbarButton
-          onClick={() => editor.chain().focus().setTextAlign('right').run()}
+          onClick={() => ec().setTextAlign('right').run()}
           active={editor.isActive({ textAlign: 'right' })}
           title="Align Right"
         >
-          <AlignRight className="h-4 w-4" />
+          <AlignRight className="h-3.5 w-3.5" />
         </ToolbarButton>
       </div>
 
       {/* Links & Tables */}
-      <div className="flex items-center gap-0.5 bg-card border border-border/50 rounded-lg p-0.5 shadow-sm">
+      <div className="flex items-center gap-0.5 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-md p-0.5 shadow-2xs">
         <div className="relative" ref={linkMenuRef}>
           <ToolbarButton
             onClick={() => {
               if (editor.isActive('link')) {
-                setLinkUrl(editor.getAttributes('link').href || '')
+                setLinkUrl(editor.getAttributes('link').href || '');
               }
-              setIsLinkMenuOpen(!isLinkMenuOpen)
+              setIsLinkMenuOpen(!isLinkMenuOpen);
             }}
             active={editor.isActive('link')}
-            title="Link"
+            title="Insert Link"
           >
-            <LinkIcon className="h-4 w-4" />
+            <LinkIcon className="h-3.5 w-3.5" />
           </ToolbarButton>
 
           {isLinkMenuOpen && (
-            <div className="absolute left-0 mt-2 w-72 bg-card border border-border rounded-xl shadow-xl z-50 p-4 animate-in fade-in zoom-in duration-200">
+            <div className="absolute left-0 mt-2 w-72 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl z-50 p-3 animate-in fade-in zoom-in duration-150">
               <div className="space-y-3">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold text-muted-foreground/50">Link URL</label>
+                  <label className="text-[10px] font-bold text-slate-500 uppercase">Link URL</label>
                   <div className="flex gap-2">
                     <Input
                       placeholder="https://example.com"
@@ -273,15 +249,15 @@ const MenuBar: React.FC<MenuBarProps> = ({ editor, onMediaUpload, showMediaUploa
                       onChange={(e: any) => setLinkUrl(e.target.value)}
                       onKeyDown={(e: any) => e.key === 'Enter' && handleLinkSubmit()}
                       autoFocus
-                      className="h-9 text-sm"
+                      className="h-8 text-xs font-sans"
                     />
                     <Button
                       type="primary"
                       onClick={() => handleLinkSubmit()}
-                      className="h-9 w-9 p-0 flex items-center justify-center shrink-0"
+                      className="h-8 w-8 p-0 flex items-center justify-center shrink-0"
                       disabled={!linkUrl}
                     >
-                      <Check className="h-4 w-4" />
+                      <Check className="h-3.5 w-3.5" />
                     </Button>
                   </div>
                 </div>
@@ -290,7 +266,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ editor, onMediaUpload, showMediaUploa
                     type="text"
                     danger
                     onClick={handleRemoveLink}
-                    className="w-full justify-start h-8 text-[11px] font-bold"
+                    className="w-full justify-start h-7 text-[11px] font-bold"
                     icon={<Trash2 className="h-3.5 w-3.5" />}
                   >
                     Remove Link
@@ -308,7 +284,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ editor, onMediaUpload, showMediaUploa
               {
                 key: 'insertTable',
                 label: 'Insert Table (3x3)',
-                icon: React.createElement(TableIcon, { className: "h-3.5 w-3.5" }),
+                icon: <TableIcon className="h-3.5 w-3.5" />,
                 onClick: () => ec().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run(),
               },
               { type: 'divider' },
@@ -364,115 +340,70 @@ const MenuBar: React.FC<MenuBarProps> = ({ editor, onMediaUpload, showMediaUploa
         >
           <div className="flex">
             <ToolbarButton
-              onClick={() => {}}
+              onClick={() => { }}
               active={editor.isActive('table')}
               title="Table Controls"
             >
-              <TableIcon className="h-4 w-4" />
+              <TableIcon className="h-3.5 w-3.5" />
             </ToolbarButton>
           </div>
         </Dropdown>
       </div>
 
+      {/* Insert Image / Media Button (Reuses Centralized MediaPickerModal) */}
       {showMediaUpload && (
-        <div className="relative" ref={imageMenuRef}>
+        <div className="flex items-center gap-1">
           <button
             type="button"
-            onClick={() => setIsImageMenuOpen(!isImageMenuOpen)}
-            disabled={isUploading}
-            className={cn(
-              "h-8 px-3 flex items-center gap-2 transition-all rounded-lg border text-sm font-semibold",
-              isImageMenuOpen 
-                ? "border-primary bg-primary/5 text-primary" 
-                : "border-border hover:border-primary hover:text-primary text-muted-foreground"
-            )}
+            onClick={() => setIsMediaPickerOpen(true)}
+            className="h-7 px-2.5 flex items-center gap-1.5 transition-all rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-900 text-xs font-semibold cursor-pointer shadow-2xs"
+            title="Insert image from Media Library"
           >
-            {isUploading ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <>
-                <ImageIcon className="h-4 w-4" />
-                <span>Media</span>
-                <ChevronDown className={cn("h-3 w-3 transition-transform", isImageMenuOpen && "rotate-180")} />
-              </>
-            )}
+            <ImageIcon className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" />
+            <span>Insert Image</span>
           </button>
 
-          {isImageMenuOpen && (
-            <div className="absolute right-0 mt-2 w-72 bg-card border border-border rounded-xl shadow-xl z-50 p-4 animate-in fade-in zoom-in duration-200">
-              <div className="space-y-4">
-                <div className="flex flex-col gap-2">
-                  <label className="text-[10px] font-bold text-muted-foreground/60">Upload</label>
-                  <Button
-                    onClick={handleImageUpload}
-                    className="w-full h-12 border-dashed flex flex-col items-center justify-center gap-1 group"
-                  >
-                    <Upload className="h-4 w-4 text-muted-foreground/60 group-hover:text-primary" />
-                    <span className="text-[11px] font-semibold text-muted-foreground/80 group-hover:text-primary">Select Files</span>
-                  </Button>
-                </div>
-
-                <div className="relative flex items-center py-1">
-                  <div className="flex-grow border-t border-border/50"></div>
-                  <span className="flex-shrink mx-3 text-[10px] font-bold text-muted-foreground/30">OR</span>
-                  <div className="flex-grow border-t border-border/50"></div>
-                </div>
-
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold text-muted-foreground/60">Media URL</label>
-                  <div className="flex gap-2">
-                    <Input
-                      prefix={<Globe className="h-3.5 w-3.5 text-muted-foreground/40" />}
-                      placeholder="https://example.com/image.jpg"
-                      value={imageUrl}
-                      onChange={(e: any) => setImageUrl(e.target.value)}
-                      onKeyDown={(e: any) => e.key === 'Enter' && handleImageUrlSubmit()}
-                      className="h-9 text-sm"
-                    />
-                    <Button
-                      type="primary"
-                      onClick={() => handleImageUrlSubmit()}
-                      className="h-9 w-9 p-0 flex items-center justify-center shrink-0"
-                      disabled={!imageUrl}
-                    >
-                      <Plus className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
+          {/* Integrated Reusable Media Selector Modal */}
+          <MediaPickerModal
+            isOpen={isMediaPickerOpen}
+            onClose={() => setIsMediaPickerOpen(false)}
+            mode={MediaSelectorMode.SINGLE}
+            onConfirm={handleMediaConfirm}
+            title="Select Image to Embed in Blog Content"
+          />
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-interface AppRichTextEditorProps {
-  value?: string
-  onChange: (value: string) => void
-  onMediaUpload?: (file: File) => Promise<string>
-  placeholder?: string
-  showMediaUpload?: boolean
-  height?: string
+export interface AppRichTextEditorProps {
+  value?: string;
+  onChange: (value: string) => void;
+  onMediaUpload?: (file: File) => Promise<string>;
+  placeholder?: string;
+  showMediaUpload?: boolean;
+  height?: string;
 }
 
 export const AppRichTextEditor = ({
   value,
   onChange,
-  onMediaUpload,
-  placeholder = 'Write something...',
+  placeholder = 'Write article content here...',
   showMediaUpload = true,
-  height = '400px'
+  height = '400px',
 }: AppRichTextEditorProps) => {
-  const safeValue = value ?? ''
-  const lastExternalValue = useRef<string>(safeValue)
+  const safeValue = value ?? '';
+  const lastExternalValue = useRef<string>(safeValue);
 
-  const handleUpdate = useCallback(({ editor }: { editor: Editor }) => {
-    const html = editor.getHTML()
-    lastExternalValue.current = html
-    onChange(html)
-  }, [onChange])
+  const handleUpdate = useCallback(
+    ({ editor }: { editor: Editor }) => {
+      const html = editor.getHTML();
+      lastExternalValue.current = html;
+      onChange(html);
+    },
+    [onChange]
+  );
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -488,12 +419,10 @@ export const AppRichTextEditor = ({
       Link.configure({
         openOnClick: false,
         HTMLAttributes: {
-          class: 'text-primary underline cursor-pointer',
+          class: 'text-amber-600 dark:text-amber-400 underline cursor-pointer font-medium',
         },
       }),
-      ImageResize.configure({
-        // Configuration for image resizing
-      }),
+      ImageResize.configure({}),
       Table.configure({
         resizable: true,
       }),
@@ -503,58 +432,33 @@ export const AppRichTextEditor = ({
     ],
     content: safeValue,
     onUpdate: handleUpdate,
-  })
+  });
 
-  // Only sync content from outside when the value truly changed externally
+  // Sync content when value changes externally (e.g., initial blog load)
   useEffect(() => {
     if (editor && safeValue !== lastExternalValue.current) {
-      lastExternalValue.current = safeValue
-      editor.commands.setContent(safeValue)
+      lastExternalValue.current = safeValue;
+      editor.commands.setContent(safeValue);
     }
-  }, [safeValue, editor])
+  }, [safeValue, editor]);
 
   return (
-    <div className={cn(
-      "border border-border rounded-xl bg-card flex flex-col transition-all duration-300 shadow-sm overflow-hidden",
-      "focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/5"
-    )}>
-      <div className="flex flex-wrap items-center gap-2 p-2 border-b border-border/50 bg-secondary/30">
-        <MenuBar editor={editor} onMediaUpload={onMediaUpload} showMediaUpload={showMediaUpload} />
-      </div>
+    <div
+      className={cn(
+        'border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-950 flex flex-col transition-all shadow-2xs overflow-hidden font-sans',
+        'focus-within:border-slate-400 dark:focus-within:border-slate-500'
+      )}
+    >
+      <MenuBar editor={editor} showMediaUpload={showMediaUpload} />
       <div
-        className="overflow-y-auto slim-scrollbar cursor-text"
-        style={{ minHeight: '200px', height: height }}
-        onClick={() => editor && editor.chain().focus().run()}
+        style={{ minHeight: height }}
+        className="p-4 overflow-y-auto max-h-[600px] text-sm leading-relaxed text-slate-900 dark:text-slate-100 font-sans cursor-text focus:outline-none"
+        onClick={() => editor?.chain().focus().run()}
       >
-        <EditorContent
-          editor={editor}
-          className={cn(
-            "p-6 min-h-full text-foreground/80 text-[15px] leading-relaxed outline-none prose-custom",
-            "[&_.ProseMirror]:outline-none",
-            "[&_.ProseMirror_p.is-editor-empty:first-child::before]:content-[attr(data-placeholder)]",
-            "[&_.ProseMirror_p.is-editor-empty:first-child::before]:text-muted-foreground/50",
-            "[&_.ProseMirror_p.is-editor-empty:first-child::before]:float-left",
-            "[&_.ProseMirror_p.is-editor-empty:first-child::before]:pointer-events-none",
-            "[&_.ProseMirror_p.is-editor-empty:first-child::before]:h-0",
-            // Headings
-            "[&_.ProseMirror_h1]:text-3xl [&_.ProseMirror_h1]:font-bold [&_.ProseMirror_h1]:mb-6",
-            "[&_.ProseMirror_h2]:text-2xl [&_.ProseMirror_h2]:font-bold [&_.ProseMirror_h2]:mb-4",
-            "[&_.ProseMirror_h3]:text-xl [&_.ProseMirror_h3]:font-bold [&_.ProseMirror_h3]:mb-3",
-            // Lists
-            "[&_.ProseMirror_ul]:list-disc [&_.ProseMirror_ul]:pl-5 [&_.ProseMirror_ul]:mb-4",
-            "[&_.ProseMirror_ol]:list-decimal [&_.ProseMirror_ol]:pl-5 [&_.ProseMirror_ol]:mb-4",
-            // Tables
-            "[&_.ProseMirror_table]:border-collapse [&_.ProseMirror_table]:w-full [&_.ProseMirror_table]:my-6",
-            "[&_.ProseMirror_td]:border [&_.ProseMirror_td]:border-border [&_.ProseMirror_td]:p-2",
-            "[&_.ProseMirror_th]:border [&_.ProseMirror_th]:border-border [&_.ProseMirror_th]:p-2 [&_.ProseMirror_th]:bg-secondary",
-            // Links & Images
-            "[&_.ProseMirror_a]:text-primary [&_.ProseMirror_a]:underline",
-            "[&_.ProseMirror_img]:rounded-xl [&_.ProseMirror_img]:shadow-md [&_.ProseMirror_img]:mx-auto"
-          )}
-        />
+        <EditorContent editor={editor} />
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default AppRichTextEditor;

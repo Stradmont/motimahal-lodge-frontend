@@ -8,6 +8,7 @@ import {
   MessageSquare,
   Image as ImageIcon,
   FileImage,
+  FileText,
   Bed,
   Video,
   Settings,
@@ -29,9 +30,6 @@ import {
   DialogDescription,
   DialogFooter,
 } from '@/components/ui/dialog';
-import { useContacts } from '@/hooks/useContacts';
-import { useInquiries } from '@/hooks/useInquiries';
-import { GeneralContactStatus, RoomInquiryStatus } from '@/lib/types/inquiry';
 
 interface AdminSidebarProps {
   isCollapsed: boolean;
@@ -45,14 +43,12 @@ export interface NavSubItem {
   title: string;
   href: string;
   icon: React.ElementType;
-  badgeType?: 'room' | 'general';
 }
 
 export interface NavItem {
   title: string;
   href?: string;
   icon: React.ElementType;
-  badgeType?: 'general' | 'room';
   children?: NavSubItem[];
 }
 
@@ -66,23 +62,6 @@ export default function AdminSidebar({
   const pathname = usePathname();
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [isRoomsExpanded, setIsRoomsExpanded] = useState(() => pathname.startsWith('/admin/rooms'));
-
-  const { submissions: contactSubmissions } = useContacts();
-  const { inquiries: roomInquiries } = useInquiries();
-
-  const unreadGeneralCount = contactSubmissions.filter(
-    (c) => c.status === GeneralContactStatus.NEW || (c.status as string) === 'NEW' || (c.status as string) === 'unread'
-  ).length;
-
-  const unreadRoomCount = roomInquiries.filter(
-    (r) => r.status === RoomInquiryStatus.NEW || (r.status as string) === 'NEW' || (r.status as string) === 'unread'
-  ).length;
-
-  const unreadCounts = {
-    general: unreadGeneralCount,
-    room: unreadRoomCount,
-    total: unreadGeneralCount + unreadRoomCount,
-  };
 
   useEffect(() => {
     if (pathname.startsWith('/admin/rooms') && !isRoomsExpanded) {
@@ -112,7 +91,6 @@ export default function AdminSidebar({
               title: 'Room Inquiries',
               href: '/admin/rooms/inquiries',
               icon: CalendarCheck,
-              badgeType: 'room' as const,
             },
           ],
         },
@@ -120,7 +98,11 @@ export default function AdminSidebar({
           title: 'Contact Inquiries',
           href: '/admin/contact',
           icon: MessageSquare,
-          badgeType: 'general' as const,
+        },
+        {
+          title: 'Blog Articles',
+          href: '/admin/blogs',
+          icon: FileText,
         },
       ],
     },
@@ -219,7 +201,6 @@ export default function AdminSidebar({
                 // Handle Submenu items (e.g., Rooms & Rates)
                 if (item.children) {
                   const isParentActive = pathname.startsWith('/admin/rooms');
-                  const totalRoomBadge = unreadCounts.room;
 
                   return (
                     <div key={item.title} className="space-y-1">
@@ -256,19 +237,12 @@ export default function AdminSidebar({
                         </div>
 
                         {!isCollapsed && (
-                          <div className="flex items-center gap-1.5">
-                            {totalRoomBadge > 0 && (
-                              <span className="px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-rose-500 text-white shadow-2xs">
-                                {totalRoomBadge}
-                              </span>
+                          <ChevronDown
+                            className={cn(
+                              'w-3.5 h-3.5 text-slate-400 transition-transform duration-200',
+                              isRoomsExpanded ? 'rotate-180 text-slate-700 dark:text-slate-300' : ''
                             )}
-                            <ChevronDown
-                              className={cn(
-                                'w-3.5 h-3.5 text-slate-400 transition-transform duration-200',
-                                isRoomsExpanded ? 'rotate-180 text-slate-700 dark:text-slate-300' : ''
-                              )}
-                            />
-                          </div>
+                          />
                         )}
                       </button>
 
@@ -281,11 +255,6 @@ export default function AdminSidebar({
                               sub.href === '/admin/rooms'
                                 ? pathname === '/admin/rooms'
                                 : pathname.startsWith(sub.href);
-
-                            const subBadge =
-                              sub.badgeType === 'room' && unreadCounts.room > 0
-                                ? unreadCounts.room
-                                : 0;
 
                             return (
                               <Link
@@ -303,18 +272,6 @@ export default function AdminSidebar({
                                   <SubIcon className={cn('w-3.5 h-3.5 shrink-0', isSubActive ? 'text-white dark:text-slate-950' : 'text-slate-500')} />
                                   <span className="truncate tracking-tight">{sub.title}</span>
                                 </div>
-                                {subBadge > 0 && (
-                                  <span
-                                    className={cn(
-                                      'px-1.5 py-0.5 text-[10px] font-bold rounded-full',
-                                      isSubActive
-                                        ? 'bg-white/20 text-white dark:bg-slate-950/20 dark:text-slate-950'
-                                        : 'bg-rose-500 text-white shadow-2xs'
-                                    )}
-                                  >
-                                    {subBadge}
-                                  </span>
-                                )}
                               </Link>
                             );
                           })}
@@ -328,13 +285,6 @@ export default function AdminSidebar({
                 const href = item.href || '/admin';
                 const isActive =
                   href === '/admin' ? pathname === '/admin' : pathname.startsWith(href);
-
-                const badgeCount =
-                  item.badgeType === 'general'
-                    ? unreadCounts.general
-                    : item.badgeType === 'room'
-                    ? unreadCounts.room
-                    : 0;
 
                 return (
                   <Link
@@ -363,19 +313,6 @@ export default function AdminSidebar({
                         <span className="truncate tracking-tight">{item.title}</span>
                       )}
                     </div>
-
-                    {!isCollapsed && badgeCount > 0 && (
-                      <span
-                        className={cn(
-                          'px-1.5 py-0.5 text-[10px] font-bold rounded-full transition-colors',
-                          isActive
-                            ? 'bg-white/20 text-white dark:bg-slate-950/20 dark:text-slate-950'
-                            : 'bg-rose-500 text-white shadow-2xs'
-                        )}
-                      >
-                        {badgeCount}
-                      </span>
-                    )}
                   </Link>
                 );
               })}
@@ -466,6 +403,3 @@ export default function AdminSidebar({
     </>
   );
 }
-
-
-
