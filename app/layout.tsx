@@ -22,6 +22,7 @@ export const metadata: Metadata = {
     'Experience lodge accommodations, authentic Chitwan hospitality, and mouthwatering tandoori cuisine near the Narayani River and Chitwan National Park.',
 };
 
+import Script from 'next/script';
 import WhatsAppButton from '@/components/WhatsAppButton';
 import ScrollToTop from '@/components/ScrollToTop';
 
@@ -35,6 +36,13 @@ export default function RootLayout({
       lang="en"
       className={`${mirza.variable} ${jost.variable} h-full antialiased`}
     >
+      <head>
+        <Script
+          defer
+          src="https://cloud.umami.is/script.js"
+          data-website-id="0c07e2dd-b0d1-4e62-8c2d-79dfc4561265"
+        />
+      </head>
       <body className="min-h-full flex flex-col bg-background text-brand-charcoal font-sans">
         {children}
         <ScrollToTop />
